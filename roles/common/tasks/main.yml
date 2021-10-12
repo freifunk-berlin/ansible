@@ -1,0 +1,23 @@
+---
+# tasks to be run on all machines
+
+- name: install basic tools
+  apt:
+    name:
+      - htop
+      - git
+      - nano
+      - mosh
+      - zsh
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: make python3 standard
+  file:
+    src: /usr/bin/python3
+    dest: /usr/bin/python
+    owner: root
+    group: root
+    state: link
+...

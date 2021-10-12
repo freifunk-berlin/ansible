@@ -1,0 +1,55 @@
+---
+# modify webserver to buildbot-environment
+- name: install python virtual-env
+  apt:
+    name: virtualenv
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: checkout buildbot-config
+  git:
+    repo: 'https://github.com/Freifunk-Spalter/buildbot.git'
+    dest: /usr/local/src/buildbot/
+    version: master
+
+- name: install buildbot in venv
+  pip:
+    name: buildbot
+    virtualenv: /usr/local/src/buildbot/env
+
+- name: add buildbot systemd-service-module
+  copy:
+    dest: /etc/systemd/system/buildbot.service
+    mode: 0644
+    content: |
+      [Unit]
+      Description=Buildbot-master for Freifunk-Berlin
+
+      [Service]
+      WorkingDirectory=/usr/local/src/buildbot/masters/master
+      Environment=PATH=/usr/local/src/buildbot/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+      ExecStart=/usr/local/src/buildbot/env/bin/buildbot start --nodaemon
+      ExecReload=/bin/kill -HUP $MAINPID
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: enable and start buildbot systemd service
+  systemd:
+    daemon_reload: yes
+    name: buildbot
+    enabled: true
+    state: started
+
+#- name: configure buildbot-host in nginx
+
+- name: checkout firmware-selector
+  git:
+    repo: 'https://github.com/Freifunk-Spalter/falter-firmware-selector.git'
+    version: falter_stable
+    dest: /usr/local/src/www/htdocs/firmware-selector
+
+#- name: configure firmware-selector-host in nginx
+
+...

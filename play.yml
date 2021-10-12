@@ -1,0 +1,24 @@
+---
+# This playbook deploys the whole application stack in this site.
+
+- name: apply common configuration
+  hosts: all
+  become: true
+
+  roles:
+    - common
+
+- name: install webservers
+  hosts: webserver
+  become: true
+
+  roles:
+    - webserver
+
+- name: set up buildbot environment
+  hosts: vagrant.vm
+  become: true
+
+  roles:
+    - buildbot
+...

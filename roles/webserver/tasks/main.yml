@@ -1,0 +1,17 @@
+---
+- name: install webserver-tools
+  apt:
+    name:
+      - snapd
+      - nginx
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: install certbot
+  snap:
+    name: certbot
+    state: present
+    classic: true
+
+...
