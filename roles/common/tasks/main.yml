@@ -8,6 +8,7 @@
       - git
       - nano
       - mosh
+      - tmux
       - zsh
     state: present
     update_cache: true

@@ -17,6 +17,9 @@
   pip:
     name: buildbot
     virtualenv: /usr/local/src/buildbot/env
+  
+- name: initialise buildbot-master
+  command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
 
 - name: add buildbot systemd-service-module
   copy:
@@ -42,14 +45,39 @@
     enabled: true
     state: started
 
-#- name: configure buildbot-host in nginx
-
 - name: checkout firmware-selector
   git:
     repo: 'https://github.com/Freifunk-Spalter/falter-firmware-selector.git'
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
 
-#- name: configure firmware-selector-host in nginx
+- name: remove 'default'-site in nginx
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: configure vhosts in nginx
+  copy:
+    src: "files/nginx-config/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-available/{{ item }}"
+  with_items:
+    - buildbot.berlin.freifunk.net.conf
+    - firmware.berlin.freifunk.net.conf
+    - selector.berlin.freifunk.net.conf
+
+- name: enable available sites
+  file:
+    src: "/etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item }}"
+    state: link
+  with_items:
+    - buildbot.berlin.freifunk.net.conf
+    - firmware.berlin.freifunk.net.conf
+    - selector.berlin.freifunk.net.conf
+
+- name: restart nginx to apply changes
+  systemd:
+    name: nginx
+    state: restarted
 
 ...
