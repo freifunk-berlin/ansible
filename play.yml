@@ -7,6 +7,7 @@
 
   roles:
     - common
+    - ryandaniels.create_users
 
 - name: install webservers
   hosts: webserver
@@ -16,9 +17,8 @@
     - webserver
 
 - name: set up buildbot environment
-  hosts: vagrant.vm
+  hosts: buildbot
   become: true
 
   roles:
     - buildbot
-...
