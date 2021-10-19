@@ -4,7 +4,8 @@
 - name: apply common configuration
   hosts: all
   become: true
-
+  vars_files:
+    - inventory/group_vars/users
   roles:
     - common
     - ryandaniels.create_users
