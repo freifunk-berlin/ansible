@@ -1,0 +1,41 @@
+---
+# variables to configure nginx-server on the buildbot-master machine
+
+nginx_remove_default_vhost: true
+
+nginx_vhosts:
+# Example vhost below, showing all available options:
+# - listen: "80" # default: "80"
+#   server_name: "example.com" # default: N/A
+#   root: "/var/www/example.com" # default: N/A
+#   index: "index.html index.htm" # default: "index.html index.htm"
+#   filename: "example.com.conf" # Can be used to set the vhost filename.
+#
+#   # Properties that are only added if defined:
+#   server_name_redirect: "www.example.com" # default: N/A
+#   error_page: ""
+#   access_log: ""
+#   error_log: ""
+#   extra_parameters: "" # Can be used to add extra config blocks (multiline).
+#   template: "" # Can be used to override the `nginx_vhost_template` per host.
+#   state: "absent" # To remove the vhost configuration.
+
+  - listen: "80"
+    server_name: "buildbot.berlin.freifunk.net" # default: N/A
+    root: "/usr/local/src/www/htdocs" # default: N/A
+    index: "index.html index.htm" # default: "index.html index.htm"
+    filename: "buildbot.berlin.freifunk.net.conf" # Can be used to set the vhost filename.
+
+  - listen: "80"
+    server_name: "firmware.berlin.freifunk.net"
+    root: "/usr/local/src/www/htdocs/buildbot"
+    index: "index.html index.htm"
+    filename: "firmware.berlin.freifunk.net.conf"
+    
+  - listen: "80"
+    server_name: "selector.berlin.freifunk.net"
+    root: "/usr/local/src/www/htdocs/firmware-selector"
+    index: "index.html index.htm"
+    filename: "selector.berlin.freifunk.net.conf"
+
+...

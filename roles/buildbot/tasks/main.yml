@@ -17,9 +17,11 @@
   pip:
     name: buildbot
     virtualenv: /usr/local/src/buildbot/env
+  register: buildbot_install
   
 - name: initialise buildbot-master
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
+  when: buildbot_install.changed
 
 - name: add buildbot systemd-service-module
   copy:
@@ -50,34 +52,34 @@
     repo: 'https://github.com/Freifunk-Spalter/falter-firmware-selector.git'
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
+  register: fw_selector_checkout
 
-- name: remove 'default'-site in nginx
+- name: run link_www to link files into website-root
+  command: /usr/local/src/www/htdocs/firmware-selector/link_www.sh
+  when: fw_selector_checkout.changed
+
+- name: insert cronjob for firmware-selector
+  cron:
+    name: update snapshots in firmware-selector regularily.
+    minute: "*/10"
+    job: /usr/local/src/www/htdocs/firmware-selector/get_profiles_local.sh
+    user: root
+    cron_file: ansible_fwselector_update
+
+- name: adjust directory-permissions for buildbot
   file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
+    path: /usr/local/src/buildbot
+    owner: buildbot
+    group: root
+    mode: 755
+    recurse: yes
 
-- name: configure vhosts in nginx
-  copy:
-    src: "files/nginx-config/sites-available/{{ item }}"
-    dest: "/etc/nginx/sites-available/{{ item }}"
-  with_items:
-    - buildbot.berlin.freifunk.net.conf
-    - firmware.berlin.freifunk.net.conf
-    - selector.berlin.freifunk.net.conf
-
-- name: enable available sites
+- name: adjust directory-permissions for web-stuff
   file:
-    src: "/etc/nginx/sites-available/{{ item }}"
-    dest: "/etc/nginx/sites-enabled/{{ item }}"
-    state: link
-  with_items:
-    - buildbot.berlin.freifunk.net.conf
-    - firmware.berlin.freifunk.net.conf
-    - selector.berlin.freifunk.net.conf
-
-- name: restart nginx to apply changes
-  systemd:
-    name: nginx
-    state: restarted
+    path: /usr/local/src/www/
+    owner: www-data
+    group: buildbot
+    mode: 755
+    recurse: yes
 
 ...
