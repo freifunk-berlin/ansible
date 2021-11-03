@@ -71,7 +71,7 @@
     path: /usr/local/src/buildbot
     owner: buildbot
     group: root
-    mode: 755
+    mode: 0755
     recurse: yes
 
 - name: adjust directory-permissions for web-stuff
@@ -79,7 +79,7 @@
     path: /usr/local/src/www/
     owner: www-data
     group: buildbot
-    mode: 755
+    mode: 0755
     recurse: yes
 
 ...
