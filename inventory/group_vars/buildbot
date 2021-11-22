@@ -21,21 +21,25 @@ nginx_vhosts:
 #   state: "absent" # To remove the vhost configuration.
 
   - listen: "80"
-    server_name: "buildbot.berlin.freifunk.net buildbot.wc.t-löffel.de" # default: N/A
+    server_name: "buildbot.berlin.freifunk.net buildbot.wc.xn--t-lffel-c1a.de" # default: N/A
     root: "/usr/local/src/www/htdocs" # default: N/A
     index: "index.html index.htm" # default: "index.html index.htm"
     filename: "buildbot.berlin.freifunk.net.conf" # Can be used to set the vhost filename.
 
   - listen: "80"
-    server_name: "firmware.berlin.freifunk.net firmware.wc.t-löffel.de"
+    server_name: "firmware.berlin.freifunk.net firmware.wc.xn--t-lffel-c1a.de"
     root: "/usr/local/src/www/htdocs/buildbot"
     index: "index.html index.htm"
     filename: "firmware.berlin.freifunk.net.conf"
-    
+
   - listen: "80"
-    server_name: "selector.berlin.freifunk.net selector.wc.t-löffel.de"
-    root: "/usr/local/src/www/htdocs/firmware-selector"
-    index: "index.html index.htm"
+    server_name: "selector.berlin.freifunk.net selector.wc.xn--t-lffel-c1a.de"
+    root: "/usr/local/src/www/htdocs/firmware-selector/www"
+    index: "index.html"
+    extra_parameters: |
+      location ^/misc {
+        root /usr/local/src/www/htdocs/firmware-selector/
+      }
     filename: "selector.berlin.freifunk.net.conf"
 
 ...
