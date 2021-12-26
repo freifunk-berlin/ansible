@@ -22,5 +22,6 @@
   become: true
 
   roles:
+    - webserver
     - buildbot
     - geerlingguy.nginx
