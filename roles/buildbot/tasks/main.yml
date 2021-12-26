@@ -23,7 +23,7 @@
 
 - name: install buildbot in venv
   pip:
-    name: buildbot
+    name: buildbot[bundle]
     virtualenv: /usr/local/src/buildbot/env
   register: buildbot_install
   
@@ -31,10 +31,10 @@
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
   when: buildbot_install.changed
 
-- name: create images-dir
-  file:
-    state: directory
-    path: /usr/local/src/www/htdocs/buildbot/
+- name: apply workers-credentials
+  copy:
+    dest: /usr/local/src/buildbot/masters/master/worker.py
+    src: ./files/worker.py
 
 - name: add buildbot systemd-service-module
   copy:
@@ -45,6 +45,8 @@
       Description=Buildbot-master for Freifunk-Berlin
 
       [Service]
+      User=buildbot
+      Group=buildbot
       WorkingDirectory=/usr/local/src/buildbot/masters/master
       Environment=PATH=/usr/local/src/buildbot/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
       ExecStart=/usr/local/src/buildbot/env/bin/buildbot start --nodaemon
@@ -83,6 +85,13 @@
     job: /usr/local/src/www/htdocs/firmware-selector/get_profiles_local.sh
     user: root
     cron_file: ansible_fwselector_update
+
+- name: create images-dir
+  file:
+    state: directory
+    path: /usr/local/src/www/htdocs/buildbot/
+    owner: www-data
+    group: www-data
 
 - name: adjust directory-permissions for buildbot
   file:
