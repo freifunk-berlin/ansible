@@ -26,7 +26,7 @@
     name: buildbot[bundle]
     virtualenv: /usr/local/src/buildbot/env
   register: buildbot_install
-  
+
 - name: initialise buildbot-master
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
   when: buildbot_install.changed
@@ -35,6 +35,7 @@
   copy:
     dest: /usr/local/src/buildbot/masters/master/worker.py
     src: ./files/worker.py
+    mode: 0764
 
 - name: add buildbot systemd-service-module
   copy:
@@ -92,6 +93,7 @@
     path: /usr/local/src/www/htdocs/buildbot/
     owner: www-data
     group: www-data
+    mode: 0764
 
 - name: adjust directory-permissions for buildbot
   file:
