@@ -1,5 +1,7 @@
 ---
+# dependency: role webserver before
 # modify webserver to buildbot-environment
+
 - name: install python virtual-env
   apt:
     name: virtualenv
@@ -7,11 +9,17 @@
     update_cache: true
     cache_valid_time: 3600
 
+- name: buildbot initialised already?
+  stat:
+    path: /usr/local/src/buildbot/
+  register: buildbot
+
 - name: checkout buildbot-config
   git:
     repo: 'https://github.com/freifunk-berlin/buildbot.git'
     dest: /usr/local/src/buildbot/
     version: master
+  when: not buildbot.stat.exists
 
 - name: install buildbot in venv
   pip:
@@ -22,6 +30,11 @@
 - name: initialise buildbot-master
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
   when: buildbot_install.changed
+
+- name: create images-dir
+  file:
+    state: directory
+    path: /usr/local/src/www/htdocs/buildbot/
 
 - name: add buildbot systemd-service-module
   copy:
@@ -47,16 +60,21 @@
     enabled: true
     state: started
 
+- name: firmware-selector initialised already?
+  stat:
+    path: /usr/local/src/www/htdocs/firmware-selector
+  register: fw_selector
+
 - name: checkout firmware-selector
   git:
     repo: 'https://github.com/freifunk-berlin/falter-firmware-selector.git'
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
-  register: fw_selector_checkout
+  when: not fw_selector.stat.exists
 
 - name: run link_www to link files into website-root
   command: /usr/local/src/www/htdocs/firmware-selector/link_www.sh
-  when: fw_selector_checkout.changed
+  when: not fw_selector.stat.exists
 
 - name: insert cronjob for firmware-selector
   cron:

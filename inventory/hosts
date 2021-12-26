@@ -1,9 +1,8 @@
-vagrant.vm
+#vagrant.vm
 
 [webserver]
-vagrant.vm
+#vagrant.vm
 
 
 [buildbot]
 65.108.82.158 # testvm
-
