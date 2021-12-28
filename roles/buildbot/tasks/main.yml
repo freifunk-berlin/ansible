@@ -27,15 +27,16 @@
     virtualenv: /usr/local/src/buildbot/env
   notify: buildbot | initialise
 
-- name: initialise buildbot-master
-  command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
-  when: buildbot_install.changed
+- meta: flush_handlers
 
 - name: apply workers-credentials
-  copy:
+  template:
     dest: /usr/local/src/buildbot/masters/master/worker.py
-    src: ./files/worker.py
+    src: worker.py.j2
     mode: 0764
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
 
 - name: add buildbot systemd-service-module
   copy:
@@ -87,7 +88,7 @@
     path: /usr/local/src/www/htdocs/buildbot/
     owner: www-data
     group: www-data
-    mode: 0764
+    mode: 0775
 
 - name: adjust directory-permissions for buildbot
   file:
@@ -115,7 +116,7 @@
 
 - name: copy buildbot config
   template:
-    src: buildbot-master.cfg.j2
+    src: "{{ buildbot_config_template }}"
     dest: /usr/local/src/buildbot/masters/master/master.cfg
     mode: 0640
     owner: buildbot

@@ -1,0 +1,1 @@
+buildbot_config_template: "buildbot-master.cfg.j2"
