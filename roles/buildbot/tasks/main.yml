@@ -25,7 +25,7 @@
   pip:
     name: buildbot[bundle]
     virtualenv: /usr/local/src/buildbot/env
-  register: buildbot_install
+  notify: buildbot | initialise
 
 - name: initialise buildbot-master
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
@@ -55,13 +55,7 @@
 
       [Install]
       WantedBy=multi-user.target
-
-- name: enable and start buildbot systemd service
-  systemd:
-    daemon_reload: yes
-    name: buildbot
-    enabled: true
-    state: started
+  notify: buildbot | restart
 
 - name: firmware-selector initialised already?
   stat:
@@ -118,5 +112,14 @@
     group: buildbot
     mode: 0755
     recurse: yes
+
+- name: copy buildbot config
+  template:
+    src: buildbot-master.cfg.j2
+    dest: /usr/local/src/buildbot/masters/master/master.cfg
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
 
 ...

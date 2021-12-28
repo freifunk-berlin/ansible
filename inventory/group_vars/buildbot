@@ -91,7 +91,6 @@ nginx_vhosts:
       ssl_ciphers         HIGH:!aNULL:!MD5;
     filename: "selector.berlin.freifunk.net-ssl.conf"
 
-
 letsencrypt_cert:
   name: buildbot
   domains:
