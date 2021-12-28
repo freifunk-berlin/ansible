@@ -25,6 +25,9 @@ nginx_vhosts:
     root: "/usr/local/src/www/htdocs"
     index: "index.html index.htm"
     extra_parameters: |
+      location ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
       location / {
         include proxy_params;
         proxy_pass http://localhost:8010;
@@ -52,6 +55,10 @@ nginx_vhosts:
     index: "index index.html index.htm"
     extra_parameters: |
       autoindex on;
+
+      location ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
     filename: "firmware.berlin.freifunk.net.conf"
 
   - listen: "80"
@@ -62,6 +69,40 @@ nginx_vhosts:
       location /misc {
         root /usr/local/src/www/htdocs/firmware-selector/;
       }
+      location ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
     filename: "selector.berlin.freifunk.net.conf"
+
+  - listen: "443 ssl http2"
+    server_name: "selector.berlin.freifunk.net selector.wc.xn--t-lffel-c1a.de"
+    root: "/usr/local/src/www/htdocs/firmware-selector/www"
+    index: "index.html"
+    extra_parameters: |
+      location /misc {
+        root /usr/local/src/www/htdocs/firmware-selector/;
+      }
+      location ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
+      ssl_certificate     /etc/letsencrypt/live/buildbot/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/buildbot/privkey.pem;
+      ssl_protocols       TLSv1.2 TLSv1.3;
+      ssl_ciphers         HIGH:!aNULL:!MD5;
+    filename: "selector.berlin.freifunk.net-ssl.conf"
+
+
+letsencrypt_cert:
+  name: buildbot
+  domains:
+    - buildbot.wc.xn--t-lffel-c1a.de
+    - firmware.wc.xn--t-lffel-c1a.de
+    - selector.wc.xn--t-lffel-c1a.de
+  challenge: http
+  http_auth: webroot
+  webroot_path: /usr/local/src/www/htdocs/
+  services:
+    - nginx
+letsencrypt_opts_extra: "--register-unsafely-without-email"
 
 ...

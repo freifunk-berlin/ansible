@@ -103,6 +103,14 @@
     mode: 0755
     recurse: yes
 
+- name: create well-known dir for letsencrypt
+  file:
+    path: /usr/local/src/www/htdocs/.well-known/
+    owner: www-data
+    group: www-data
+    mode: 0750
+    recurse: yes
+
 - name: adjust directory-permissions for web-stuff
   file:
     path: /usr/local/src/www/
