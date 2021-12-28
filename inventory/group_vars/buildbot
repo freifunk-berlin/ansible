@@ -25,7 +25,7 @@ nginx_vhosts:
     root: "/usr/local/src/www/htdocs"
     index: "index.html index.htm"
     extra_parameters: |
-      location ^/.well-known {
+      location ~ ^/.well-known {
         root /usr/local/src/www/htdocs/;
       }
       location / {
@@ -56,7 +56,7 @@ nginx_vhosts:
     extra_parameters: |
       autoindex on;
 
-      location ^/.well-known {
+      location ~ ^/.well-known {
         root /usr/local/src/www/htdocs/;
       }
     filename: "firmware.berlin.freifunk.net.conf"
@@ -66,10 +66,10 @@ nginx_vhosts:
     root: "/usr/local/src/www/htdocs/firmware-selector/www"
     index: "index.html"
     extra_parameters: |
-      location ^/misc {
+      location ~ ^/misc {
         root /usr/local/src/www/htdocs/firmware-selector/;
       }
-      location ^/.well-known {
+      location ~ ^/.well-known {
         root /usr/local/src/www/htdocs/;
       }
     filename: "selector.berlin.freifunk.net.conf"
@@ -79,10 +79,10 @@ nginx_vhosts:
     root: "/usr/local/src/www/htdocs/firmware-selector/www"
     index: "index.html"
     extra_parameters: |
-      location ^/misc {
+      location ~ ^/misc {
         root /usr/local/src/www/htdocs/firmware-selector/;
       }
-      location ^/.well-known {
+      location ~ ^/.well-known {
         root /usr/local/src/www/htdocs/;
       }
       ssl_certificate     /etc/letsencrypt/live/buildbot/fullchain.pem;
