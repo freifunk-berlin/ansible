@@ -70,10 +70,6 @@
     dest: /usr/local/src/www/htdocs/firmware-selector
   when: not fw_selector.stat.exists
 
-- name: run link_www to link files into website-root
-  command: /usr/local/src/www/htdocs/firmware-selector/link_www.sh
-  when: not fw_selector.stat.exists
-
 - name: insert cronjob for firmware-selector
   cron:
     name: update snapshots in firmware-selector regularily.
