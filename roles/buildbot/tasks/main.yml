@@ -9,25 +9,48 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: buildbot initialised already?
-  stat:
-    path: /usr/local/src/buildbot/
-  register: buildbot
-
-- name: checkout buildbot-config
-  git:
-    repo: 'https://github.com/freifunk-berlin/buildbot.git'
-    dest: /usr/local/src/buildbot/
-    version: master
-  when: not buildbot.stat.exists
+- name: create directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: buildbot
+    group: www-data
+    mode: 0755
+    recurse: yes
+  with_items:
+    - /usr/local/src/www/htdocs/buildbot/
+    - /usr/local/src/buildbot
+    - /usr/local/src/www/htdocs/.well-known/
 
 - name: install buildbot in venv
   pip:
     name: buildbot[bundle]
+    version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
   notify: buildbot | initialise
 
 - meta: flush_handlers
+
+- name: copy buildsteps
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src/buildbot/masters/master/
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
+  with_items:
+   - buildsteps_feed.py
+   - buildsteps_image.py
+
+- name: copy buildbot config
+  template:
+    src: "{{ buildbot_config_template }}"
+    dest: /usr/local/src/buildbot/masters/master/master.cfg
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
 
 - name: apply workers-credentials
   template:
@@ -78,45 +101,5 @@
     user: root
     cron_file: ansible_fwselector_update
 
-- name: create images-dir
-  file:
-    state: directory
-    path: /usr/local/src/www/htdocs/buildbot/
-    owner: www-data
-    group: www-data
-    mode: 0775
-
-- name: adjust directory-permissions for buildbot
-  file:
-    path: /usr/local/src/buildbot
-    owner: buildbot
-    group: www-data
-    mode: 0755
-    recurse: yes
-
-- name: create well-known dir for letsencrypt
-  file:
-    path: /usr/local/src/www/htdocs/.well-known/
-    owner: www-data
-    group: www-data
-    mode: 0750
-    recurse: yes
-
-- name: adjust directory-permissions for web-stuff
-  file:
-    path: /usr/local/src/www/
-    owner: www-data
-    group: buildbot
-    mode: 0755
-    recurse: yes
-
-- name: copy buildbot config
-  template:
-    src: "{{ buildbot_config_template }}"
-    dest: /usr/local/src/buildbot/masters/master/master.cfg
-    mode: 0640
-    owner: buildbot
-    group: root
-  notify: buildbot | restart
 
 ...

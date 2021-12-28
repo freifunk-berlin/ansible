@@ -1,1 +1,3 @@
 buildbot_config_template: "buildbot-master.cfg.j2"
+
+buildbot_version: "3.4.0"
