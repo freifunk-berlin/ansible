@@ -101,5 +101,18 @@
     user: root
     cron_file: ansible_fwselector_update
 
+- name: copy extra files
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src
+    mode: 0700
+    owner: root
+    group: root
+  with_items:
+    - clear_target.sh
+    - packagefeed_master.pub
+    - packagefeed_master.sec
+    - sign_packages.sh
+    - sign_packages_test.sh
 
 ...

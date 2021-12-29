@@ -7,3 +7,5 @@
 
 - name: buildbot | initialise
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
+  become_user: buildbot
+
