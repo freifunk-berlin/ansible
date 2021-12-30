@@ -107,16 +107,6 @@ cmd_masterchmod = MasterShellCommand(
         upload_directory
     ])
 
-cmd_masterchown = MasterShellCommand(
-    name="make dir accessible",
-    command=[
-        "chown",
-        "-R",
-        "www-data:buildbot",
-        upload_directory
-    ]
-)
-
 cmd_cleanup = RemoveDirectory(
     dir="build/falter-builter",
     alwaysRun=True
@@ -154,7 +144,6 @@ image_factory = BuildFactory([
     cmd_make,
     cmd_uploadPackages,
     cmd_masterchmod,
-    cmd_masterchown,
     cmd_create_release_dir,
     cmd_rsync_release,
     cmd_cleanup
