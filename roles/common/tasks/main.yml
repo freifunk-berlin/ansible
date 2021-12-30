@@ -6,6 +6,7 @@
     name:
       - atop
       - htop
+      - curl
       - git
       - nano
       - mosh
