@@ -1,7 +1,4 @@
 ---
-# dependency: role webserver before
-# modify webserver to buildbot-environment
-
 - name: install python virtual-env
   apt:
     name: virtualenv
@@ -29,7 +26,8 @@
     virtualenv: /usr/local/src/buildbot/env
   notify: buildbot | initialise
 
-- meta: flush_handlers
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: copy buildsteps
   copy:
@@ -40,8 +38,8 @@
     group: root
   notify: buildbot | restart
   with_items:
-   - buildsteps_feed.py
-   - buildsteps_image.py
+    - buildsteps_feed.py
+    - buildsteps_image.py
 
 - name: copy buildbot config
   template:
