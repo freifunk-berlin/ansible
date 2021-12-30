@@ -1,5 +1,4 @@
 ---
-# modify webserver to buildbot-environment
 - name: install python virtual-env
   apt:
     name: virtualenv
@@ -7,19 +6,58 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: checkout buildbot-config
-  git:
-    repo: 'https://github.com/Freifunk-Spalter/buildbot.git'
-    dest: /usr/local/src/buildbot/
-    version: master
+- name: create directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: buildbot
+    group: www-data
+    mode: 0755
+    recurse: yes
+  with_items:
+    - /usr/local/src/www/htdocs/buildbot/
+    - /usr/local/src/buildbot
+    - /usr/local/src/www/htdocs/.well-known/
 
 - name: install buildbot in venv
   pip:
-    name: buildbot
+    name: buildbot[bundle]
+    version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
-  
-- name: initialise buildbot-master
-  command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
+  notify: buildbot | initialise
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: copy buildsteps
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src/buildbot/masters/master/
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
+  with_items:
+    - buildsteps_feed.py
+    - buildsteps_image.py
+
+- name: copy buildbot config
+  template:
+    src: "{{ buildbot_config_template }}"
+    dest: /usr/local/src/buildbot/masters/master/master.cfg
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
+
+- name: apply workers-credentials
+  template:
+    dest: /usr/local/src/buildbot/masters/master/worker.py
+    src: worker.py.j2
+    mode: 0764
+    owner: buildbot
+    group: root
+  notify: buildbot | restart
 
 - name: add buildbot systemd-service-module
   copy:
@@ -30,6 +68,8 @@
       Description=Buildbot-master for Freifunk-Berlin
 
       [Service]
+      User=buildbot
+      Group=buildbot
       WorkingDirectory=/usr/local/src/buildbot/masters/master
       Environment=PATH=/usr/local/src/buildbot/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
       ExecStart=/usr/local/src/buildbot/env/bin/buildbot start --nodaemon
@@ -37,47 +77,39 @@
 
       [Install]
       WantedBy=multi-user.target
+  notify: buildbot | restart
 
-- name: enable and start buildbot systemd service
-  systemd:
-    daemon_reload: yes
-    name: buildbot
-    enabled: true
-    state: started
+- name: firmware-selector initialised already?
+  stat:
+    path: /usr/local/src/www/htdocs/firmware-selector
+  register: fw_selector
 
 - name: checkout firmware-selector
   git:
-    repo: 'https://github.com/Freifunk-Spalter/falter-firmware-selector.git'
+    repo: 'https://github.com/freifunk-berlin/falter-firmware-selector.git'
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
+  when: not fw_selector.stat.exists
 
-- name: remove 'default'-site in nginx
-  file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
+- name: insert cronjob for firmware-selector
+  cron:
+    name: update snapshots in firmware-selector regularily.
+    minute: "*/10"
+    job: /usr/local/src/www/htdocs/firmware-selector/get_profiles_local.sh
+    user: root
+    cron_file: ansible_fwselector_update
 
-- name: configure vhosts in nginx
+- name: copy extra files
   copy:
-    src: "files/nginx-config/sites-available/{{ item }}"
-    dest: "/etc/nginx/sites-available/{{ item }}"
+    src: "{{ item }}"
+    dest: /usr/local/src
+    mode: 0700
+    owner: buildbot
+    group: root
   with_items:
-    - buildbot.berlin.freifunk.net.conf
-    - firmware.berlin.freifunk.net.conf
-    - selector.berlin.freifunk.net.conf
-
-- name: enable available sites
-  file:
-    src: "/etc/nginx/sites-available/{{ item }}"
-    dest: "/etc/nginx/sites-enabled/{{ item }}"
-    state: link
-  with_items:
-    - buildbot.berlin.freifunk.net.conf
-    - firmware.berlin.freifunk.net.conf
-    - selector.berlin.freifunk.net.conf
-
-- name: restart nginx to apply changes
-  systemd:
-    name: nginx
-    state: restarted
+    - clear_target.sh
+    - packagefeed_master.pub
+    - packagefeed_master.sec
+    - sign_packages.sh
 
 ...

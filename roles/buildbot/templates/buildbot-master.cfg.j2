@@ -1,0 +1,264 @@
+# -*- python -*-
+# ex: set filetype=python:
+
+import re
+
+c = BuildmasterConfig = {}
+
+c['title'] = "Freifunk-Berlin"
+c['titleURL'] = "https://berlin.freifunk.net"
+c['buildbotURL'] = "https://buildbot.berlin.freifunk.net/"
+c['db_url'] = "sqlite:///state.sqlite"
+c['buildbotNetUsageData'] = 'basic'
+
+# Workers
+from worker import build_worker, workernames
+c['workers'] = build_worker
+
+
+targets_2102_snapshot = [
+    "ath79/generic",
+    "ath79/mikrotik",
+    "ipq40xx/generic",
+    "ipq40xx/mikrotik",
+    "ramips/mt7621",
+    "mpc85xx/p1010"
+]
+
+# tragets since openwrt-21.02
+targets_2102 = [
+    "ath79/nand",
+    "bcm27xx/bcm2708",
+    "bcm27xx/bcm2709",
+    "bcm27xx/bcm2710",
+    "bcm27xx/bcm2711",
+    "bcm47xx/generic",
+    "bcm47xx/legacy",
+    "bcm47xx/mips74k",
+    "bcm53xx/generic",
+    "bcm63xx/generic",
+    "bcm63xx/smp",
+    "ipq806x/generic",
+    "lantiq/ase",
+    "lantiq/xrx200",
+    "lantiq/xway",
+    "lantiq/xway_legacy",
+    "mediatek/mt7622",
+    "mediatek/mt7623",
+    "mediatek/mt7629",
+    "mpc85xx/p1020",
+    "mpc85xx/p2020",
+    "octeon/generic",
+    "ramips/mt7620",
+    "ramips/mt76x8",
+    "x86/64",
+    "x86/generic",
+    "x86/geode",
+    "x86/legacy"
+] + targets_2102_snapshot
+
+
+# builder-names correspond to branches in falter-packages-repository.
+feed_builders = [
+    "master",
+    "openwrt-21.02",
+    "upstream/21.02-perry",
+    "feed_testbranch"
+    ]
+
+
+
+##################
+#   Schedulers   #
+##################
+from buildbot.schedulers.basic import SingleBranchScheduler
+from buildbot.schedulers.forcesched import ForceScheduler
+from buildbot.changes import filter
+from buildbot.schedulers.timed import Periodic
+from buildbot.plugins import schedulers, steps, util
+
+c['schedulers'] = []
+
+# compile new feed for 'master' when triggered via webhook
+c['schedulers'].append(SingleBranchScheduler(
+        name="build_packagefeed_master",
+        change_filter=filter.ChangeFilter(
+            branch="master"),
+        treeStableTimer=600,
+        builderNames=["master"]
+    )
+)
+
+# compile new feed for 'openwrt-21.02' when triggered via webhook
+c['schedulers'].append(SingleBranchScheduler(
+        name="build_packagefeed_openwrt2102",
+        change_filter=filter.ChangeFilter(
+            branch="openwrt-21.02"),
+        treeStableTimer=600,
+        builderNames=["openwrt-21.02"]
+    )
+)
+
+# compile new feed for 'feed_testbranch' when triggered via webhook
+c['schedulers'].append(SingleBranchScheduler(
+        name="build_packagefeed_testbranch",
+        change_filter=filter.ChangeFilter(
+            branch="feed_testbranch"),
+        treeStableTimer=300,
+        builderNames=["feed_testbranch"]
+    )
+)
+
+# compile perrys personal branch
+c['schedulers'].append(SingleBranchScheduler(
+        name="build_packagefeed_perry",
+        change_filter=filter.ChangeFilter(
+            branch="upstream/21.02-perry"),
+        treeStableTimer=30,
+        builderNames=["upstream/21.02-perry"]
+    )
+)
+
+c['schedulers'].append(Periodic(
+    name="build snapshots every two days",
+    branch="master",
+    builderNames=targets_2102_snapshot,
+    periodicBuildTimer=2*24*60*60
+    )
+)
+
+c['schedulers'].append(Periodic(
+    name="build 1.2.0-snapshots every three days",
+    branch="master",
+    builderNames=targets_2102_snapshot,
+    properties={"falterVersion": "1.2.0-snapshot"},
+    periodicBuildTimer=3*24*60*60
+    )
+)
+
+# force building button for image-builders
+c['schedulers'].append(
+        ForceScheduler(
+        name="force_building_images",
+        builderNames=targets_2102
+        )
+        )
+
+# force building button for feed-builders
+c['schedulers'].append(
+    ForceScheduler(
+        name="force_building_packagefeed",
+        builderNames=feed_builders
+        )
+    )
+
+# triggerable schedulers for snapshots
+c['schedulers'].append(
+    schedulers.Triggerable(
+        name="trigger_snapshots",
+        builderNames=targets_2102_snapshot
+    )
+)
+
+# triggerable schedulers for releases
+c['schedulers'].append(
+    schedulers.Triggerable(
+        name="trigger_release",
+        builderNames=targets_2102
+    )
+)
+
+
+################
+#   BUILDERS   #
+################
+
+from buildbot.process.factory import BuildFactory
+from buildbot.config import BuilderConfig
+from buildbot.steps.source.git import Git
+from buildbot.steps.shell import ShellCommand
+from buildbot.steps.transfer import DirectoryUpload
+from buildbot.steps.master import MasterShellCommand
+from buildbot.process.properties import Interpolate, renderer
+from buildbot.steps.worker import RemoveDirectory
+from datetime import date
+
+# define buildsteps and factories in seperate files
+from buildsteps_image import *
+from buildsteps_feed import *
+
+c['builders'] = list(map(create_builder_config, targets_2102))
+c['builders'].extend(list(map(create_feed_builder, feed_builders)))
+
+
+
+#####################
+#   Web-Interface   #
+#####################
+
+c['www'] = dict(
+        port=8010,
+        plugins=dict(waterfall_view={}, console_view={}, grid_view={}),
+        change_hook_dialects={
+    'github': {
+        'secret': 'c3600bf6160cf2c8536b260111b97a339',
+        'strict': True
+        }
+    }
+)
+
+c['protocols'] = { 'pb': { 'port': 9989 } }
+
+###########
+# Janitor #
+###########
+from datetime import timedelta
+
+# configure a janitor which will delete all logs older than one month,
+# and will run on sundays at noon
+c['configurators'] = [util.JanitorConfigurator(
+    logHorizon=timedelta(weeks=4),
+    hour=6,
+    dayOfWeek=1
+)]
+
+
+# STATUS TARGETS
+#from buildbot.status import html
+#from buildbot.status.web import authz
+#from buildbot.status import words
+#from buildbot.status.mail import MailNotifier
+#
+#c['status'] = []
+#c['status'].append(html.WebStatus(
+#    http_port=8010,
+#    change_hook_dialects={'github': True},
+#    authz=authz.Authz(
+#        gracefulShutdown=False,
+#        forceBuild=True,
+#        forceAllBuilds=False,
+#        pingBuilder=False,
+#        stopBuild=False,
+#        stopAllBuilds=False,
+#        cancelPendingBuild=False,
+#        )
+#    )
+#    )
+#c['status'].append(words.IRC(
+#    "irc.freenode.net",
+#    "freifunkbuildbot",
+#    channels=["#freifunk-berlin"],
+#    notify_events={
+#        'exception':        1,
+#        'successToFailure': 1,
+#        'failureToSuccess': 1,
+#        }
+#    )
+#    )
+#
+#c['status'].append(
+#    MailNotifier(
+#        fromaddr="buildbot@buildbot.berlin.freifunk.net",
+#        mode="change"
+#        )
+#    )

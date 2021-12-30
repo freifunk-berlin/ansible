@@ -10,16 +10,20 @@
     - common
     - ryandaniels.create_users
 
-- name: install webservers
-  hosts: webserver
-  become: true
-
-  roles:
-    - webserver
-
 - name: set up buildbot environment
   hosts: buildbot
   become: true
-
   roles:
     - buildbot
+    - geerlingguy.nginx
+    - systemli.letsencrypt
+
+#- name: set up config server
+#  hosts:  config
+#  become: true
+#  roles:
+#    - webserver
+#    - nipap
+#    - config_wizard
+#    - geerlingguy.nginx
+#    - systemli.letsencrypt
