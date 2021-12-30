@@ -16,8 +16,3 @@ for LIST in $PACKAGE_LISTS; do
         echo "$LIST"
         signify-openbsd -S -m "$LIST" -s "$KEY"
 done
-
-SIGNATURES=$(find -name "Packages.sig")
-for SIG in $SIGNATURES; do
-        chown www-data:buildbot $SIG
-done
