@@ -5,10 +5,11 @@ import re
 
 c = BuildmasterConfig = {}
 
-c['title'] = "Freifunk-Berlin Falter"
+c['title'] = "Freifunk-Berlin"
 c['titleURL'] = "https://berlin.freifunk.net"
 c['buildbotURL'] = "https://buildbot.berlin.freifunk.net/"
 c['db_url'] = "sqlite:///state.sqlite"
+c['buildbotNetUsageData'] = 'basic'
 
 # Workers
 from worker import build_worker, workernames

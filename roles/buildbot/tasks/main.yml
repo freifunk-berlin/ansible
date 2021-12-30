@@ -106,7 +106,7 @@
     src: "{{ item }}"
     dest: /usr/local/src
     mode: 0700
-    owner: root
+    owner: buildbot
     group: root
   with_items:
     - clear_target.sh

@@ -3,25 +3,14 @@
 
 nginx_remove_default_vhost: true
 
+nginx_extra_http_options: |
+  ssl_protocols       TLSv1.2 TLSv1.3;
+  ssl_ciphers         HIGH:!aNULL:!MD5;
+
 nginx_vhosts:
-# Example vhost below, showing all available options:
-# - listen: "80" # default: "80"
-#   server_name: "example.com" # default: N/A
-#   root: "/var/www/example.com" # default: N/A
-#   index: "index.html index.htm" # default: "index.html index.htm"
-#   filename: "example.com.conf" # Can be used to set the vhost filename.
-#
-#   # Properties that are only added if defined:
-#   server_name_redirect: "www.example.com" # default: N/A
-#   error_page: ""
-#   access_log: ""
-#   error_log: ""
-#   extra_parameters: "" # Can be used to add extra config blocks (multiline).
-#   template: "" # Can be used to override the `nginx_vhost_template` per host.
-#   state: "absent" # To remove the vhost configuration.
 
   - listen: "80"
-    server_name: "buildbot.berlin.freifunk.net buildbot.wc.xn--t-lffel-c1a.de"
+    server_name: "buildbot.berlin.freifunk.net"
     root: "/usr/local/src/www/htdocs"
     index: "index.html index.htm"
     extra_parameters: |
@@ -49,8 +38,39 @@ nginx_vhosts:
       }
     filename: "buildbot.berlin.freifunk.net.conf"
 
+  - listen: "443 ssl http2"
+    server_name: "buildbot.berlin.freifunk.net"
+    root: "/usr/local/src/www/htdocs"
+    index: "index.html index.htm"
+    extra_parameters: |
+      location ~ ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
+      location / {
+        include proxy_params;
+        proxy_pass http://localhost:8010;
+      }
+
+      # Server sent event (sse) settings
+      location /sse {
+        proxy_buffering off;
+        proxy_pass http://localhost:8010;
+      }
+
+      # Websocket settings
+      location /ws {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_pass http://localhost:8010;
+        proxy_read_timeout 6000s;
+      }
+      ssl_certificate     /etc/letsencrypt/live/buildbot/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/buildbot/privkey.pem;
+    filename: "buildbot.berlin.freifunk.net-ssl.conf"
+
   - listen: "80"
-    server_name: "firmware.berlin.freifunk.net firmware.wc.xn--t-lffel-c1a.de"
+    server_name: "firmware.berlin.freifunk.net"
     root: "/usr/local/src/www/htdocs/buildbot"
     index: "index index.html index.htm"
     extra_parameters: |
@@ -61,8 +81,23 @@ nginx_vhosts:
       }
     filename: "firmware.berlin.freifunk.net.conf"
 
+  - listen: "443 ssl http2"
+    server_name: "firmware.berlin.freifunk.net"
+    root: "/usr/local/src/www/htdocs/buildbot"
+    index: "index index.html index.htm"
+    extra_parameters: |
+      autoindex on;
+
+      location ~ ^/.well-known {
+        root /usr/local/src/www/htdocs/;
+      }
+
+      ssl_certificate     /etc/letsencrypt/live/buildbot/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/buildbot/privkey.pem;
+    filename: "firmware.berlin.freifunk.net-ssl.conf"
+
   - listen: "80"
-    server_name: "selector.berlin.freifunk.net selector.wc.xn--t-lffel-c1a.de"
+    server_name: "selector.berlin.freifunk.net"
     root: "/usr/local/src/www/htdocs/firmware-selector/www"
     index: "index.html"
     extra_parameters: |
@@ -75,7 +110,7 @@ nginx_vhosts:
     filename: "selector.berlin.freifunk.net.conf"
 
   - listen: "443 ssl http2"
-    server_name: "selector.berlin.freifunk.net selector.wc.xn--t-lffel-c1a.de"
+    server_name: "selector.berlin.freifunk.net"
     root: "/usr/local/src/www/htdocs/firmware-selector/www"
     index: "index.html"
     extra_parameters: |
@@ -87,16 +122,14 @@ nginx_vhosts:
       }
       ssl_certificate     /etc/letsencrypt/live/buildbot/fullchain.pem;
       ssl_certificate_key /etc/letsencrypt/live/buildbot/privkey.pem;
-      ssl_protocols       TLSv1.2 TLSv1.3;
-      ssl_ciphers         HIGH:!aNULL:!MD5;
     filename: "selector.berlin.freifunk.net-ssl.conf"
 
 letsencrypt_cert:
   name: buildbot
   domains:
-    - buildbot.wc.xn--t-lffel-c1a.de
-    - firmware.wc.xn--t-lffel-c1a.de
-    - selector.wc.xn--t-lffel-c1a.de
+    - buildbot.berlin.freifunk.net
+    - firmware.berlin.freifunk.net
+    - selector.berlin.freifunk.net
   challenge: http
   http_auth: webroot
   webroot_path: /usr/local/src/www/htdocs/
