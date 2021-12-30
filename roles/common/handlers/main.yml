@@ -1,0 +1,5 @@
+- name: collectd | restart
+  ansible.builtin.service:
+    name: collectd
+    enabled: yes
+    state: restarted

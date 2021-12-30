@@ -4,21 +4,26 @@
 - name: apply common configuration
   hosts: all
   become: true
-
+  vars_files:
+    - inventory/group_vars/users
   roles:
     - common
-
-- name: install webservers
-  hosts: webserver
-  become: true
-
-  roles:
-    - webserver
+    - ryandaniels.create_users
 
 - name: set up buildbot environment
-  hosts: vagrant.vm
+  hosts: buildbot
   become: true
-
   roles:
     - buildbot
-...
+    - geerlingguy.nginx
+    - systemli.letsencrypt
+
+#- name: set up config server
+#  hosts:  config
+#  become: true
+#  roles:
+#    - webserver
+#    - nipap
+#    - config_wizard
+#    - geerlingguy.nginx
+#    - systemli.letsencrypt

@@ -4,21 +4,33 @@
 - name: install basic tools
   apt:
     name:
+      - atop
       - htop
       - git
       - nano
       - mosh
       - tmux
       - zsh
+      - collectd
     state: present
     update_cache: true
-    cache_valid_time: 3600
 
-- name: make python3 standard
-  file:
-    src: /usr/bin/python3
-    dest: /usr/bin/python
+# Collectd config
+- name: collectd config
+  template:
+    src: collectd-ffberlin.conf.j2
+    dest: /etc/collectd/collectd.conf.d/ffberlin.conf
+    mode: 0640
     owner: root
     group: root
-    state: link
-...
+  notify: collectd | restart
+
+
+# Todo: we should use community.general.alternatives for this, OTOH debian 11 does not install python3 as a default anymore, so this  might be irrelevant
+#- name: make python3 standard
+#  file:
+#    src: /usr/bin/python3
+#    dest: /usr/bin/python
+#    owner: root
+#    group: root
+#    state: link
