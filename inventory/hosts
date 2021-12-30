@@ -1,8 +1,2 @@
-#vagrant.vm
-
-[webserver]
-#vagrant.vm
-
-
 [buildbot]
-65.108.82.158 # testvm
+buildbot.berlin.freifunk.net
