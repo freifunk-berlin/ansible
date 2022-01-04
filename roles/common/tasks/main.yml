@@ -5,14 +5,15 @@
   apt:
     name:
       - atop
-      - htop
+      - collectd
       - curl
+      - fail2ban
       - git
-      - nano
+      - htop
       - mosh
+      - nano
       - tmux
       - zsh
-      - collectd
     state: present
     update_cache: true
 
@@ -25,6 +26,15 @@
     owner: root
     group: root
   notify: collectd | restart
+
+- name: configure fail2ban-jails
+  template:
+    src: fail2ban-ffberlin.local.j2
+    dest: /etc/fail2ban/jail.local
+    mode: 0640
+    owner: root
+    group: root
+  notify: fail2ban | restart
 
 
 # Todo: we should use community.general.alternatives for this, OTOH debian 11 does not install python3 as a default anymore, so this  might be irrelevant

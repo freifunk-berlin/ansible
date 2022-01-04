@@ -3,3 +3,9 @@
     name: collectd
     enabled: yes
     state: restarted
+
+- name: fail2ban | restart
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: restarted
