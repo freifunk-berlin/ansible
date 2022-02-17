@@ -1,10 +1,19 @@
 ---
 - name: install python virtual-env
   apt:
-    name: virtualenv
+    name:
+      - virtualenv
+      - git
     state: present
     update_cache: true
     cache_valid_time: 3600
+
+- name: create buildbot user
+  ansible.builtin.user:
+    name: buildbot
+    comment: buildbot application user
+    create_home: no
+    home: /usr/local/src/buildbot
 
 - name: create directories
   file:
