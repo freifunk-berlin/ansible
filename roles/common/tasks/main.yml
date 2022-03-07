@@ -36,6 +36,13 @@
     group: root
   notify: fail2ban | restart
 
+- name: copy custom motd
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    mode: 0640
+    owner: root
+    group: root
 
 # Todo: we should use community.general.alternatives for this, OTOH debian 11 does not install python3 as a default anymore, so this  might be irrelevant
 #- name: make python3 standard
