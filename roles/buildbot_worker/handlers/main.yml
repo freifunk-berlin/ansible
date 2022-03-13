@@ -1,0 +1,12 @@
+- name: buildbot-worker | restart
+  systemd:
+    daemon_reload: yes
+    name: buildbot-worker
+    enabled: true
+    state: restarted
+
+- name: buildbot-worker | initialise
+  command: buildbot-worker create-worker --umask=0o22 {{ bbworker_dir }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}
+  args:
+    chdir: /home/{{ machine_user }}/
+  become_user: bbworker

@@ -18,6 +18,12 @@
     - geerlingguy.nginx
     - systemli.letsencrypt
 
+- name: set up buildbot workers
+  hosts: buildbotworker
+  become: true
+  roles:
+    - buildbot_worker
+
 - name: set up config server
   hosts: configserver
   vars_files:

@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Buildbot-worker for Freifunk-Berlin
+After=network.target
+
+[Service]
+User=bbworker
+Group=bbworker
+WorkingDirectory=/home/{{ machine_user }}/{{ bbworker_dir }}
+ExecStart=/usr/local/bin/buildbot-worker start --nodaemon
+
+[Install]
+WantedBy=multi-user.target
