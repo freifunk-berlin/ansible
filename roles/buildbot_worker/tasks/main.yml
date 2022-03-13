@@ -1,0 +1,99 @@
+---
+
+- name: install dependencies for falter build system and openwrt
+  apt:
+    name:
+      - curl
+      - python3-pip
+      - rsync
+      - build-essential
+      - ccache
+      - ecj
+      - fastjar
+      - file
+      - g++
+      - gawk
+      - gettext
+      - git
+      - java-propose-classpath
+      - libelf-dev
+      - libncurses5-dev
+      - libncursesw5-dev
+      - libssl-dev
+      - python
+      - python2.7-dev
+      - python3
+      - unzip
+      - wget
+      - python3-distutils
+      - python3-setuptools
+      - python3-dev
+      - rsync
+      - subversion
+      - sqlite3
+      - swig
+      - time
+      - xsltproc
+      - zlib1g-dev
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: create unpriviliged user for buildbot
+  user:
+    name: "{{ machine_user }}"
+
+- name: install docker and add user
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_package_state: present
+    docker_users:
+      - "{{ machine_user }}"
+
+- name: install buildbot-worker
+  pip:
+    name:
+      - buildbot-worker
+      - docker-hub
+    state: present
+  notify: buildbot-worker | initialise
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: add workers admin-info
+  template:
+    dest: /home/{{ machine_user }}/{{ bbworker_dir }}/info/admin
+    src: admin.j2
+    mode: '0644'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+
+- name: add worker descriptopn
+  template:
+    dest: /home/{{ machine_user }}/{{ bbworker_dir }}/info/host
+    src: host.j2
+    mode: '0644'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+  notify: buildbot-worker | restart
+
+- name: adjust permissions on buildbot-worker description
+  ansible.builtin.file:
+    path: /home/{{ machine_user }}/{{ bbworker_dir }}/
+    state: directory
+    mode: '0744'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+    recurse: yes
+  notify: buildbot-worker | restart
+
+- name: add buildbot-worker systemd-service-module
+  template:
+    dest: /etc/systemd/system/buildbot-worker.service
+    src: systemd-unit.j2
+    mode: '0644'
+    owner: root
+    group: root
+  notify: buildbot-worker | restart

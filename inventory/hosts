@@ -3,3 +3,8 @@ buildbot.berlin.freifunk.net
 
 [configserver]
 config-dev.berlin.freifunk.net
+
+[buildbotworker]
+85.215.202.123 # buildbot.worker.01
+85.215.248.194 # buildbot.worker.02
+# 85.215.225.21 #buildbot.worker.03

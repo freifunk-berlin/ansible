@@ -1,0 +1,8 @@
+bbmaster_fqdn: buildbot.berlin.freifunk.net
+bbmaster_port: 9989
+
+bbworker_dir: buildbot_worker/
+bbworker_contact: info {æt} berlin.freifunk.net
+bbworker_info: Worker administered by ffb-ansible-repo
+
+machine_user: bbworker
