@@ -1,7 +1,7 @@
 ---
 roles:
   - src: ryandaniels.create_users
-    version: 1.0.6
+    version: 1.0.7
   - src: geerlingguy.nginx
     version: 3.1.0
   - src: systemli.letsencrypt
