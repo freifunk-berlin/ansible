@@ -9,6 +9,8 @@
       - curl
       - fail2ban
       - git
+      - gpg
+      - gpg-agent
       - htop
       - mosh
       - nano

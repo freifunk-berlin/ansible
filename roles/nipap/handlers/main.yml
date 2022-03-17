@@ -1,0 +1,6 @@
+- name: nipapd | restart
+  systemd:
+    daemon_reload: yes
+    name: nipapd
+    enabled: true
+    state: restarted

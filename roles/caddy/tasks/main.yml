@@ -1,0 +1,29 @@
+---
+- name: Add caddy apt key
+  ansible.builtin.apt_key:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    state: present
+
+- name: Add caddy repo
+  ansible.builtin.apt_repository:
+    repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    state: present
+
+- name: install dependencies
+  apt:
+    name:
+      - caddy
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: copy caddyfile
+  template:
+    dest: /etc/caddy/Caddyfile
+    src: "{{ caddy_caddyfile }}"
+    mode: 0640
+    owner: caddy
+    group: caddy
+  notify: caddy | restart
+
+...

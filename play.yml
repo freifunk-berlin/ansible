@@ -18,12 +18,11 @@
     - geerlingguy.nginx
     - systemli.letsencrypt
 
-#- name: set up config server
-#  hosts:  config
-#  become: true
-#  roles:
-#    - webserver
-#    - nipap
-#    - config_wizard
-#    - geerlingguy.nginx
-#    - systemli.letsencrypt
+- name: set up config server
+  hosts: configserver
+  become: true
+  roles:
+    - nipap
+    - caddy
+    - ff_wizard
+# email!
