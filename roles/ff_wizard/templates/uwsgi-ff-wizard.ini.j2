@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+[uwsgi]
+plugins = python
+#http-socket = /run/uwsgi/app/ff-wizard/socket
+http-socket = 127.0.0.1:8123
+chmod-socket=640
+chown-socket = caddy:caddy
+logto = /tmp/wizard-config.berlin.freifunk.net.log
+master = true
+processes = 2
+pythonpath = /var/www/nipap-wizard/env/lib/python2.7/site-packages/
+chdir = /var/www/nipap-wizard
+uid = www-data
+gid = www-data
+module = manage:app
+hook-asap = exec:mkdir -m 777 -p /run/uwsgi/app/%n/

@@ -1,0 +1,67 @@
+---
+- name: install dependencies
+  apt:
+    name:
+      - uwsgi
+      - uwsgi-plugin-python
+      - postgresql-server-dev-11
+      - libpq-dev
+      - python-virtualenv
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: copy uwsgi app config
+  template:
+    dest: /etc/uwsgi/apps-enabled/ff-wizard.ini
+    src: uwsgi-ff-wizard.ini.j2
+    mode: 0640
+    owner: root
+    group: root
+  notify: uwsgi | restart
+
+- name: create directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: www-data
+    group: www-data
+    mode: 0750
+  with_items:
+    - /var/www/nipap-wizard
+    - /var/log/nipap-wizard/
+
+- name: checkout ff-wizard
+  become_user: "www-data"
+  git:
+    repo: 'https://github.com/freifunk-berlin/config.berlin.freifunk.net.git'
+    version: change_dependencies
+    dest: /var/www/nipap-wizard
+    force: yes
+  notify: uwsgi | restart
+
+- name: copy ff-wizard config
+  template:
+    dest: /etc/uwsgi/apps-enabled/ff-wizard.ini
+    src: uwsgi-ff-wizard.ini.j2
+    mode: 0640
+    owner: root
+    group: root
+  notify: uwsgi | restart
+
+- name: install nipap in venv
+  pip:
+    requirements: /var/www/nipap-wizard/requirements.txt
+    virtualenv: /var/www/nipap-wizard/env
+    virtualenv_command: virtualenv --python=python2.7
+    virtualenv_python: python2.7
+  notify: uwsgi | restart
+
+- name: set owner
+  file:
+    state: directory
+    path: /var/www/nipap-wizard/
+    owner: www-data
+    group: www-data
+    recurse: yes
+...
