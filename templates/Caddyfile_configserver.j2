@@ -3,7 +3,7 @@
     file_server /static/* {
         root /var/www/nipap-wizard/app/
     }
-    reverse_proxy * unix//run/uwsgi/app/ff-wizard/socket
+    reverse_proxy * http://127.0.0.1:8123
   }
 }
 

@@ -5,11 +5,38 @@
       - uwsgi
       - uwsgi-plugin-python
       - postgresql-server-dev-11
+      - postgresql-11
       - libpq-dev
       - python-virtualenv
     state: present
     update_cache: true
     cache_valid_time: 3600
+
+- name: Create wizard db
+  remote_user: root
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: wizard
+    owner: wizard
+
+- name: create wizard db user
+  remote_user: root
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: wizard
+    password: "{{ ff_wizard_db_pass }}"
+
+- name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
+  remote_user: root
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_privs:
+    db: wizard
+    privs: ALL
+    type: database
+    roles: wizard
 
 - name: copy uwsgi app config
   template:
@@ -28,7 +55,7 @@
     group: www-data
     mode: 0750
   with_items:
-    - /var/www/nipap-wizard
+    - /var/www/nipap-wizard/
     - /var/log/nipap-wizard/
 
 - name: checkout ff-wizard
@@ -42,11 +69,11 @@
 
 - name: copy ff-wizard config
   template:
-    dest: /etc/uwsgi/apps-enabled/ff-wizard.ini
-    src: uwsgi-ff-wizard.ini.j2
+    dest: /var/www/nipap-wizard/config.cfg
+    src: wizard-config.cfg.j2
     mode: 0640
-    owner: root
-    group: root
+    owner: www-data
+    group: www-data
   notify: uwsgi | restart
 
 - name: install nipap in venv

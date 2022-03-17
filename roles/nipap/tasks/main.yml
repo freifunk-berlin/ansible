@@ -38,13 +38,24 @@
   become_user: postgres
   community.postgresql.postgresql_db:
     name: nipap
+    owner: nipap
 
 - name: create nipap db user
   remote_user: root
   become: yes
   become_user: postgres
   community.postgresql.postgresql_user:
-    db: nipap
     name: nipap
     password: "{{ nipap_db_password }}"
+
+- name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
+  remote_user: root
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_privs:
+    db: nipap
+    privs: ALL
+    type: database
+    roles: nipap,wizard
+
 ...

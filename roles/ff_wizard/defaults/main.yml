@@ -1,4 +1,5 @@
 ---
 ff_wizard_secret: changeme
-ff_wizard_connectionstring: "postgresql://wizard:changeme@127.0.0.1:5432/wizard"
+ff_wizard_connectionstring: "postgresql://wizard:{{ff_wizard_db_pass}}@127.0.0.1:5432/wizard"
+ff_wizard_db_pass: changeme
 ff_wizard_api_pass: changeme
