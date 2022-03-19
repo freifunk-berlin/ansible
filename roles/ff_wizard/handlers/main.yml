@@ -4,3 +4,10 @@
     name: uwsgi
     enabled: true
     state: restarted
+
+- name: postfix | restart
+  systemd:
+    daemon_reload: yes
+    name: uwsgi
+    enabled: true
+    state: restarted
