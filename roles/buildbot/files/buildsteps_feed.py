@@ -21,7 +21,7 @@ def is_no_release(step):
 
 
 feed_checkoutSource = Git(
-    repourl='git://github.com/freifunk-berlin/falter-repo_builder',
+    repourl='https://github.com/freifunk-berlin/falter-repo_builder',
     branch="master",   # this can get changed by html.WebStatus.change_hook()
                        # by notification from GitHub of a commit
     workdir="build",
