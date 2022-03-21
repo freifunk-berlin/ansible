@@ -1,2 +1,5 @@
 [buildbot]
 buildbot.berlin.freifunk.net
+
+[configserver]
+config-dev.berlin.freifunk.net
