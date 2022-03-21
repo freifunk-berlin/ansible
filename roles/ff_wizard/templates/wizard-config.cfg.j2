@@ -8,6 +8,7 @@ LOG_FILE_PATH='/var/log/nipap-wizard/wizard.log'
 SECRET_KEY = '{{ ff_wizard_secret }}'
 
 SQLALCHEMY_DATABASE_URI = '{{ ff_wizard_connectionstring }}'
+SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 MAIL_FROM = 'no-reply@config.berlin.freifunk.net'
 
@@ -26,10 +27,10 @@ API_POOL_IPV6 = [
   u'Wahlkreis 78, Spandau - Charlottenburg Nord',
   u'Wahlkreis 79, Steglitz - Zehlendorf',
   u'Wahlkreis 80, Charlottenburg - Wilmersdorf',
-  u'Wahlkreis 81, Tempelhof - Schöneberg',
-  u'Wahlkreis 82, Neukölln',
+  u'Wahlkreis 81, Tempelhof - Schoeneberg',
+  u'Wahlkreis 82, Neukoelln',
   u'Wahlkreis 83, Friedrichshain - Kreuzberg - Prenzlauer Berg Ost',
-  u'Wahlkreis 84, Treptow - Köpenick',
+  u'Wahlkreis 84, Treptow - Koepenick',
   u'Wahlkreis 85, Marzahn - Hellersdorf',
   u'Wahlkreis 86, Lichtenberg'
 ]

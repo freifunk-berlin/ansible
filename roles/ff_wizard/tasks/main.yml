@@ -72,7 +72,7 @@
   become_user: "www-data"
   git:
     repo: 'https://github.com/freifunk-berlin/config.berlin.freifunk.net.git'
-    version: change_dependencies
+    version: master
     dest: /var/www/nipap-wizard
     force: yes
   notify: uwsgi | restart
