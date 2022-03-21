@@ -20,9 +20,10 @@
 
 - name: set up config server
   hosts: configserver
+  vars_files:
+    - inventory/group_vars/configserver
   become: true
   roles:
     - nipap
     - caddy
     - ff_wizard
-# email!
