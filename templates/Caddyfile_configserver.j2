@@ -1,4 +1,13 @@
-:80 {
+http:// {
+  route {
+    file_server /static/* {
+        root /var/www/nipap-wizard/app/
+    }
+    reverse_proxy * http://127.0.0.1:8123
+  }
+}
+
+https://config.berlin.freifunk.net  {
   route {
     file_server /static/* {
         root /var/www/nipap-wizard/app/
