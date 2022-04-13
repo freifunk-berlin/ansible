@@ -29,13 +29,15 @@ feed_checkoutSource = Git(
     mode='full'
     )
 
+artifacts_dir = Interpolate("%(prop:builddir)s/tmp/")
 
 feed_create_tmpdir = ShellCommand(
     name="create tmp dir",
     command=[
     "mkdir",
     "-p",
-    "tmp"]
+    "--mode=0777",
+    artifacts_dir]
     )
 
 
@@ -44,7 +46,7 @@ def feed_make_command(props):
     command = ['nice',
 	'./build_all_targets',
     Interpolate('src-git falter https://github.com/freifunk-berlin/falter-packages^%(prop:revision)s'),
-    Interpolate('%(prop:builddir)s/tmp'),
+    artifacts_dir,
     'build_parallel'
         ]
     return command
@@ -97,9 +99,8 @@ feed_mastermkdir = MasterShellCommand(
         ]
 )
 
-worker_src_dir = Interpolate("%(prop:builddir)s/tmp/")
 feed_uploadPackages = DirectoryUpload(
-    workersrc=worker_src_dir,
+    workersrc=artifacts_dir,
     masterdest=upload_dir
     )
 
@@ -126,7 +127,7 @@ feed_cleanup = RemoveDirectory(
     )
 
 feed_cleanup_tmp = RemoveDirectory(
-    dir=Interpolate('%(prop:builddir)s/tmp'),
+    dir=artifacts_dir,
     alwaysRun=True
 )
 
