@@ -83,7 +83,8 @@
   ansible.builtin.file:
     path: /home/{{ machine_user }}/{{ bbworker_dir }}/
     state: directory
-    mode: '0744'
+    # needs to be this high, to allow the user from within the docker-container to write the artifacts to the host.
+    mode: '0777'
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
     recurse: yes
