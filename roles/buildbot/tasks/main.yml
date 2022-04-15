@@ -120,5 +120,6 @@
     - packagefeed_master.pub
     - packagefeed_master.sec
     - sign_packages.sh
+    - generate_autoupdate_json.py
 
 ...
