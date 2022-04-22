@@ -1,5 +1,5 @@
 ---
-- name: install dependencys
+- name: install dependencies
   apt:
     name:
       - build-essential
@@ -63,7 +63,7 @@
 
 - name: install mysql dependencies in venv
   pip:
-    name: pymysql
+    name: mysqlclient
     virtualenv: /usr/local/src/buildbot/env
 
 - name: Flush handlers
