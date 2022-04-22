@@ -8,3 +8,10 @@
 - name: buildbot | initialise
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
   become_user: buildbot
+
+- name: mariadb | restart
+  systemd:
+    daemon_reload: yes
+    name: mariadb
+    enabled: true
+    state: restarted

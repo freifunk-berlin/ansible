@@ -1,12 +1,38 @@
 ---
-- name: install python virtual-env
+- name: install dependencys
   apt:
     name:
-      - virtualenv
+      - build-essential
+      - default-libmysqlclient-dev
       - git
+      - mariadb-server
+      - python3-dev
+      - python3-mysqldb
+      - virtualenv
     state: present
     update_cache: true
     cache_valid_time: 3600
+
+- name: copy mariadb server config
+  template:
+    src: "mariadb-server.cnf.j2"
+    dest: /etc/mysql/mariadb.conf.d/50-server.cnf
+    mode: 0640
+    owner: buildbot
+    group: root
+  notify: mariadb | restart
+
+- name: Create buildbot database
+  community.mysql.mysql_db:
+    name: buildbot
+    state: present
+
+- name: Create buildbot mariadb user
+  community.mysql.mysql_user:
+    name: buildbot
+    password: "{{ buildbot_mariadb_user_password }}"
+    priv: 'buildbot.*:ALL'
+    state: present
 
 - name: create buildbot user
   ansible.builtin.user:
@@ -34,6 +60,11 @@
     version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
   notify: buildbot | initialise
+
+- name: install mysql dependencies in venv
+  pip:
+    name: pymysql
+    virtualenv: /usr/local/src/buildbot/env
 
 - name: Flush handlers
   meta: flush_handlers

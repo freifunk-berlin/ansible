@@ -1,5 +1,6 @@
 # -*- python -*-
 # ex: set filetype=python:
+# {{ ansible_managed }}
 
 import re
 
@@ -8,13 +9,12 @@ c = BuildmasterConfig = {}
 c['title'] = "Freifunk-Berlin"
 c['titleURL'] = "https://berlin.freifunk.net"
 c['buildbotURL'] = "https://buildbot.berlin.freifunk.net/"
-c['db_url'] = "sqlite:///state.sqlite"
+c['db_url'] = "mysql://buildbot:{{ buildbot_mariadb_user_password }}@localhost/buildbot?max_idle=300"
 c['buildbotNetUsageData'] = 'basic'
 
 # Workers
 from worker import build_worker, workernames
 c['workers'] = build_worker
-
 
 targets_2102_snapshot = [
     "ath79/generic",
@@ -191,7 +191,6 @@ c['builders'] = list(map(create_builder_config, targets_2102))
 c['builders'].extend(list(map(create_feed_builder, feed_builders)))
 
 
-
 #####################
 #   Web-Interface   #
 #####################
@@ -222,43 +221,3 @@ c['configurators'] = [util.JanitorConfigurator(
     dayOfWeek=1
 )]
 
-
-# STATUS TARGETS
-#from buildbot.status import html
-#from buildbot.status.web import authz
-#from buildbot.status import words
-#from buildbot.status.mail import MailNotifier
-#
-#c['status'] = []
-#c['status'].append(html.WebStatus(
-#    http_port=8010,
-#    change_hook_dialects={'github': True},
-#    authz=authz.Authz(
-#        gracefulShutdown=False,
-#        forceBuild=True,
-#        forceAllBuilds=False,
-#        pingBuilder=False,
-#        stopBuild=False,
-#        stopAllBuilds=False,
-#        cancelPendingBuild=False,
-#        )
-#    )
-#    )
-#c['status'].append(words.IRC(
-#    "irc.freenode.net",
-#    "freifunkbuildbot",
-#    channels=["#freifunk-berlin"],
-#    notify_events={
-#        'exception':        1,
-#        'successToFailure': 1,
-#        'failureToSuccess': 1,
-#        }
-#    )
-#    )
-#
-#c['status'].append(
-#    MailNotifier(
-#        fromaddr="buildbot@buildbot.berlin.freifunk.net",
-#        mode="change"
-#        )
-#    )
