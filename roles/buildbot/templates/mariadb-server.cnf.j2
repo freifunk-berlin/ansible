@@ -1,0 +1,28 @@
+# {{ ansible_managed }}
+
+[server]
+
+[mysqld]
+
+user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+lc-messages             = en_US
+skip-external-locking
+
+bind-address            = 127.0.0.1
+
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
+
+innodb_buffer_pool_size = 1G
+
+# The following settings are not recommended if you care about data integrity
+# But we don't (its just log data from builds) and our IO is limited, so
+
+skip-log-bin
+innodb_doublewrite = 0
+innodb_flush_log_at_trx_commit = 0
