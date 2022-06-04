@@ -9,6 +9,7 @@ SECRET_KEY = '{{ ff_wizard_secret }}'
 
 SQLALCHEMY_DATABASE_URI = '{{ ff_wizard_connectionstring }}'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
+SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
 MAIL_FROM = 'no-reply@config.berlin.freifunk.net'
 
