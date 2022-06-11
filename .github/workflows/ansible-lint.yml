@@ -4,9 +4,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Create .vaultpass file
+        run: echo "${{ secrets.VAULTPASS }}" > ./.vaultpass
+
     - uses: actions/checkout@v2
     - name: Lint Ansible Playbook
-      uses: ansible/ansible-lint-action@master
+      uses: ansible/ansible-lint-action@main
       with:
         targets: |
           play.yml
