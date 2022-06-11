@@ -1,6 +1,5 @@
 ---
 # tasks to be run on all machines
-
 - name: install basic tools
   apt:
     name:
@@ -46,12 +45,3 @@
     mode: 0640
     owner: root
     group: root
-
-# Todo: we should use community.general.alternatives for this, OTOH debian 11 does not install python3 as a default anymore, so this  might be irrelevant
-#- name: make python3 standard
-#  file:
-#    src: /usr/bin/python3
-#    dest: /usr/bin/python
-#    owner: root
-#    group: root
-#    state: link

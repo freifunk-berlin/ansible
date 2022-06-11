@@ -1,5 +1,4 @@
 ---
-
 - name: install dependencies for falter build system and openwrt
   apt:
     name:
@@ -87,7 +86,7 @@
     mode: '0777'
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
-    recurse: yes
+    recurse: true
   notify: buildbot-worker | restart
 
 - name: add buildbot-worker systemd-service-module

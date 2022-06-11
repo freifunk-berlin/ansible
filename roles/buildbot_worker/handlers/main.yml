@@ -1,6 +1,6 @@
 - name: buildbot-worker | restart
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: buildbot-worker
     enabled: true
     state: restarted

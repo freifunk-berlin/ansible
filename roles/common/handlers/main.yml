@@ -1,7 +1,7 @@
 - name: collectd | restart
   ansible.builtin.service:
     name: collectd
-    enabled: yes
+    enabled: true
     state: restarted
 
 - name: fail2ban | restart

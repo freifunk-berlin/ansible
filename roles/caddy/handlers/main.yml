@@ -1,6 +1,6 @@
 - name: caddy | restart
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: caddy
     enabled: true
     state: restarted

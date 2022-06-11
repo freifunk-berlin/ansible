@@ -1,6 +1,6 @@
 - name: buildbot | restart
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: buildbot
     enabled: true
     state: restarted
@@ -11,7 +11,7 @@
 
 - name: mariadb | restart
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: mariadb
     enabled: true
     state: restarted
