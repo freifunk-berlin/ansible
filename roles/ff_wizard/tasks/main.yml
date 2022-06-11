@@ -13,31 +13,31 @@
     update_cache: true
     cache_valid_time: 3600
 
-#- name: Create wizard db
-#  remote_user: root
-#  become: yes
-#  become_user: postgres
-#  community.postgresql.postgresql_db:
-#    name: wizard
-#    owner: wizard
+# - name: Create wizard db
+#   remote_user: root
+#   become: yes
+#   become_user: postgres
+#   community.postgresql.postgresql_db:
+#     name: wizard
+#     owner: wizard
 
-#- name: create wizard db user
-#  remote_user: root
-#  become: yes
-#  become_user: postgres
-#  community.postgresql.postgresql_user:
-#    name: wizard
-#    password: "{{ ff_wizard_db_pass }}"
+# - name: create wizard db user
+#   remote_user: root
+#   become: yes
+#   become_user: postgres
+#   community.postgresql.postgresql_user:
+#     name: wizard
+#     password: "{{ ff_wizard_db_pass }}"
 
-#- name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
-#  remote_user: root
-#  become: yes
-#  become_user: postgres
-#  community.postgresql.postgresql_privs:
-#    db: wizard
-#    privs: ALL
-#    type: database
-#    roles: wizard
+# - name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
+#   remote_user: root
+#   become: yes
+#   become_user: postgres
+#   community.postgresql.postgresql_privs:
+#     db: wizard
+#     privs: ALL
+#     type: database
+#     roles: wizard
 
 - name: copy postfix config
   template:
@@ -74,7 +74,7 @@
     repo: 'https://github.com/freifunk-berlin/config.berlin.freifunk.net.git'
     version: master
     dest: /var/www/nipap-wizard
-    force: yes
+    force: true
   notify: uwsgi | restart
 
 - name: copy ff-wizard config
@@ -100,5 +100,5 @@
     path: /var/www/nipap-wizard/
     owner: www-data
     group: www-data
-    recurse: yes
+    recurse: true
 ...

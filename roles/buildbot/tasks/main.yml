@@ -38,7 +38,7 @@
   ansible.builtin.user:
     name: buildbot
     comment: buildbot application user
-    create_home: no
+    create_home: false
     home: /usr/local/src/buildbot
 
 - name: create directories
@@ -48,7 +48,7 @@
     owner: buildbot
     group: www-data
     mode: 0755
-    recurse: yes
+    recurse: true
   with_items:
     - /usr/local/src/www/htdocs/buildbot/
     - /usr/local/src/buildbot
