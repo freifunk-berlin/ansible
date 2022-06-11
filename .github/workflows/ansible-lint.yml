@@ -9,6 +9,3 @@ jobs:
       - uses: actions/checkout@v2
       - name: Lint Ansible Playbook
         uses: ansible/ansible-lint-action@main
-        with:
-          targets: |
-            play.yml
