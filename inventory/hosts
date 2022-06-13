@@ -2,7 +2,7 @@
 buildbot.berlin.freifunk.net
 
 [configserver]
-config-dev.berlin.freifunk.net
+config.berlin.freifunk.net
 
 [buildbotworker]
 buidbot-worker-01 ansible_host=85.215.202.123 # 85.215.202.123
