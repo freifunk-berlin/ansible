@@ -1,3 +1,8 @@
 .vaultpass
 .idea
 .vagrant
+roles/geerlingguy.certbot/
+roles/geerlingguy.docker/
+roles/geerlingguy.nginx/
+roles/ryandaniels.create_users/
+roles/systemli.letsencrypt/
