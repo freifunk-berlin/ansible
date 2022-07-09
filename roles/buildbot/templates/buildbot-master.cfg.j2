@@ -16,7 +16,7 @@ c['buildbotNetUsageData'] = 'basic'
 from worker import build_worker, workernames
 c['workers'] = build_worker
 
-targets_2102_snapshot = [
+targets_snapshot_builds = [
     "ath79/generic",
     "ath79/mikrotik",
     "ipq40xx/generic",
@@ -55,13 +55,14 @@ targets_2102 = [
     "x86/generic",
     "x86/geode",
     "x86/legacy"
-] + targets_2102_snapshot
+] + targets_snapshot_builds
 
 
 # builder-names correspond to branches in falter-packages-repository.
 feed_builders = [
     "master",
     "openwrt-21.02",
+    "openwrt-22.03",
     "upstream/21.02-perry",
     "feed_testbranch"
     ]
@@ -99,6 +100,16 @@ c['schedulers'].append(SingleBranchScheduler(
     )
 )
 
+# compile new feed for 'openwrt-22.03' when triggered via webhook
+c['schedulers'].append(SingleBranchScheduler(
+        name="build_packagefeed_openwrt2203",
+        change_filter=filter.ChangeFilter(
+            branch="openwrt-22.03"),
+        treeStableTimer=600,
+        builderNames=["openwrt-22.03"]
+    )
+)
+
 # compile new feed for 'feed_testbranch' when triggered via webhook
 c['schedulers'].append(SingleBranchScheduler(
         name="build_packagefeed_testbranch",
@@ -122,7 +133,7 @@ c['schedulers'].append(SingleBranchScheduler(
 c['schedulers'].append(Periodic(
     name="build snapshots every two days",
     branch="master",
-    builderNames=targets_2102_snapshot,
+    builderNames=targets_snapshot_builds,
     periodicBuildTimer=2*24*60*60
     )
 )
@@ -130,8 +141,8 @@ c['schedulers'].append(Periodic(
 c['schedulers'].append(Periodic(
     name="build 1.2.0-snapshots every three days",
     branch="master",
-    builderNames=targets_2102_snapshot,
-    properties={"falterVersion": "1.2.0-snapshot"},
+    builderNames=targets_snapshot_builds,
+    properties={"falterVersion": "1.2.3-snapshot"},
     periodicBuildTimer=3*24*60*60
     )
 )
@@ -156,7 +167,7 @@ c['schedulers'].append(
 c['schedulers'].append(
     schedulers.Triggerable(
         name="trigger_snapshots",
-        builderNames=targets_2102_snapshot
+        builderNames=targets_snapshot_builds
     )
 )
 
@@ -200,7 +211,7 @@ c['www'] = dict(
         plugins=dict(waterfall_view={}, console_view={}, grid_view={}),
         change_hook_dialects={
     'github': {
-        'secret': 'c3600bf6160cf2c8536b260111b97a339',
+        'secret': '{{ webhook_secret }}',
         'strict': True
         }
     }

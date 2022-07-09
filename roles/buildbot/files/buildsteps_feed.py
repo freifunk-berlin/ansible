@@ -168,7 +168,7 @@ feed_factory = BuildFactory([
 def create_feed_builder(builder_name):
     return BuilderConfig(
         name=builder_name,
-        workernames=['ionos-worker01', 'ionos-worker02'],
+        workernames=['ionos-worker01', 'ionos-worker02', 'scherer8-buildbot'],
         factory=feed_factory
     )
 
