@@ -5,6 +5,6 @@ buildbot.berlin.freifunk.net
 config.berlin.freifunk.net
 
 [buildbotworker]
-buidbot-worker-01 ansible_host=85.215.202.123 # 85.215.202.123
-buidbot-worker-02 ansible_host=85.215.248.194 # 85.215.248.194
+buildbot-worker-01 ansible_host=85.215.202.123 # 85.215.202.123
+buildbot-worker-02 ansible_host=85.215.248.194 # 85.215.248.194
 # buidbot-worker-03 # 85.215.225.21
