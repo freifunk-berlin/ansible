@@ -6,3 +6,6 @@ bbworker_contact: info {æt} berlin.freifunk.net
 bbworker_info: Worker administered by ffb-ansible-repo
 
 machine_user: bbworker
+
+# gets overridden on hosts, that use a ramdisk
+bbworker_path: /home/{{ machine_user }}/{{ bbworker_dir }}
