@@ -134,12 +134,13 @@ c['schedulers'].append(Periodic(
     name="build snapshots every two days",
     branch="master",
     builderNames=targets_snapshot_builds,
+    properties={"falterVersion": "snapshot"},
     periodicBuildTimer=2*24*60*60
     )
 )
 
 c['schedulers'].append(Periodic(
-    name="build 1.2.0-snapshots every three days",
+    name="build 1.2.3-snapshots every three days",
     branch="master",
     builderNames=targets_snapshot_builds,
     properties={"falterVersion": "1.2.3-snapshot"},
@@ -147,13 +148,14 @@ c['schedulers'].append(Periodic(
     )
 )
 
-# force building button for image-builders
-c['schedulers'].append(
-        ForceScheduler(
-        name="force_building_images",
-        builderNames=targets_2102
-        )
-        )
+c['schedulers'].append(Periodic(
+    name="build 1.3.0-snapshots every three days",
+    branch="master",
+    builderNames=targets_snapshot_builds,
+    properties={"falterVersion": "1.3.0-snapshot"},
+    periodicBuildTimer=3*24*60*60
+    )
+)
 
 # force building button for feed-builders
 c['schedulers'].append(
