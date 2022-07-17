@@ -7,7 +7,7 @@ After=network.target
 [Service]
 User=bbworker
 Group=bbworker
-WorkingDirectory=/home/{{ machine_user }}/{{ bbworker_dir }}
+WorkingDirectory={{ bbworker_path }}
 ExecStart=/usr/local/bin/buildbot-worker start --nodaemon
 
 [Install]
