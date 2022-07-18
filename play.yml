@@ -9,6 +9,7 @@
   roles:
     - common
     - ryandaniels.create_users
+  tags: basic_provision
 
 - name: set up buildbot environment
   hosts: buildbot

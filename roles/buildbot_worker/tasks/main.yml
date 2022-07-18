@@ -61,9 +61,10 @@
 - name: Flush handlers
   meta: flush_handlers
 
+
 - name: add workers admin-info
   template:
-    dest: /home/{{ machine_user }}/{{ bbworker_dir }}/info/admin
+    dest: "{{ bbworker_path }}/info/admin"
     src: admin.j2
     mode: '0644'
     owner: "{{ machine_user }}"
@@ -71,7 +72,7 @@
 
 - name: add worker descriptopn
   template:
-    dest: /home/{{ machine_user }}/{{ bbworker_dir }}/info/host
+    dest: "{{ bbworker_path }}/info/host"
     src: host.j2
     mode: '0644'
     owner: "{{ machine_user }}"
@@ -80,7 +81,7 @@
 
 - name: adjust permissions on buildbot-worker description
   ansible.builtin.file:
-    path: /home/{{ machine_user }}/{{ bbworker_dir }}/
+    path: "{{ bbworker_path }}"
     state: directory
     # needs to be this high, to allow the user from within the docker-container to write the artifacts to the host.
     mode: '0777'
