@@ -160,7 +160,7 @@ feed_factory = BuildFactory([
     feed_masterchmod,
     feed_sign_packages,
     feed_cleanup,
-    feed_cleanup_tmp,
+    #feed_cleanup_tmp,
     feed_trigger_image_generation_snapshot,
     feed_trigger_image_generation_release
     ])
