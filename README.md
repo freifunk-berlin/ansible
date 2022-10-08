@@ -13,6 +13,15 @@ The code is, where necessary, quite debian centric since that's the distribution
 The Repository also uses a [monorepo](https://en.wikipedia.org/wiki/Monorepo) structure since all the custom roles are only used in this context. 
 
 
+## Managed Infrastructure
+
+This repository currently manages these services:
+- buildbot (Master on buildbot.berlin.freifunk.net)
+- several buildbot-workers
+- IP-Address-Wizard at config.berlin.freiffunk.net
+
+
+
 ## Requirements
 - Ansible 5.x
 - The secret encryption password for ansible-vault under `./.vaultpass` 
