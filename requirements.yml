@@ -1,4 +1,6 @@
 ---
+# ansible dependencies
+# usage: ansible-galaxy install -r requirements.yml
 roles:
   - src: ryandaniels.create_users
     version: 1.0.8
