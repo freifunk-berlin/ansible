@@ -1,3 +1,5 @@
 .vaultpass
 .idea
 .vagrant
+venv/
+external_roles/
