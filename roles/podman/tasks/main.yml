@@ -1,0 +1,16 @@
+---
+- name: install podman and its dependencies for rootless setup
+  apt:
+    name:
+      - slirp4netns
+      - fuse-overlayfs
+      - dbus-user-session
+      - uidmap
+      - podman
+      - skopeo
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  notify: podman | reboot
+
+...

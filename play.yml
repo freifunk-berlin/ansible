@@ -15,6 +15,7 @@
   hosts: buildbot
   become: true
   roles:
+    - podman
     - buildbot
     - geerlingguy.nginx
     - systemli.letsencrypt

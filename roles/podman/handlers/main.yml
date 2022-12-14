@@ -1,0 +1,7 @@
+---
+- name: podman | reboot
+  # after setting up podman, we need to reboot, so the dbus-user-connection module gets working
+  ansible.builtin.reboot:
+    reboot_timeout: 300
+
+...
