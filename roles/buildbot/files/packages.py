@@ -5,13 +5,13 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-repo = 'https://github.com/pktpls/falter-packages.git'
-branches = ['master','openwrt-22.03','openwrt-21.02']
+from config import workerNames, packages_repo, packages_branches
+
 
 def packagesConfig(c):
 
   c['change_source'].append(changes.GitPoller(
-    repourl=repo,
+    repourl=packages_repo,
     workdir='gitpoller-workdir',
     pollInterval=60))
 
@@ -27,11 +27,11 @@ def packagesConfig(c):
         "",
         branch=util.ChoiceStringParameter(
           name="branch",
-          choices=branches,
+          choices=packages_branches,
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=packages_repo),
         project=util.FixedParameter(name="project", default=""))]))
 
   c['builders'].append(util.BuilderConfig(
@@ -41,7 +41,7 @@ def packagesConfig(c):
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/packages",
-    workernames=["worker1", "worker2", "worker3", "worker4", "worker5", "worker6", "worker7", "worker8"],
+    workernames=workerNames,
     factory=packagesArchFactory(util.BuildFactory()),
     collapseRequests=False))
 
@@ -69,7 +69,7 @@ def packagesFactory(f):
         steps.Git(
             name="git clone",
             haltOnFailure=True,
-            repourl=repo,
+            repourl=packages_repo,
             mode='incremental'))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
@@ -153,7 +153,7 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
             name="sign",
             haltOnFailure=True,
             command=["sh", "-c", util.Interpolate(
-                "signify -S -m %(kw:wwwdir)s/falter/Packages -s packagefeed_master.sec",
+                "signify-openbsd -S -m %(kw:wwwdir)s/falter/Packages -s packagefeed_master.sec",
                 wwwdir=wwwdir)]))
     f.addStep(
         steps.MasterShellCommand(

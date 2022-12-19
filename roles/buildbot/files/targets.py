@@ -5,13 +5,13 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-repo = 'https://github.com/pktpls/falter-builter.git'
-branches = ['master']
+from config import workerNames, builter_repo, builter_branches
+
 
 def targetsConfig(c):
 
   c['change_source'].append(changes.GitPoller(
-    repourl=repo,
+    repourl=builter_repo,
     workdir='gitpoller-workdir',
     pollInterval=60))
 
@@ -31,7 +31,7 @@ def targetsConfig(c):
           label="branch",
           default="master"),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=builter_repo),
         project=util.FixedParameter(name="project", default=""))],
     properties=[
         util.StringParameter(
@@ -47,7 +47,7 @@ def targetsConfig(c):
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/targets",
-    workernames=["worker1", "worker2", "worker3", "worker4", "worker5", "worker6", "worker7", "worker8"],
+    workernames=workerNames,
     factory=targetsTargetFactory(util.BuildFactory()),
     collapseRequests=False))
 
@@ -75,7 +75,7 @@ def targetsFactory(f):
         steps.Git(
             name="git clone",
             haltOnFailure=True,
-            repourl=repo,
+            repourl=builter_repo,
             mode='incremental'))
     f.addStep(
         AsyncBuildGenerator(targetTriggerStep,
