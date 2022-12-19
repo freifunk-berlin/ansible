@@ -1,0 +1,11 @@
+# -*- python -*-
+# ex: set filetype=python:
+
+# {{ ansible_managed }}
+
+dbURL = 'mysql://buildbot:{{ buildbot_mariadb_user_password }}@localhost/buildbot?max_idle=300'
+
+githubClientID = '{{ githubClientID }}'
+githubClientSecret = '{{ githubClientSecret }}'
+
+matrixAccessToken = '{{ matrixAccessToken }}'

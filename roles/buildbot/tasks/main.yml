@@ -54,6 +54,16 @@
     - /usr/local/src/buildbot
     - /usr/local/src/www/htdocs/.well-known/
 
+# it looks like there is a dependency not included into buildbot[bundle]
+- name: Install dependencies for GitHub-OAuth in venv
+  pip:
+    name:
+      - requests
+      # - txrequests # the software stated, that treq would be faster by 2.8 times or so...
+      - treq
+    virtualenv: /usr/local/src/buildbot/env
+  notify: Initialise buildbot
+
 - name: Install buildbot in venv
   pip:
     name: buildbot[bundle]
@@ -69,7 +79,7 @@
 - name: Flush handlers
   meta: flush_handlers
 
-- name: Copy buildsteps
+- name: "buildbot-config: copy static files"
   copy:
     src: "{{ item }}"
     dest: /usr/local/src/buildbot/masters/master/
@@ -78,13 +88,16 @@
     group: root
   notify: Restart buildbot
   with_items:
-    - buildsteps_feed.py
-    - buildsteps_image.py
+    - master.cfg
+    - asyncbuild.py
+    - notify.py
+    - packages.py
+    - targets.py
 
-- name: Copy buildbot config
+- name: "buildbot-config: render and copy dynamic stuff"
   template:
-    src: "{{ buildbot_config_template }}"
-    dest: /usr/local/src/buildbot/masters/master/master.cfg
+    src: "{{ item.src }}"
+    dest: "/usr/local/src/buildbot/masters/master/{{ item.dest }}"
     mode: 0640
     owner: buildbot
     group: root
@@ -98,6 +111,9 @@
     owner: buildbot
     group: root
   notify: Restart buildbot
+  loop:
+    - { src: config.py.j2, dest: config.py }
+    - { src: secs.py.j2, dest: secs.py }
 
 - name: Add buildbot systemd-service-module
   copy:
@@ -139,18 +155,13 @@
     user: root
     cron_file: ansible_fwselector_update
 
-- name: Copy extra files
+- name: Copy signing keys
   copy:
     src: "{{ item }}"
-    dest: /usr/local/src
+    dest: /usr/local/src/buildbot/masters/master/
     mode: 0700
     owner: buildbot
     group: root
   with_items:
-    - clear_target.sh
     - packagefeed_master.pub
     - packagefeed_master.sec
-    - sign_packages.sh
-    - generate_autoupdate_json.py
-
-...
