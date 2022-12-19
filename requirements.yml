@@ -8,3 +8,5 @@ roles:
     version: 4.1.3
   - src: systemli.letsencrypt
     version: 2.1.0
+  - src: alvistack.podman
+    version: 6.3.1

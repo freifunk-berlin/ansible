@@ -23,6 +23,8 @@
   hosts: buildbotworker
   become: true
   roles:
+    - alvistack.podman
+    - podman_fix
     - buildbot_worker
 
 - name: set up config server
