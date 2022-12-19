@@ -1,0 +1,37 @@
+# -*- python -*-
+# ex: set filetype=python:
+
+# {{ ansible_managed }}
+
+matrixHomeserver = '{{ matrixHomeserver }}'
+matrixRoom = '{{ matrixRoom }}'
+
+
+# Repository-URL for the builter script.
+builter_repo = 'https://github.com/freifunk-berlin/falter-builter.git'
+builter_branches = ['master']
+
+
+# URL for the packages repo. The branches map to the branches selectable
+# in the force scheduler
+packages_repo = 'https://github.com/freifunk-berlin/falter-packages.git'
+packages_branches = ['master','openwrt-22.03','openwrt-21.02']
+
+
+# workernames get used in the build-factories, all workers get assigned to
+# the falter-builders except for the master worker
+workerNames = [
+    {% for worker in buildbot_workers %}
+    "{{ worker.name }}",
+    {% endfor %}
+]
+
+
+# this variable holds all workers available. masterworker is somewhat special,
+# so we let appear it here only.
+workers = [
+    ('{{ buildbot_master_worker.name }}', '{{ buildbot_master_worker.passwd }}'),
+    {% for worker in buildbot_workers %}
+    ('{{ worker.name }}', '{{ worker.passwd }}'),
+    {% endfor %}
+]

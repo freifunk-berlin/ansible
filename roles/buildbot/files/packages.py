@@ -2,16 +2,17 @@
 # ex: set filetype=python:
 
 from buildbot.plugins import *
+import re
 
 from asyncbuild import *
 
-repo = 'https://github.com/pktpls/falter-packages.git'
-branches = ['master','openwrt-22.03','openwrt-21.02']
+from config import workerNames, packages_repo, packages_branches
+
 
 def packagesConfig(c):
 
   c['change_source'].append(changes.GitPoller(
-    repourl=repo,
+    repourl=packages_repo,
     workdir='gitpoller-workdir',
     pollInterval=60))
 
@@ -27,11 +28,11 @@ def packagesConfig(c):
         "",
         branch=util.ChoiceStringParameter(
           name="branch",
-          choices=branches,
+          choices=packages_branches,
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=packages_repo),
         project=util.FixedParameter(name="project", default=""))]))
 
   c['builders'].append(util.BuilderConfig(
@@ -41,7 +42,7 @@ def packagesConfig(c):
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/packages",
-    workernames=["worker1", "worker2", "worker3", "worker4", "worker5", "worker6", "worker7", "worker8"],
+    workernames=workerNames,
     factory=packagesArchFactory(util.BuildFactory()),
     collapseRequests=False))
 
@@ -69,8 +70,18 @@ def packagesFactory(f):
         steps.Git(
             name="git clone",
             haltOnFailure=True,
-            repourl=repo,
+            repourl=packages_repo,
             mode='incremental'))
+    f.addStep(
+        steps.SetPropertyFromCommand(
+            # fetch upload-dir from FREIFUNK_RELEASE variable in freifunk_release file.
+            # this file shows the falter-version the feed is intended for
+            name="fetch falter feed-version",
+            haltOnFailure=True,
+            command=["wget",
+                util.Interpolate("https://raw.githubusercontent.com/freifunk-berlin/falter-packages/%(prop:got_revision)s/packages/falter-common/files-common/etc/freifunk_release"),
+                "-O", "-"],
+            extract_fn=extract_falter_version))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
             name="generate builds",
@@ -131,7 +142,9 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
 
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
-    wwwdir = util.Interpolate("public_html/%(kw:wwwpath)s", wwwpath=wwwpath)
+    wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
+    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages/")
+    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s/*")
     wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
@@ -153,7 +166,7 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
             name="sign",
             haltOnFailure=True,
             command=["sh", "-c", util.Interpolate(
-                "signify -S -m %(kw:wwwdir)s/falter/Packages -s packagefeed_master.sec",
+                "signify-openbsd -S -m %(kw:wwwdir)s/falter/Packages -s packagefeed_master.sec",
                 wwwdir=wwwdir)]))
     f.addStep(
         steps.MasterShellCommand(
@@ -169,5 +182,27 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
             alwaysRun=True,
             warnOnFailure=False,
             command=["sh", "-c", "rm -vf out.tar"]))
+    # TODO: Make the following 3 steps better by having one symlink as the
+    # packages dir, not multiple within the packages dir.
+    f.addStep(
+        steps.MasterShellCommand(
+            name="remove symlinks to old artifacts",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "rm -vrf %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="recreate directory for symlinks",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "mkdir -p %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="symlink artifacts to url",
+            # might have happened, that another worker created the links already.
+            # That isn't a problem though
+            haltOnFailure=False,
+            command=["sh", "-c", util.Interpolate(
+                "ln -s %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinkdest=symlinkdest, symlinksrc=symlinksrc)]))
 
     return f
