@@ -42,39 +42,29 @@
   user:
     name: "{{ machine_user }}"
 
-- name: install docker and add user
-  include_role:
-    name: geerlingguy.docker
-  vars:
-    docker_package_state: present
-    docker_users:
-      - "{{ machine_user }}"
-
 - name: install buildbot-worker
   pip:
     name:
       - buildbot-worker
-      - docker-hub
     state: present
   notify: buildbot-worker | initialise
 
 - name: Flush handlers
   meta: flush_handlers
 
-
 - name: add workers admin-info
   template:
     dest: "{{ bbworker_path }}/info/admin"
     src: admin.j2
-    mode: '0644'
+    mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
 
-- name: add worker descriptopn
+- name: add worker description
   template:
     dest: "{{ bbworker_path }}/info/host"
     src: host.j2
-    mode: '0644'
+    mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
   notify: buildbot-worker | restart
@@ -83,8 +73,7 @@
   ansible.builtin.file:
     path: "{{ bbworker_path }}"
     state: directory
-    # needs to be this high, to allow the user from within the docker-container to write the artifacts to the host.
-    mode: '0777'
+    mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
     recurse: true
@@ -94,7 +83,7 @@
   template:
     dest: /etc/systemd/system/buildbot-worker.service
     src: systemd-unit.j2
-    mode: '0644'
+    mode: "0644"
     owner: root
     group: root
   notify: buildbot-worker | restart
