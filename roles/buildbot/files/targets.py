@@ -2,6 +2,7 @@
 # ex: set filetype=python:
 
 from buildbot.plugins import *
+import re
 
 from asyncbuild import *
 
@@ -64,7 +65,10 @@ def targetTriggerStep(target):
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
       'virtual_builder_name': util.Interpolate("t/%(prop:branch)s/%(kw:target)s", target=target),
-      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:branch)s")]})
+      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:branch)s")],
+      #'falterVersion': util.Interpolate("%(prop:falterVersion)s")
+      'falterVersion': util.Interpolate("%(prop:release)s")
+      })
 
 # Fans out to one builder per target and blocks for the results.
 def targetsFactory(f):
@@ -107,6 +111,30 @@ done \
         steps.ShellCommand(
             name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
             command=["true"]))
+    # TODO: Make the following 3 steps better by having one symlink as the
+    # packages dir, not multiple within the packages dir.
+    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/unstable/%(prop:falterVersion)s/")
+    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/targets/%(prop:origbuildnumber)s/*")
+    f.addStep(
+        steps.MasterShellCommand(
+            name="remove symlinks to old artifacts",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "rm -vrf %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="recreate directory for symlinks",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "mkdir -p %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="symlink artifacts to url",
+            # might have happened, that another worker created the links already.
+            # That isn't a problem though
+            haltOnFailure=False,
+            command=["sh", "-c", util.Interpolate(
+                "ln -s %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinkdest=symlinkdest, symlinksrc=symlinksrc)]))
 
     return f
 

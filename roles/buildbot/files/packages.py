@@ -117,6 +117,31 @@ cat build/targets-%(prop:branch)s.txt \
             name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
             command=["true"]))
 
+    # TODO: Make the following 3 steps better by having one symlink as the
+    # packages dir, not multiple within the packages dir.
+    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages/")
+    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s/*")
+    f.addStep(
+        steps.MasterShellCommand(
+            name="remove symlinks to old artifacts",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "rm -vrf %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="recreate directory for symlinks",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "mkdir -p %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="symlink artifacts to url",
+            # might have happened, that another worker created the links already.
+            # That isn't a problem though
+            haltOnFailure=False,
+            command=["sh", "-c", util.Interpolate(
+                "ln -s %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinkdest=symlinkdest, symlinksrc=symlinksrc)]))
+
     return f
 
 # Runs build.sh with prop:arch and prop:branch, and uploads the result to master.
@@ -155,8 +180,6 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
     wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
-    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages/")
-    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s/*")
     wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
@@ -194,27 +217,5 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
             alwaysRun=True,
             warnOnFailure=False,
             command=["sh", "-c", "rm -vf out.tar"]))
-    # TODO: Make the following 3 steps better by having one symlink as the
-    # packages dir, not multiple within the packages dir.
-    f.addStep(
-        steps.MasterShellCommand(
-            name="remove symlinks to old artifacts",
-            haltOnFailure=True,
-            command=["sh", "-c", util.Interpolate(
-                "rm -vrf %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
-    f.addStep(
-        steps.MasterShellCommand(
-            name="recreate directory for symlinks",
-            haltOnFailure=True,
-            command=["sh", "-c", util.Interpolate(
-                "mkdir -p %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
-    f.addStep(
-        steps.MasterShellCommand(
-            name="symlink artifacts to url",
-            # might have happened, that another worker created the links already.
-            # That isn't a problem though
-            haltOnFailure=False,
-            command=["sh", "-c", util.Interpolate(
-                "ln -s %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinkdest=symlinkdest, symlinksrc=symlinksrc)]))
 
     return f
