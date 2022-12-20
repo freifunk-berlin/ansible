@@ -2,6 +2,7 @@
 # ex: set filetype=python:
 
 from buildbot.plugins import *
+import re
 
 from asyncbuild import *
 
@@ -60,7 +61,23 @@ def archTriggerStep(arch):
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
       'virtual_builder_name': util.Interpolate("packages/%(prop:branch)s/%(kw:arch)s", arch=arch),
-      'virtual_builder_tags': ["packages", util.Interpolate("%(prop:branch)s")]})
+      'virtual_builder_tags': ["packages", util.Interpolate("%(prop:branch)s")],
+      'falterVersion': util.Interpolate("%(prop:falterVersion)s")
+      })
+
+
+def extract_falter_version(rc, stdout, stderr):
+    """provides some logic and regex magic to get a falter-version from a
+    freifunk_release file.
+    """
+    try:
+        versionString = re.search("FREIFUNK_RELEASE=['\"](.*)['\"]", stdout)
+        falterVersion = versionString.group(1)
+    except:
+        falterVersion = 'unknown'
+
+    return {'falterVersion': falterVersion}
+
 
 # Fans out to one builder per arch and blocks for the results.
 def packagesFactory(f):
@@ -71,6 +88,16 @@ def packagesFactory(f):
             haltOnFailure=True,
             repourl=packages_repo,
             mode='incremental'))
+    f.addStep(
+        steps.SetPropertyFromCommand(
+            # fetch upload-dir from FREIFUNK_RELEASE variable in freifunk_release file.
+            # this file shows the falter-version the feed is intended for
+            name="fetch falter feed-version",
+            haltOnFailure=True,
+            command=["wget",
+                util.Interpolate("https://raw.githubusercontent.com/freifunk-berlin/falter-packages/%(prop:got_revision)s/packages/falter-common/files-common/etc/freifunk_release"),
+                "-O", "-"],
+            extract_fn=extract_falter_version))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
             name="generate builds",
@@ -131,7 +158,9 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
 
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
-    wwwdir = util.Interpolate("public_html/%(kw:wwwpath)s", wwwpath=wwwpath)
+    wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
+    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages/")
+    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s/*")
     wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
@@ -169,5 +198,27 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
             alwaysRun=True,
             warnOnFailure=False,
             command=["sh", "-c", "rm -vf out.tar"]))
+    # TODO: Make the following 3 steps better by having one symlink as the
+    # packages dir, not multiple within the packages dir.
+    f.addStep(
+        steps.MasterShellCommand(
+            name="remove symlinks to old artifacts",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "rm -vrf %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="recreate directory for symlinks",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate(
+                "mkdir -p %(kw:symlinksrc)s", symlinksrc=symlinksrc)]))
+    f.addStep(
+        steps.MasterShellCommand(
+            name="symlink artifacts to url",
+            # might have happened, that another worker created the links already.
+            # That isn't a problem though
+            haltOnFailure=False,
+            command=["sh", "-c", util.Interpolate(
+                "ln -s %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinkdest=symlinkdest, symlinksrc=symlinksrc)]))
 
     return f
