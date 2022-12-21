@@ -44,6 +44,8 @@ class AsyncBuildGenerator(buildstep.ShellMixin, steps.BuildStep):
 #
 # Adapted from @vit9696's code at https://github.com/buildbot/buildbot/issues/3088
 class AsyncTrigger(steps.Trigger):
+    waiter = None
+
     def setAsyncLock(self, lock):
         self.asyncLock = lock
 
@@ -82,6 +84,9 @@ class AsyncTrigger(steps.Trigger):
             val = self.getProperty("asyncUnknown", 0)
             self.setProperty("asyncUnknown", val + 1, "AsyncTrigger")
 
+        if self.waiter:
+            self.waiter.callback(None)
+
         return results
 
 # AsyncBuild is a Build which can execute AsyncTrigger steps in parallel.
@@ -89,6 +94,8 @@ class AsyncTrigger(steps.Trigger):
 #
 # Adapted from @vit9696's code at https://github.com/buildbot/buildbot/issues/3088
 class AsyncBuild(build.Build):
+    waiters = []
+
     def setupBuild(self):
         """
         Remember async locks and create an async lock itself,
@@ -125,6 +132,18 @@ class AsyncBuild(build.Build):
             step.interrupt(reason)
 
         return super().stopBuild(reason, results)
+
+    @defer.inlineCallbacks
+    def _start_next_step_impl(self, step):
+        if isinstance(step, AsyncTrigger):
+            step.waiter = defer.Deferred()
+            self.waiters.append(step.waiter)
+        elif len(self.waiters) > 0:
+            yield defer.DeferredList(self.waiters)
+            self.waiters = []
+
+        results = yield super()._start_next_step_impl(step)
+        return results
 
     def startNextStep(self):
         """

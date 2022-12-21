@@ -89,6 +89,10 @@ cat build/targets-%(prop:branch)s.txt \
 | cut -d' ' -f1 \
 | head -n4 \
 """)]))
+    f.addStep(
+        steps.ShellCommand(
+            name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
+            command=["true"]))
 
     return f
 

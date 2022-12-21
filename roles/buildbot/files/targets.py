@@ -105,6 +105,10 @@ for t in "$targets"; do \
     fi ; \
 done \
 ''')]))
+    f.addStep(
+        steps.ShellCommand(
+            name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
+            command=["true"]))
 
     return f
 
