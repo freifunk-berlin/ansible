@@ -10,11 +10,6 @@ from config import workerNames, builter_repo, builter_branches
 
 def targetsConfig(c):
 
-  c['change_source'].append(changes.GitPoller(
-    repourl=builter_repo,
-    workdir='gitpoller-workdir',
-    pollInterval=60))
-
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
     builderNames=["dummy/targets"]))

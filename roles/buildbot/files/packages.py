@@ -11,11 +11,6 @@ from config import workerNames, packages_repo, packages_branches
 
 def packagesConfig(c):
 
-  c['change_source'].append(changes.GitPoller(
-    repourl=packages_repo,
-    workdir='gitpoller-workdir',
-    pollInterval=60))
-
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",
     builderNames=["dummy/packages"]))
@@ -96,9 +91,8 @@ def packagesFactory(f):
             # this file shows the falter-version the feed is intended for
             name="fetch falter feed-version",
             haltOnFailure=True,
-            command=["wget",
-                util.Interpolate("https://raw.githubusercontent.com/freifunk-berlin/falter-packages/%(prop:got_revision)s/packages/falter-common/files-common/etc/freifunk_release"),
-                "-O", "-"],
+            command=["cat",
+                util.Interpolate("%(prop:builddir)s/build/packages/falter-common/files-common/etc/freifunk_release")],
             extract_fn=extract_falter_version))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
