@@ -11,11 +11,6 @@ from config import workerNames, packages_repo, packages_branches
 
 def packagesConfig(c):
 
-  c['change_source'].append(changes.GitPoller(
-    repourl=packages_repo,
-    workdir='gitpoller-workdir',
-    pollInterval=60))
-
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",
     builderNames=["dummy/packages"]))
