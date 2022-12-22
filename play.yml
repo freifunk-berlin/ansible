@@ -30,13 +30,13 @@
     - geerlingguy.nginx
     - systemli.letsencrypt
 
-- name: Set up buildbot workers
-  hosts: buildbotworker
-  become: true
-  roles:
-    - alvistack.podman
-    - podman_fix
-    - buildbot_worker
+# - name: Set up buildbot workers
+#   hosts: buildbotworker
+#   become: true
+#   roles:
+#     - alvistack.podman
+#     - podman_fix
+#     - buildbot_worker
 
 - name: Set up config server
   hosts: configserver
