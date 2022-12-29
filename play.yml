@@ -2,7 +2,7 @@
 # This playbook deploys the whole application stack in this site.
 
 - name: Apply common configuration
-  hosts: all
+  hosts: all,!vpn03
   become: true
   vars_files:
     - inventory/group_vars/users
@@ -10,6 +10,15 @@
     - common
     - ryandaniels.create_users
   tags: basic_provision
+
+
+- name: Deploy Users to VPN03 servers
+  hosts: vpn03
+  become: true
+  vars_files:
+    - inventory/group_vars/users
+  roles:
+    - ryandaniels.create_users
 
 - name: Set up buildbot environment
   hosts: buildbot
