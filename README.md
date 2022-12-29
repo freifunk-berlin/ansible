@@ -18,7 +18,8 @@ The Repository also uses a [monorepo](https://en.wikipedia.org/wiki/Monorepo) st
 This repository currently manages these services:
 - buildbot (Master on buildbot.berlin.freifunk.net)
 - several buildbot-workers
-- IP-Address-Wizard at config.berlin.freiffunk.net
+- IP-Address-Wizard at config.berlin.freifunk.net
+- The vpn03 servers which route our traffic to the internet
 
 
 
@@ -50,6 +51,7 @@ This separation makes using the monorepo approach easier, since we can just excl
 ├── templates                    # Directory for template files
 └── Vagrantfile                  # A Vagrant file to run test machines with Vagrant
 ```
+
 
 ## How to contribute
 

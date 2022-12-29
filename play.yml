@@ -1,7 +1,7 @@
 ---
 # This playbook deploys the whole application stack in this site.
 
-- name: apply common configuration
+- name: Apply common configuration
   hosts: all,!vpn03
   become: true
   vars_files:
@@ -11,6 +11,7 @@
     - ryandaniels.create_users
   tags: basic_provision
 
+
 - name: Deploy Users to VPN03 servers
   hosts: vpn03
   become: true
@@ -19,7 +20,7 @@
   roles:
     - ryandaniels.create_users
 
-- name: set up buildbot environment
+- name: Set up buildbot environment
   hosts: buildbot
   become: true
   roles:
@@ -27,7 +28,7 @@
     - geerlingguy.nginx
     - systemli.letsencrypt
 
-- name: set up buildbot workers
+- name: Set up buildbot workers
   hosts: buildbotworker
   become: true
   roles:
@@ -35,7 +36,7 @@
     - podman_fix
     - buildbot_worker
 
-- name: set up config server
+- name: Set up config server
   hosts: configserver
   vars_files:
     - inventory/group_vars/configserver

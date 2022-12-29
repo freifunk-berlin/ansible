@@ -9,7 +9,7 @@
     repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
     state: present
 
-- name: install dependencies
+- name: Install dependencies
   apt:
     name:
       - caddy
@@ -17,13 +17,13 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: copy caddyfile
+- name: Copy caddyfile
   template:
     dest: /etc/caddy/Caddyfile
     src: "{{ caddy_caddyfile }}"
     mode: 0640
     owner: caddy
     group: caddy
-  notify: caddy | restart
+  notify: Restart caddy
 
 ...

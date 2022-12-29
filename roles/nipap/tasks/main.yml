@@ -9,7 +9,7 @@
     repo: deb http://spritelink.github.io/NIPAP/repos/apt stable main extra
     state: present
 
-- name: install dependencies
+- name: Install dependencies
   apt:
     name:
       - nipap-cli
@@ -23,14 +23,14 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: copy nipap config
+- name: Copy nipap config
   template:
     dest: /etc/nipap/nipap.conf
     src: nipap.conf.j2
     mode: 0640
     owner: root
     group: root
-  notify: nipapd | restart
+  notify: Restart nipapd
 
 # - name: Create nipap db
 #   remote_user: root

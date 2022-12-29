@@ -1,10 +1,10 @@
-- name: collectd | restart
+- name: Restart collectd
   ansible.builtin.service:
     name: collectd
     enabled: true
     state: restarted
 
-- name: fail2ban | restart
+- name: Restart fail2ban
   ansible.builtin.service:
     name: fail2ban
     enabled: true

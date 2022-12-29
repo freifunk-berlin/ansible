@@ -9,4 +9,4 @@
 # This clears the images of a specific target while leaving the other ones.
 # That is useful, when we generate new images for a target
 
-rm -rf $1
+rm -rf "$1"
