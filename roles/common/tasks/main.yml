@@ -1,6 +1,6 @@
 ---
 # tasks to be run on all machines
-- name: install basic tools
+- name: Install basic tools
   apt:
     name:
       - atop
@@ -20,25 +20,25 @@
     update_cache: true
 
 # Collectd config
-- name: collectd config
+- name: Copy collectd config
   template:
     src: collectd-ffberlin.conf.j2
     dest: /etc/collectd/collectd.conf.d/ffberlin.conf
     mode: 0640
     owner: root
     group: root
-  notify: collectd | restart
+  notify: Restart collectd
 
-- name: configure fail2ban-jails
+- name: Configure fail2ban-jails
   template:
     src: fail2ban-ffberlin.local.j2
     dest: /etc/fail2ban/jail.local
     mode: 0640
     owner: root
     group: root
-  notify: fail2ban | restart
+  notify: Restart fail2ban
 
-- name: copy custom motd
+- name: Copy custom motd
   template:
     src: motd.j2
     dest: /etc/motd

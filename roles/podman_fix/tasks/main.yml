@@ -1,4 +1,4 @@
-- name: quick-fix alvistack.podman role by adding dbus-user-session
+- name: Quick-fix alvistack.podman role by adding dbus-user-session
   # This fix seems to be not the best, as it pulls roughly 20 MiB additional
   # dependencies. https://github.com/alvistack/ansible-role-podman/issues/17#issuecomment-1352787379
   apt:

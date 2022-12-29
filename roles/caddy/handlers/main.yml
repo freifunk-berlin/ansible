@@ -1,4 +1,4 @@
-- name: caddy | restart
+- name: Restart caddy
   systemd:
     daemon_reload: true
     name: caddy

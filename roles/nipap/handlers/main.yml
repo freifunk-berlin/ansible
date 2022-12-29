@@ -1,4 +1,4 @@
-- name: nipapd | restart
+- name: Restart nipapd
   systemd:
     daemon_reload: true
     name: nipapd

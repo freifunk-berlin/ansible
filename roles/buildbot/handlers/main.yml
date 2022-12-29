@@ -1,15 +1,15 @@
-- name: buildbot | restart
+- name: Restart buildbot
   systemd:
     daemon_reload: true
     name: buildbot
     enabled: true
     state: restarted
 
-- name: buildbot | initialise
+- name: Initialize buildbot
   command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
   become_user: buildbot
 
-- name: mariadb | restart
+- name: Restart mariadb
   systemd:
     daemon_reload: true
     name: mariadb

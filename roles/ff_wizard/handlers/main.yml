@@ -1,11 +1,11 @@
-- name: uwsgi | restart
+- name: Restart uwsgi
   systemd:
     daemon_reload: true
     name: uwsgi
     enabled: true
     state: restarted
 
-- name: postfix | restart
+- name: Restart postfix
   systemd:
     daemon_reload: true
     name: uwsgi

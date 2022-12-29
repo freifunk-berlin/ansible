@@ -1,12 +1,10 @@
 ---
-- name: install dependencies for falter build system and openwrt
+- name: Install dependencies for falter build system and openwrt
   apt:
     name:
-      - curl
-      - python3-pip
-      - rsync
       - build-essential
       - ccache
+      - curl
       - ecj
       - fastjar
       - file
@@ -22,37 +20,39 @@
       - python
       - python2.7-dev
       - python3
-      - unzip
-      - wget
-      - python3-distutils
-      - python3-setuptools
       - python3-dev
+      - python3-distutils
+      - python3-pip
+      - python3-setuptools
       - rsync
-      - subversion
+      - rsync
       - sqlite3
+      - subversion
       - swig
       - time
+      - unzip
+      - wget
       - xsltproc
       - zlib1g-dev
     state: present
     update_cache: true
     cache_valid_time: 3600
 
-- name: create unpriviliged user for buildbot
+- name: Create unprivileged user for buildbot
   user:
     name: "{{ machine_user }}"
 
-- name: install buildbot-worker
+- name: Install buildbot-worker
   pip:
     name:
       - buildbot-worker
     state: present
-  notify: buildbot-worker | initialise
+  notify: Initialise buildbot-worker
 
 - name: Flush handlers
   meta: flush_handlers
 
-- name: add workers admin-info
+- name: Add workers admin-info
   template:
     dest: "{{ bbworker_path }}/info/admin"
     src: admin.j2
@@ -60,16 +60,16 @@
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
 
-- name: add worker description
+- name: Add worker description
   template:
     dest: "{{ bbworker_path }}/info/host"
     src: host.j2
     mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
-  notify: buildbot-worker | restart
+  notify: Restart buildbot-worker
 
-- name: adjust permissions on buildbot-worker description
+- name: Adjust permissions on buildbot-worker description
   ansible.builtin.file:
     path: "{{ bbworker_path }}"
     state: directory
@@ -77,13 +77,13 @@
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
     recurse: true
-  notify: buildbot-worker | restart
+  notify: Restart buildbot-worker
 
-- name: add buildbot-worker systemd-service-module
+- name: Add buildbot-worker systemd-service-module
   template:
     dest: /etc/systemd/system/buildbot-worker.service
     src: systemd-unit.j2
     mode: "0644"
     owner: root
     group: root
-  notify: buildbot-worker | restart
+  notify: Restart buildbot-worker
