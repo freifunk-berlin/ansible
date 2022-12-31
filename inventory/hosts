@@ -4,6 +4,9 @@ buildbot.berlin.freifunk.net
 [configserver]
 config.berlin.freifunk.net
 
+[monitoring]
+monitor.berlin.freifunk.net
+
 [buildbotworker]
 buildbot-worker-01 ansible_host=85.215.202.123
 buildbot-worker-02 ansible_host=85.215.248.194
