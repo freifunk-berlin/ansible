@@ -47,3 +47,9 @@
     - nipap
     - caddy
     - ff_wizard
+
+- name: Set up monitoring server
+  hosts: monitor.berlin.freifunk.net
+  become: true
+  roles:
+    - caddy
