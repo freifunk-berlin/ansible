@@ -92,9 +92,8 @@ def packagesFactory(f):
             # this file shows the falter-version the feed is intended for
             name="fetch falter feed-version",
             haltOnFailure=True,
-            command=["wget",
-                util.Interpolate("https://raw.githubusercontent.com/freifunk-berlin/falter-packages/%(prop:got_revision)s/packages/falter-common/files-common/etc/freifunk_release"),
-                "-O", "-"],
+            command=["cat",
+                util.Interpolate("%(prop:builddir)s/build/packages/falter-common/files-common/etc/freifunk_release")],
             extract_fn=extract_falter_version))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
@@ -114,7 +113,6 @@ cat build/targets-%(prop:branch)s.txt \
 | cut -d' ' -f1 \
 | head -n4 \
 """)]))
-                "cat build/targets-%(prop:branch)s.txt | grep -v '#' | grep . | cut -d' ' -f1")]))
     f.addStep(
         steps.ShellCommand(
             name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
