@@ -118,14 +118,14 @@ cat build/targets-%(prop:branch)s.txt \
             name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
             command=["true"]))
     # TODO: This linking stuff does not work reliably
-    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages")
-    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s")
-    f.addStep(
-        steps.MasterShellCommand(
-            name="change symlinks to new artifacts",
-            haltOnFailure=True,
-            command=["sh", "-c", util.Interpolate(
-                "rm -vrf %(kw:symlinksrc)s && ln -s  -T %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinksrc=symlinksrc, symlinkdest=symlinkdest)]))
+    #symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages")
+    #symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s")
+    #f.addStep(
+    #    steps.MasterShellCommand(
+    #        name="change symlinks to new artifacts",
+    #        haltOnFailure=True,
+    #        command=["sh", "-c", util.Interpolate(
+    #            "rm -vrf %(kw:symlinksrc)s && ln -s  -T %(kw:symlinkdest)s %(kw:symlinksrc)s", symlinksrc=symlinksrc, symlinkdest=symlinkdest)]))
 
     return f
 
