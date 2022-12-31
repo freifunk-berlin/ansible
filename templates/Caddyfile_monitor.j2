@@ -1,0 +1,10 @@
+monitor.berlin.freifunk.net  {
+    root * /srv/www/monitor.berlin.freifunk.net
+    encode gzip zstd
+    php_fastcgi unix//run/php/php-fpm.sock
+    file_server
+}
+
+
+
+
