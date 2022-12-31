@@ -56,7 +56,10 @@ def targetsConfig(c):
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
 def targetTriggerStep(target):
   return AsyncTrigger(
-    name=util.Interpolate("trigger targets/%(prop:branch)s/%(kw:target)s", target=target),
+    # here is the possiblibilty of running into a nasty bug. Apparently, names
+    # for virt-builders shouldn't get too long. otherwise they might not get spawned
+    # https://github.com/buildbot/buildbot/issues/3413
+    name=util.Interpolate("trigger t/%(prop:branch)s/%(kw:target)s", target=target),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/targets"],
@@ -65,7 +68,7 @@ def targetTriggerStep(target):
       'target': target,
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
-      'virtual_builder_name': util.Interpolate("targets/%(prop:branch)s/%(kw:target)s", target=target),
+      'virtual_builder_name': util.Interpolate("t/%(prop:branch)s/%(kw:target)s", target=target),
       'virtual_builder_tags': ["targets", util.Interpolate("%(prop:branch)s")]})
 
 # Fans out to one builder per target and blocks for the results.
