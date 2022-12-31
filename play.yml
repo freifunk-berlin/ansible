@@ -2,7 +2,7 @@
 # This playbook deploys the whole application stack in this site.
 
 - name: Apply common configuration
-  hosts: all,!vpn03
+  hosts: all,!vpn03d.berlin.freifunk.net,!vpn03f.berlin.freifunk.net
   become: true
   vars_files:
     - inventory/group_vars/users
@@ -12,8 +12,10 @@
   tags: basic_provision
 
 
-- name: Deploy Users to VPN03 servers
-  hosts: vpn03
+- name: Deploy Users to VPN03 Ubuntu servers
+  hosts:
+    - vpn03d.berlin.freifunk.net
+    - vpn03f.berlin.freifunk.net
   become: true
   vars_files:
     - inventory/group_vars/users
