@@ -59,7 +59,7 @@
   pip:
     name:
       - requests
-      #- txrequests # the software stated, that treq would be faster by 2.8 times or so...
+      # - txrequests # the software stated, that treq would be faster by 2.8 times or so...
       - treq
     virtualenv: /usr/local/src/buildbot/env
   notify: Initialise buildbot
@@ -79,7 +79,7 @@
 - name: Flush handlers
   meta: flush_handlers
 
-- name: "buildbot-config: copy static files"
+- name: "Buildbot-config: copy static files"
   copy:
     src: "{{ item }}"
     dest: /usr/local/src/buildbot/masters/master/
@@ -94,7 +94,7 @@
     - packages.py
     - targets.py
 
-- name: "buildbot-config: render and copy dynamic stuff"
+- name: "Buildbot-config: render and copy dynamic stuff"
   template:
     src: "{{ item.src }}"
     dest: "/usr/local/src/buildbot/masters/master/{{ item.dest }}"
