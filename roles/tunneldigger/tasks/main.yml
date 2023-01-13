@@ -1,0 +1,63 @@
+---
+- name: Install dependencies
+  apt:
+    name:
+      - git
+      - dnsmasq
+      - python3-virtualenv
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Checkout tunneldigger
+  git:
+    repo: 'https://github.com/wlanslovenija/tunneldigger.git'
+    version: master
+    dest: "{{ tunneldigger_path }}"
+    force: true
+  notify: Restart tunneldigger
+
+- name: Copy tunneldigger service file
+  template:
+    src: "tunneldigger.service.j2"
+    dest: /etc/systemd/system/tunneldigger.service
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart tunneldigger
+
+- name: Copy tunneldigger configuration file
+  template:
+    src: "l2tp_broker.cfg.j2"
+    dest: /opt/tunneldigger/broker/l2tp_broker.cfg
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart tunneldigger
+
+- name: "Copy tunneldigger scripts: setup_interface.sh"
+  template:
+    src: "setup_interface.sh.j2"
+    dest: /opt/tunneldigger/broker/scripts/setup_interface.sh
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart tunneldigger
+
+- name: "Copy tunneldigger scripts: functions.sh"
+  template:
+    src: "functions.sh.j2"
+    dest: /opt/tunneldigger/broker/scripts/functions.sh
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart tunneldigger
+
+- name: "Copy dnsmasq config"
+  template:
+    src: "dnsmasq.conf.j2"
+    dest: /etc/dnsmasq.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart dnsmasq
