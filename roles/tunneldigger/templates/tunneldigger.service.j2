@@ -1,0 +1,13 @@
+[Unit]
+Description=tunneldigger tunnelling network daemon using l2tpv3
+After=network.target auditd.service
+
+[Service]
+Type=simple
+WorkingDirectory={{ tunneldigger_path }}
+ExecStart={{ tunneldigger_path }}/env/bin/python -m tunneldigger_broker.main {{ tunneldigger_path }}/broker/l2tp_broker.cfg
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

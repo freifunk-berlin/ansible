@@ -1,0 +1,16 @@
+#!/bin/bash
+TUNNEL_ID="$1"
+INTERFACE="$3"
+MTU="$4"
+
+. /opt/tunneldigger/broker/scripts/functions.sh
+
+# Set up the firewall
+ensure_nftables
+
+# Set the interface to UP state
+ip link set dev $INTERFACE up mtu $MTU
+
+# Add the interface to our bridge
+ensure_bridge diggerALL
+brctl addif diggerALL $INTERFACE

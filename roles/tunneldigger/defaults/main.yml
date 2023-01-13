@@ -1,0 +1,3 @@
+---
+tunneldigger_path: /opt/tunneldigger
+tunneldigger_listen_ip: "{{ ansible_eth0.ipv4.address }}"
