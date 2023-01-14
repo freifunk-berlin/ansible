@@ -14,6 +14,7 @@
       - mc
       - mosh
       - nano
+      - prometheus-node-exporter
       - tmux
       - zsh
     state: present
@@ -45,3 +46,12 @@
     mode: 0640
     owner: root
     group: root
+
+- name: Configure prometheus-node-exporter
+  template:
+    src: prometheus-node-exporter.j2
+    dest: /etc/default/prometheus-node-exporter
+    mode: 0640
+    owner: root
+    group: root
+  notify: Restart prometheus-node-exporter
