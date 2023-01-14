@@ -9,3 +9,9 @@
     name: fail2ban
     enabled: true
     state: restarted
+
+- name: Restart prometheus-node-exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    enabled: true
+    state: restarted
