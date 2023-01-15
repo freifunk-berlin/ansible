@@ -1,0 +1,41 @@
+---
+- name: Install dependencies
+  apt:
+    name:
+      - prometheus
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Copy prometheus config
+  template:
+    dest: /etc/prometheus/prometheus.yml
+    src: prometheus.yml.j2
+    mode: 0640
+    owner: prometheus
+    group: prometheus
+  notify: Restart prometheus
+
+- name: Copy prometheus defaults
+  template:
+    dest: /etc/default/prometheus
+    src: prometheus.j2
+    mode: 0640
+    owner: root
+    group: root
+  notify: Restart prometheus
+
+- name: Start prometheus collectd-exporter
+  community.general.docker_container:
+    name: collectd-exporter
+    state: started
+    image: prom/collectd-exporter
+    command: --collectd.listen-address=":25826"
+    ports:
+      - 9103:9103
+      - 25826:25826/udp
+
+# Todo:
+# grafana:
+# sudo wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
+# echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
