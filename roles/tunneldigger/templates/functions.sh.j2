@@ -29,17 +29,17 @@ ensure_nftables() {
   if [[ "$?" == "1" ]]; then
     nft add table nat
     nft 'add chain nat postrouting { type nat hook postrouting priority 100 ; }'
-    nft add rule nat postrouting ip saddr 172.31.224.1/20 oif eth0 snat to 185.183.158.195
+    nft add rule nat postrouting ip saddr 172.31.224.1/20 oif {{ tunneldigger_oifname }} snat to {{ tunneldigger_snat_ip }}
   fi
 
   nft list table ip filter &> /dev/null
   if [[ "$?" == "1" ]]; then
     nft add table ip filter
     nft 'add chain ip filter forward { type filter hook forward priority 0 ; }'
-    nft add rule filter forward oifname "eth0" ip daddr 10.0.0.0/8 counter packets 0 bytes 0 reject with icmp type net-prohibited
-    nft add rule filter forward oifname "eth0" ip daddr 172.16.0.0/12 counter packets 0 bytes 0 reject with icmp type net-prohibited
-    nft add rule filter forward oifname "eth0" ip daddr 192.168.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
-    nft add rule filter forward oifname "eth0" ip daddr 169.254.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
+    nft add rule filter forward oifname "{{ tunneldigger_oifname }}" ip daddr 10.0.0.0/8 counter packets 0 bytes 0 reject with icmp type net-prohibited
+    nft add rule filter forward oifname "{{ tunneldigger_oifname }}" ip daddr 172.16.0.0/12 counter packets 0 bytes 0 reject with icmp type net-prohibited
+    nft add rule filter forward oifname "{{ tunneldigger_oifname }}" ip daddr 192.168.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
+    nft add rule filter forward oifname "{{ tunneldigger_oifname }}" ip daddr 169.254.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
     nft add rule ip filter forward tcp flags syn tcp option maxseg size set rt mtu
   fi
 
