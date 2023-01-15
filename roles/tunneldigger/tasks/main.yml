@@ -2,8 +2,12 @@
 - name: Install dependencies
   apt:
     name:
-      - git
+      - bridge-utils
       - dnsmasq
+      - git
+      - iproute
+      - libevent-dev
+      - python-dev
       - python3-virtualenv
     state: present
     update_cache: true
@@ -16,6 +20,14 @@
     dest: "{{ tunneldigger_path }}"
     force: true
   notify: Restart tunneldigger
+
+# Does not work if you don't have a requirements file
+#- name: Install tunneldigger venv
+#  pip:
+#    virtualenv: "{{ tunneldigger_path }}/env"
+#    virtualenv_command: virtualenv --python=python3.7
+#    virtualenv_python: python3.7
+#  notify: Restart tunneldigger
 
 - name: Copy tunneldigger service file
   template:
@@ -39,7 +51,7 @@
   template:
     src: "setup_interface.sh.j2"
     dest: /opt/tunneldigger/broker/scripts/setup_interface.sh
-    mode: 0644
+    mode: 0755
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -48,6 +60,15 @@
   template:
     src: "functions.sh.j2"
     dest: /opt/tunneldigger/broker/scripts/functions.sh
+    mode: 0755
+    owner: root
+    group: root
+  notify: Restart tunneldigger
+
+- name: "Make sure the correct Kernel modules will load on boot"
+  template:
+    src: modules-tunneldigger.conf.j2
+    dest: /etc/modules-load.d/tunneldigger.conf
     mode: 0644
     owner: root
     group: root
