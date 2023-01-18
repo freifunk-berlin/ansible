@@ -1,7 +1,21 @@
 ---
+- name: Get grafana repo key
+  ansible.builtin.get_url:
+    url: https://apt.grafana.com/gpg.key
+    dest: /usr/share/keyrings/grafana.key
+    mode: '0440'
+    owner: root
+    group: root
+
+- name: Add grafana APT Repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main"
+    state: present
+
 - name: Install dependencies
   apt:
     name:
+      - grafana
       - prometheus
     state: present
     update_cache: true
@@ -35,7 +49,11 @@
       - 9103:9103
       - 25826:25826/udp
 
-# Todo:
-# grafana:
-# sudo wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
-# echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+- name: Copy grafana config
+  template:
+    dest: /etc/prometheus/prometheus.yml
+    src: prometheus.yml.j2
+    mode: 0640
+    owner: prometheus
+    group: prometheus
+  notify: Restart prometheus

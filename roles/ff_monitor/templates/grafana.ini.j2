@@ -1,0 +1,127 @@
+[server]
+# Protocol (http, https, h2, socket)
+;protocol = http
+
+# The ip address to bind to, empty will bind to all interfaces
+http_addr = 127.0.0.1
+
+# The http port  to use
+;http_port = 80
+
+# The public facing domain name used to access grafana from a browser
+;domain = localhost
+
+# Redirect to correct domain if host header does not match domain
+# Prevents DNS rebinding attacks
+;enforce_domain = false
+
+# The full public facing url you use in browser, used for redirects and emails
+# If you use reverse proxy and sub path specify full url (with sub path)
+;root_url = %(protocol)s://%(domain)s:%(http_port)s/
+
+# Serve Grafana from subpath specified in `root_url` setting. By default it is set to `false` for compatibility reasons.
+;serve_from_sub_path = true
+
+# Log web requests
+router_logging = false
+
+# the path relative working path
+;static_root_path = public
+
+# enable gzip
+;enable_gzip = false
+
+# https certs & key file
+;cert_file =
+;cert_key =
+
+# Unix socket path
+;socket =
+
+[analytics]
+reporting_enabled = false
+check_for_updates = false
+[security]
+disable_gravatar = true
+;cookie_secure = false
+[users]
+allow_sign_up = false
+[auth]
+[auth.anonymous]
+enabled = true
+org_name = t-löffel
+org_role = Viewer
+hide_version = true
+
+[log]
+# Either "console", "file", "syslog". Default is console and  file
+# Use space to separate multiple modes, e.g. "console file"
+;mode = console file
+
+# Either "debug", "info", "warn", "error", "critical", default is "info"
+;level = info
+
+# optional settings to set different levels for specific loggers. Ex filters = sqlstore:debug
+;filters =
+
+# For "console" mode only
+[log.console]
+;level =
+
+# log line format, valid options are text, console and json
+;format = console
+
+# For "file" mode only
+[log.file]
+;level =
+
+# log line format, valid options are text, console and json
+;format = text
+
+# This enables automated log rotate(switch of following options), default is true
+;log_rotate = true
+
+# Max line number of single file, default is 1000000
+;max_lines = 1000000
+
+# Max size shift of single file, default is 28 means 1 << 28, 256MB
+;max_size_shift = 28
+
+# Segment log daily, default is true
+;daily_rotate = true
+
+# Expired days of log file(delete after max days), default is 7
+;max_days = 7
+
+[log.syslog]
+;level =
+
+# log line format, valid options are text, console and json
+;format = text
+
+# Syslog network type and address. This can be udp, tcp, or unix. If left blank, the default unix endpoints will be used.
+;network =
+;address =
+
+# Syslog facility. user, daemon and local0 through local7 are valid.
+;facility =
+
+# Syslog tag. By default, the process' argv[0] is used.
+;tag =
+
+[alerting]
+enabled = false
+
+[explore]
+enabled = true
+
+[metrics]
+enabled  = false
+
+[plugins]
+allow_loading_unsigned_plugins = grafana-map-panel,panodata-map-panel
+
+[feature_toggles]
+publicDashboards = true
+[unified_alerting]
+enabled = false
