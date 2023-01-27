@@ -110,7 +110,6 @@ def packagesFactory(f):
 cat build/targets-%(prop:branch)s.txt \
 | grep -v '#' | grep . \
 | cut -d' ' -f1 \
-| head -n4 \
 """)]))
     f.addStep(
         steps.ShellCommand(
