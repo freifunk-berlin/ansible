@@ -138,7 +138,7 @@ def targetsTargetFactory(f):
                 """\
 podman run -i --rm --timeout=21600 --log-driver=none docker.io/library/alpine:edge sh -c '\
 ( \
-    apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite \
+    apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
