@@ -96,7 +96,7 @@ targets=$(\
     | cut -d" " -f2- \
     | xargs -n1 echo | sort \
 ) ; \
-for t in "$targets"; do \
+for t in $targets; do \
     if ! cat broken-%(prop:release)s.txt | grep -F "$t" >/dev/null ; \
     then \
         echo "$t" ; \
