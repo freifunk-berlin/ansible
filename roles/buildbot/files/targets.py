@@ -74,7 +74,10 @@ def targetsFactory(f):
             name="git clone",
             haltOnFailure=True,
             repourl=builter_repo,
-            mode='incremental'))
+            # if using incremental, we get strange behaviors, when configuring
+            # another repo, that is back the other repo. Doing full checkouts is cleaner
+            method='clobber',
+            mode='full'))
     f.addStep(
         AsyncBuildGenerator(targetTriggerStep,
             name="generate builds",
