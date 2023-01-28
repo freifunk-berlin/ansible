@@ -31,7 +31,8 @@
     - systemli.letsencrypt
 
 - name: Set up buildbot workers
-  hosts: buildbotworker
+  # buildbot has docker already. Don't deploy podman for now.
+  hosts: buildbotworker, !buildbot.berlin.freifunk.net
   become: true
   roles:
     - alvistack.podman
