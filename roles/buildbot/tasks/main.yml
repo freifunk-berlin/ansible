@@ -102,15 +102,6 @@
     owner: buildbot
     group: root
   notify: Restart buildbot
-
-- name: Apply workers-credentials
-  template:
-    dest: /usr/local/src/buildbot/masters/master/worker.py
-    src: worker.py.j2
-    mode: 0764
-    owner: buildbot
-    group: root
-  notify: Restart buildbot
   loop:
     - { src: config.py.j2, dest: config.py }
     - { src: secs.py.j2, dest: secs.py }
@@ -165,3 +156,16 @@
   with_items:
     - packagefeed_master.pub
     - packagefeed_master.sec
+
+- name: copy helper scripts (fw-selector)
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src
+    mode: 0700
+    owner: buildbot
+    group: root
+  with_items:
+    - packagefeed_master.pub
+    - packagefeed_master.sec
+    - sign_packages.sh
+    - generate_autoupdate_json.py
