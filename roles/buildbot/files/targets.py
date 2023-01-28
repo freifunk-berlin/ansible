@@ -94,13 +94,13 @@ def targetsFactory(f):
                 # TODO: doesn't fail if targets-*.txt doesn't exist
                 '''\
 targets=$(\
-    cat targets-%(prop:release)s.txt \
+    cat .buildconf/targets-%(prop:release)s.txt \
     | grep -v "#" | grep . \
     | cut -d" " -f2- \
     | xargs -n1 echo | sort \
 ) ; \
 for t in $targets; do \
-    if ! cat broken-%(prop:release)s.txt | grep -F "$t" >/dev/null ; \
+    if ! cat .buildconf/broken-%(prop:release)s.txt | grep -F "$t" >/dev/null ; \
     then \
         echo "$t" ; \
     fi ; \
