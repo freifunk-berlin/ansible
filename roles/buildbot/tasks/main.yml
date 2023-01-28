@@ -169,3 +169,4 @@
     - packagefeed_master.sec
     - sign_packages.sh
     - generate_autoupdate_json.py
+    - symlink_build.sh
