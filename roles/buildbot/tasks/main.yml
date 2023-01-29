@@ -79,7 +79,7 @@
 - name: Flush handlers
   meta: flush_handlers
 
-- name: "buildbot-config: copy static files"
+- name: "Buildbot-config: copy static files"
   copy:
     src: "{{ item }}"
     dest: /usr/local/src/buildbot/masters/master/
@@ -94,7 +94,7 @@
     - packages.py
     - targets.py
 
-- name: "buildbot-config: render and copy dynamic stuff"
+- name: "Buildbot-config: render and copy dynamic stuff"
   template:
     src: "{{ item.src }}"
     dest: "/usr/local/src/buildbot/masters/master/{{ item.dest }}"
@@ -157,7 +157,7 @@
     - packagefeed_master.pub
     - packagefeed_master.sec
 
-- name: copy helper scripts (fw-selector)
+- name: Copy helper scripts (fw-selector)
   copy:
     src: "{{ item }}"
     dest: /usr/local/src
