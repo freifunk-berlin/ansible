@@ -54,7 +54,7 @@
 
 - name: Add workers admin-info
   template:
-    dest: "{{ bbworker_path }}/info/admin"
+    dest: "{{ bbworker_path }}info/admin"
     src: admin.j2
     mode: "0644"
     owner: "{{ machine_user }}"
@@ -73,7 +73,8 @@
   ansible.builtin.file:
     path: "{{ bbworker_path }}"
     state: directory
-    mode: "0644"
+    # needs to be this high. Otherwise service will not start.
+    mode: "0755"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
     recurse: true
