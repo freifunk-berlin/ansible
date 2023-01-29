@@ -1,12 +1,12 @@
 #!/bin/sh
 
 print_help() {
-    echo "Links a build to the final download-dir."
+    echo "Links a build to the final download-dir. run as buildbot-user, please!"
     echo "Usage:"
-    echo '    ./symlink_build.sh $falterversion $buildnumber [-p|-t]'
+    echo '    sudo -u buildbot ./symlink_build.sh $falterversion $buildnumber [-p|-t]'
     echo " "
     echo "Example:"
-    echo "    ./symlink_build.sh 1.2.3-snapshot 18 -t"
+    echo "    sudo -u buildbot ./symlink_build.sh 1.2.3-snapshot 18 -t"
     echo ""
 }
 
