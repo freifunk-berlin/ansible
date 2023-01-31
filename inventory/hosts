@@ -15,7 +15,9 @@ buildbot-worker-04 ansible_host=85.215.162.88
 buildbot-worker-scherer8 ansible_host=scherer8-buildbot.olsr # only from within freifunk-net use a Jumphost or so...
 buildbot.berlin.freifunk.net # the buildbot master runs aditionally the master-worker. Thus having the worker-role too.
 
-[vpn03]
-vpn03d.berlin.freifunk.net
-vpn03f.berlin.freifunk.net
-vpn03h.berlin.freifunk.net
+[tunneldigger]
+b.tunnel.berlin.freifunk.net # freifunk-gw01
+c.tunnel.berlin.freifunk.net # vpn03d.berlin.freifunk.net
+d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
+f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net
+
