@@ -161,7 +161,7 @@
   copy:
     src: "{{ item }}"
     dest: /usr/local/src
-    mode: "0700"
+    mode: "0600"
     owner: buildbot
     group: root
   with_items:
