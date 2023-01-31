@@ -2,7 +2,7 @@
 # This playbook deploys the whole application stack in this site.
 
 - name: Apply common configuration
-  hosts: all,!vpn03d.berlin.freifunk.net,!vpn03f.berlin.freifunk.net
+  hosts: all,!c.tunnel.berlin.freifunk.net,!d.tunnel.berlin.freifunk.net
   become: true
   vars_files:
     - inventory/group_vars/users
@@ -11,16 +11,16 @@
     - ryandaniels.create_users
   tags: basic_provision
 
-
-- name: Deploy Users to VPN03 Ubuntu servers
+- name: Deploy Users to tunneldigger Ubuntu servers
   hosts:
-    - vpn03d.berlin.freifunk.net
-    - vpn03f.berlin.freifunk.net
+    - c.tunnel.berlin.freifunk.net
+    - d.tunnel.berlin.freifunk.net
   become: true
   vars_files:
     - inventory/group_vars/users
   roles:
     - ryandaniels.create_users
+  tags: basic_provision
 
 - name: Set up buildbot environment
   hosts: buildbot
