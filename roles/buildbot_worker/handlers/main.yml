@@ -5,6 +5,6 @@
     enabled: true
     state: restarted
 
-- name: Initialize buildbot-worker
+- name: Initialise buildbot-worker
   command: buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}
   become_user: bbworker
