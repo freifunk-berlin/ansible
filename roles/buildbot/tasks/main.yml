@@ -157,16 +157,25 @@
     - packagefeed_master.pub
     - packagefeed_master.sec
 
-- name: Copy helper scripts (fw-selector)
+- name: Copy keys
   copy:
     src: "{{ item }}"
     dest: /usr/local/src
-    mode: 0700
+    mode: "0600"
     owner: buildbot
     group: root
   with_items:
     - packagefeed_master.pub
     - packagefeed_master.sec
+
+- name: Copy helper scripts (fw-selector)
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/src
+    mode: "0755"
+    owner: buildbot
+    group: root
+  with_items:
     - sign_packages.sh
     - generate_autoupdate_json.py
     - symlink_build.sh
