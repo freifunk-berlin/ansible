@@ -54,9 +54,4 @@
   become: true
   roles:
     - caddy
-
-- name: Set up monitoring server
-  hosts: monitoring_new
-  become: true
-  roles:
     - ff_monitor

@@ -1,22 +1,22 @@
 ---
-- name: Get grafana repo key
-  ansible.builtin.get_url:
+- name: Add grafana signing key
+  ansible.builtin.apt_key:
     url: https://apt.grafana.com/gpg.key
-    dest: /usr/share/keyrings/grafana.key
-    mode: '0440'
-    owner: root
-    group: root
+    state: present
 
 - name: Add grafana APT Repo
   ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main"
+    repo: "deb https://apt.grafana.com stable main"
     state: present
+    update_cache: false
 
 - name: Install dependencies
   apt:
     name:
       - grafana
       - prometheus
+      - collectd
+      - docker.io
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -46,14 +46,31 @@
     image: prom/collectd-exporter
     command: --collectd.listen-address=":25826"
     ports:
-      - 9103:9103
-      - 25826:25826/udp
+      - 9104:9103
+      - 127.0.0.1:25827:25826/udp
 
 - name: Copy grafana config
   template:
-    dest: /etc/prometheus/prometheus.yml
-    src: prometheus.yml.j2
+    dest: /etc/grafana/grafana.ini
+    src: grafana.ini.j2
     mode: 0640
-    owner: prometheus
-    group: prometheus
-  notify: Restart prometheus
+    owner: grafana
+    group: grafana
+  notify: Restart grafana
+
+- name: Copy collectd config
+  template:
+    dest: /etc/collectd/collectd.conf
+    src: collectd.conf.j2
+    mode: 0644
+    owner: root
+    group: root
+  notify: Restart collectd
+
+- name: Add cleanup task
+  ansible.builtin.cron:
+    name: remove old rrd files
+    special_time: daily
+    user: root
+    job: "find /mnt/collectd/rrd/ -type f -mtime +90 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
+

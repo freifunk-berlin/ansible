@@ -20,7 +20,8 @@ scrape_configs:
 
   - job_name: collectd
     static_configs:
-      - targets: ['localhost:9103']
+      - targets: ['monitor.berlin.freifunk.net:9104']
+    honor_timestamps: true
 
   - job_name: servers
     static_configs:

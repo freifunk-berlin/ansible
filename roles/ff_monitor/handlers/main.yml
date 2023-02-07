@@ -25,3 +25,10 @@
     name: prometheus
     enabled: true
     state: restarted
+
+- name: Restart grafana
+  systemd:
+    daemon_reload: true
+    name: grafana-server
+    enabled: true
+    state: restarted
