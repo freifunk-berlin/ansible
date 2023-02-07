@@ -1,0 +1,105 @@
+FQDNLookup true
+
+AutoLoadPlugin false
+TypesDB "/usr/share/collectd/types.db" "/usr/share/collectd/iwinfo_types.db" "/usr/share/collectd/kmodem_types.db"
+Interval 10
+Timeout 2
+ReadThreads 5
+WriteThreads 5
+
+LoadPlugin "syslog"
+<Plugin syslog>
+  LogLevel err
+</Plugin>
+
+LoadPlugin "cpu"
+
+<Plugin cpu>
+  ReportByState true
+  ReportByCpu true
+  ValuesPercentage false
+  ReportNumCpu false
+  ReportGuestState false
+  SubtractGuestState true
+</Plugin>
+
+LoadPlugin "df"
+<Plugin df>
+  IgnoreSelected false
+  ReportByDevice false
+  ReportInodes true
+  ValuesAbsolute true
+  ValuesPercentage false
+</Plugin>
+
+LoadPlugin "disk"
+<Plugin disk>
+  Disk  "vda"
+  Disk  "vdb"
+  IgnoreSelected false
+</Plugin>
+
+LoadPlugin "interface"
+<Plugin interface>
+  Interface  "ens3"
+  IgnoreSelected false
+  ReportInactive true
+</Plugin>
+
+LoadPlugin "load"
+<Plugin load>
+  ReportRelative false
+</Plugin>
+
+LoadPlugin "memory"
+<Plugin memory>
+  ValuesAbsolute true
+  ValuesPercentage false
+</Plugin>
+
+LoadPlugin "network"
+<Plugin network>
+  Forward true
+  ReportStats true
+</Plugin>
+
+LoadPlugin "processes"
+LoadPlugin "rrdcached"
+<Plugin rrdcached>
+  DaemonAddress "unix:/var/run/rrdcached.sock"
+  DataDir "/var/lib/collectd/rrd"
+  CreateFiles true
+  CreateFilesAsync false
+</Plugin>
+
+LoadPlugin "swap"
+<Plugin swap>
+  ReportByDevice false
+  ReportBytes true
+  ValuesAbsolute true
+  ValuesPercentage false
+  ReportIO true
+</Plugin>
+
+LoadPlugin "unixsock"
+<Plugin unixsock>
+  SocketFile  "/var/run/collectd-unixsock"
+  SocketGroup "collectd"
+  SocketPerms "0666"
+  DeleteSocket "false"
+</Plugin>
+
+LoadPlugin "write_prometheus"
+<Plugin "write_prometheus">
+  Port "9103"
+</Plugin>
+
+<Plugin network>
+  <Server "127.0.0.1" "25827">
+  </Server>
+</Plugin>
+
+<Plugin network>
+  <Listen "*" "25826">
+  </Listen>
+</Plugin>
