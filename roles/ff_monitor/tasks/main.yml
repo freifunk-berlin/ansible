@@ -72,4 +72,64 @@
     name: remove old rrd files
     special_time: daily
     user: root
-    job: "find /mnt/collectd/rrd/ -type f -mtime +90 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
+    job: "find /mnt/collectd/rrd/ -type f -mtime +60 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0750'
+    owner: www-data
+    group: www-data
+  with_items:
+    - /srv/www/monitor.berlin.freifunk.net/cgp/
+    - /srv/www/monitor.berlin.freifunk.net/metrics/
+    - /srv/www/monitor.berlin.freifunk.net/static/
+    - /opt/helperscripts/
+
+- name: Copy firmwaremetrics
+  ansible.builtin.copy:
+    src: files/firmwaremetrics/
+    dest: /srv/www/monitor.berlin.freifunk.net/metrics/firmware/
+    owner: www-data
+    group: www-data
+
+- name: Copy helperscripts
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /opt/helperscripts/
+    owner: www-data
+    group: www-data
+    mode: '0640'
+  with_items:
+    - create_node_geojson.py
+    - create_node_list.py
+
+- name: Cronjob to create node json
+  ansible.builtin.cron:
+    name: create node json
+    special_time: daily
+    user: www-data
+    job: "/opt/create_node_list.py > /srv/www/monitor.berlin.freifunk.net/static/nodes.json"
+
+- name: Cronjob to create node geojson
+  ansible.builtin.cron:
+    name: create node geojson
+    special_time: hourly
+    user: www-data
+    job: "/opt/create_node_geojson.py.py > /srv/www/monitor.berlin.freifunk.net/static/nodes_geojson.json"
+
+- name: Checkout CGP Repo
+  become_user: www-data
+  ansible.builtin.git:
+    repo: https://github.com/pommi/CGP.git
+    dest: /srv/www/monitor.berlin.freifunk.net/cgp/
+    version: 5daa8b3a98818e7bbedf8e0e2a27a4672ee6dfdd
+
+- name: Copy CGP config
+  template:
+    dest: /srv/www/monitor.berlin.freifunk.net/cgp/conf/config.local.php
+    src: config.local.php.j2
+    mode: 0644
+    owner: www-data
+    group: www-data
