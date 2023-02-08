@@ -3,6 +3,11 @@ monitor.berlin.freifunk.net  {
     encode gzip zstd
     php_fastcgi unix//run/php/php-fpm.sock
     file_server
+
+    handle_path /grafana* {
+	    reverse_proxy http://127.0.0.1:8080
+    }
+
 }
 
 
