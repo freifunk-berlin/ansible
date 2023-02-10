@@ -67,12 +67,12 @@
     group: root
   notify: Restart collectd
 
-- name: Add cleanup task
+- name: Add cleanup task for data that hasn't been updated in 30 days
   ansible.builtin.cron:
     name: remove old rrd files
     special_time: daily
     user: root
-    job: "find /mnt/collectd/rrd/ -type f -mtime +60 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
+    job: "find /mnt/collectd/rrd/ -type f -mtime +30 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
@@ -100,7 +100,7 @@
     dest: /opt/helperscripts/
     owner: www-data
     group: www-data
-    mode: '0640'
+    mode: '0750'
   with_items:
     - create_node_geojson.py
     - create_node_list.py
@@ -110,14 +110,14 @@
     name: create node json
     special_time: daily
     user: www-data
-    job: "/opt/create_node_list.py > /srv/www/monitor.berlin.freifunk.net/static/nodes.json"
+    job: "/opt/helperscripts/create_node_list.py > /srv/www/monitor.berlin.freifunk.net/static/nodes.json"
 
 - name: Cronjob to create node geojson
   ansible.builtin.cron:
     name: create node geojson
-    special_time: hourly
+    special_time: daily
     user: www-data
-    job: "/opt/create_node_geojson.py.py > /srv/www/monitor.berlin.freifunk.net/static/nodes_geojson.json"
+    job: "/opt/helperscripts/create_node_geojson.py > /srv/www/monitor.berlin.freifunk.net/static/nodes_geojson.json"
 
 - name: Checkout CGP Repo
   become_user: www-data

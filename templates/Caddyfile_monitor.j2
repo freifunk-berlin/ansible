@@ -4,6 +4,8 @@ monitor.berlin.freifunk.net  {
     php_fastcgi unix//run/php/php-fpm.sock
     file_server
 
+    redir / /cgp/
+
     handle_path /grafana* {
 	    reverse_proxy http://127.0.0.1:8080
     }

@@ -17,7 +17,7 @@ $CONFIG['flush_type'] = 'rrdcached';
     'download-master.berlin.freifunk.net',
     'monitor.berlin.freifunk.net',
     'pool.tunnel.berlin.freifunk.net',
-    'vmhost03.berlin.freifunk.net',
+    'vmhost03.berlin.freifunk.net'
   );
 
   $CONFIG['cat']['vpn03.berlin.freifunk.net'] = array(
@@ -35,14 +35,12 @@ $CONFIG['flush_type'] = 'rrdcached';
     'rhxb-nw-5ghz',
     'rhxb-nw-ac',
     'rhxb-rhnk',
-    'rhxb-rt1',
     'rhxb-simeon',
     'rhxb-sw-5ghz',
     'rhxb-technikmuseum'
   );
 
   $CONFIG['cat']['Rathaus Neukoelln'] = array(
-    'rhnk-ap-0',
     'rhnk-ap1',
     'rhnk-ap2',
     'rhnk-bvv-core',
@@ -50,58 +48,30 @@ $CONFIG['flush_type'] = 'rrdcached';
     'rhnk-emma',
     'rhnk-nf-bvv',
     'rhnk-no-5ghz',
-    'rhnk-ono-5ghz',
     'rhnk-philmel',
-    'rhnk-platz',
     'rhnk-rhxb',
     'rhnk-ssw-5ghz'
   );
 
-  $CONFIG['cat']['E-Lok'] = array(
-    'elok-ff-core',
-    'elok-medienraum',
-    'elok-tresen',
-    'elok-lascafe',
-    'laskerwiese-2ghz',
-    'elok-nordwest',
-    'ELOK-Nordwest-2GHz',
-    'ELOK-Nordwest-5GHz'
-  );
-
   $CONFIG['cat']['JUP'] = array(
-    'JUP-core',
-    'JUP-OG1',
-    'JUP-OG2',
-    'JUP-beam',
-    'JUP-omni',
-    'JUP-ost-5',
-    'JUP-nord-2',
-    'JUP-nord-5',
-    'JUP-sued-2',
-    'JUP-sued-5'
+    'jup-bar',
+    'jup-bht',
+    'jup-bullet-ap4',
+    'jup-core',
+    'jup-m2-ap3',
+    'jup-m5-ap1',
+    'jup-m5-ap2',
+    'jup-m5-ap5',
+    'jup-segen'
   );
 
   $CONFIG['cat']['Zwingli'] = array(
-    'Zwingli-Core',
-    'Zwingli-Ost-2GHz',
-    'Zwingli-Ost-5GHz',
-    'Zwingli-Nord-2GHz',
-    'Zwingli-Nord-5GHz',
-    'Zwingli-West-2GHz',
-    'Zwingli-West-5GHz',
-    'Zwingli-Sued-2GHz',
-    'Zwingli-Sued-5GHz',
     'zwingli-agym',
     'zwingli-core',
-    'zwingli-emma',
     'zwingli-nord-5ghz',
     'zwingli-ost-nf-2ghz',
     'zwingli-ost-nf-5ghz',
-    'zwingli-rhnk',
     'zwingli-sama',
-    'zwingli-sued-5ghz',
-    'zwingli-sued-nf-2ghz',
-    'zwingli-sued-nf-5ghz',
     'zwingli-vaterhaus',
     'zwingli-west-nf-2ghz',
     'zwingli-west-nf-5ghz',
@@ -127,25 +97,6 @@ $CONFIG['flush_type'] = 'rrdcached';
     'sama27-sama'
 );
 
-  $CONFIG['cat']['Finowst. 2a'] = array(
-    'f2a-core-rt',
-    'f2a-omni-2ghz',
-    'f2a-omni-2og',
-    'f2a-nno-2ghz',
-    'f2a-sued',
-    'f2a-bbb-sw',
-    'f2a-bbb-west',
-    'f2a-finow-nord-2ghz',
-    'f2a-finow-sued-2ghz',
-    'f2a-testing-dfs'
-  );
-
-  $CONFIG['cat']['Neukoelln Arcaden'] = array(
-    'arcaden-klunkerkranich',
-    'arcaden-bib',
-    'arcaden-nordost'
-  );
-
   $CONFIG['cat']['Martin Luther Kirche'] = array(
     'mlk-nk-core',
     'mlk-nk-nf-wbp1',
@@ -155,124 +106,45 @@ $CONFIG['flush_type'] = 'rrdcached';
     'mlk-nk-zwingli'
   );
 
-  $CONFIG['cat']['Emmaus Kirche'] = array(
-    'emma-core',
-    'emma-nno-2ghz',
-    'emma-nnw-2ghz',
-    'emma-ono-m2',
-    'emma-oso-2ghz',
-    'emma-sso-2ghz',
-    'emma-ssw-m2',
-    'emma-wnw-2ghz',
-    'emma-wsw-2ghz'
-  );
-
-  $CONFIG['cat']['Refugee Notunterkünfte'] = array(
-    'refugees-TeskeSchuleUplink',
-    'refugees-haarlemer',
-    'refugees-jahnhalle',
-    'refugees-lageso',
-    'refugees-mdorferweg',
-    'refugees-teske-downlink',
-    'notunterkunft-malmoeer8',
-    'notunterkunft-malmoeer8-slave-0',
-    'notunterkunft-malmoeer8-slave-1',
-    'refugees-geibel-halle',
-    'refugees-lobeck-core'
-  );
-
-  $CONFIG['cat']['Stuttgarter Str.'] = array(
-    'stuttgarter-core',
-    'stuttgarter-emma',
-    'stuttgarter-hof',
-    'stuttgarter-nord',
-    'stuttgarter-ost',
-    'stuttgarter-rhnk',
-    'stuttgarter-stra',
-    'stuttgarter-sued',
-    'stuttgarter-west'
-  );
-
-  $CONFIG['cat']['IN-Berlin'] = array(
-    'am-dach-rt1',
-    'am-dach-ns5-sw',
-    'am-dach-ns5-so'
-  );
 
   $CONFIG['cat']['Teufelsberg'] = array(
-    'tberg-core',
-    'tberg-loft',
-    'tberg-loft-m2'
-  );
-
-  $CONFIG['cat']['TU Berlin'] = array(
-    'dk0tu-core',
-    'dk0tu-shack',
-    'dk0tu-mathe',
-    'tub-zoo-5ghz',
-    'tub-am-2ghz',
-    'tub-mathe-2ghz'
-  );
-
-  $CONFIG['cat']['SKA95'] = array(
-    'ska95-core',
-    'ska95-cortile',
-    'ska95-schoolyard'
-  );
-
-  $CONFIG['cat']['c-base'] = array(
-    'c-base-core',
-    'c-base-ceminar',
-    'c-base-mainhall-exit',
-    'c-base-mainhall-he1'
-  );
-
-  $CONFIG['cat']['humpty-frei'] = array(
-    'humpty-frei-main',
-    'humpty-frei-beeren-back',
-    'humpty-frei-obentraut-back',
-    'humpty-frei-rhxb',
-    'humpty-frei-saigon'
+    'tberg-core'
   );
 
   $CONFIG['cat']['Rixbox'] = array(
     'rixbox-core',
-    'rixbox-node01',
-    'rixbox-node02',
-    'rixbox-node03'
-  );
-
-  $CONFIG['cat']['Neukölln - Kneipen, Cafes und private APs'] = array(
-    'nk-silverfuture'
+    'rixbox-ap1',
+    'rixbox-ap2',
+    'rixbox-ap3'
   );
 
   $CONFIG['cat']['Treptow / Köpenick'] = array(
-    'Adlershof-Eigeninitiative',
-    'Ahof-frieden-bbbgw',
-    'Ahof-frieden01',
-    'Ahof-frieden02',
-    'Ahof-frieden03',
-    'ekke-aussen', 'ekke-innen',
-    'eschenbach5',
-    'ff_Ahoernchen2',
-    'Geographie',
-    'Mitmach-Republik',
-    'PFTK',
-    'Rabenhaus',
-    'Unter_den_Linden',
-    'Wilhelminenhofstrasse',
-    'wop-sued'
+    'eschenbach5'
   );
 
   $CONFIG['cat']['Cottbuss'] = array(
-    'cottbus-poznaner-str19',
-    'cottbus-quasimono',
-    'cottbus-vom-stein-str-37',
+    'cottbus-ampark42a',
+    'cottbus-branitzerdorfmitte8',
+    'cottbus-branitzerstr11',
+    'cottbus-chekov',
+    'cottbus-doebbrickerdorfstr6',
+    'cottbus-froebelstr13',
+    'cottbus-gaglowerlandstr4',
+    'cottbus-huefnerweg1',
+    'cottbus-karlstr24',
+    'cottbus-lausi36-2',
+    'cottbus-merzdorferwiesenstr4b',
+    'cottbus-schmellwitzerstr50',
+    'cottbus-strombad-heizraum',
+    'cottbus-strombad-kueche',
+    'cottbus-vetschauerplatz6',
+    'cottbus-vom-stein-str-37'
   );
 
   $CONFIG['cat']['Scherer8'] = array(
     'scherer8',
     'scherer8-abb',
+    'Scherer8-Beuth',
     'scherer8-eg-s',
     'scherer8-eg-nw',
     'scherer8-eg-o',
@@ -289,4 +161,36 @@ $CONFIG['flush_type'] = 'rrdcached';
     'scharni-ap3'
   );
 
+  $CONFIG['cat']['Glienicke'] = array(
+    'Glienicke_Buergerhaus_1001',
+    'Glienicke_Buergerhaus_2027',
+    'Glienicke_Feuerwehr_2021',
+    'Glienicke_Jungborn_0101',
+    'Glienicke_Lessing_1000',
+    'Glienicke_Lessing_1024',
+    'Glienicke_MensaOst_0002',
+    'Glienicke_MensaWest_2030',
+    'Glienicke_Mensa_1007',
+    'Glienicke_Mobil_1015',
+    'Glienicke_NeuesRathaus_2031',
+    'Glienicke_NeuesRathaus_2032',
+    'Glienicke_Seniorenclub_2026',
+    'Glienicke_Standesamt_2025'
+  );
+
+  $CONFIG['cat']['dragonkiez'] = array(
+    'dragonkiez-buero',
+    'dragonkiez-buero-rhxb',
+    'dragonkiez-dorfplatz',
+    'dragonkiez-dorfplatz-ap1',
+    'dragonkiez-dorfplatz-rhxb',
+    'dragonkiez-kiezraum',
+    'dragonkiez-kiezraum-rhxb',
+    'dragonkiez-plangarage',
+    'dragonkiez-plangarage-rhxb',
+    'dragonkiez-rathausblock-miami',
+    'dragonkiez-rathausblock-miami-ap1',
+    'dragonkiez-rathausblock-miami-ap2',
+    'dragonkiez-rathausblock-miami-rhxb'
+  );
 ?>
