@@ -1,26 +1,20 @@
 ---
 # This playbook deploys the whole application stack in this site.
 
-- name: Apply common configuration
+- name: Deploy users to all servers
+  hosts: all
+  become: true
+  vars_files:
+    - inventory/group_vars/users
+  roles:
+    - ryandaniels.create_users
+  tags: user_provision
+
+- name: Apply common configuration and packagaes
   hosts: all,!c.tunnel.berlin.freifunk.net,!d.tunnel.berlin.freifunk.net
   become: true
-  vars_files:
-    - inventory/group_vars/users
   roles:
     - common
-    - ryandaniels.create_users
-  tags: basic_provision
-
-- name: Deploy Users to tunneldigger Ubuntu servers
-  hosts:
-    - c.tunnel.berlin.freifunk.net
-    - d.tunnel.berlin.freifunk.net
-  become: true
-  vars_files:
-    - inventory/group_vars/users
-  roles:
-    - ryandaniels.create_users
-  tags: basic_provision
 
 - name: Set up buildbot environment
   hosts: buildbot
