@@ -51,10 +51,10 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
 def targetTriggerStep(target):
   return AsyncTrigger(
-    # here is the possiblibilty of running into a nasty bug. Apparently, names
-    # for virt-builders shouldn't get too long. otherwise they might not get spawned
-    # https://github.com/buildbot/buildbot/issues/3413
-    name=util.Interpolate("trigger t/%(prop:release)s/%(kw:target)s", target=target),
+    # Step name limit is 50 chars, longest is currently 40 chars:
+    # targets/openwrt-22.03/lantiq/xway_legacy
+    # See https://github.com/buildbot/buildbot/issues/3413
+    name=util.Interpolate("targets/%(prop:release)s/%(kw:target)s", target=target),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/targets"],
@@ -63,7 +63,10 @@ def targetTriggerStep(target):
       'target': target,
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
-      'virtual_builder_name': util.Interpolate("t/%(prop:release)s/%(kw:target)s", target=target),
+      # Builder name limit is 70 characters, longest is currently 40 chars:
+      # targets/openwrt-22.03/lantiq/xway_legacy
+      # See https://github.com/buildbot/buildbot/pull/3957
+      'virtual_builder_name': util.Interpolate("targets/%(prop:release)s/%(kw:target)s", target=target),
       'virtual_builder_tags': ["targets", util.Interpolate("%(prop:release)s")]})
 
 # Fans out to one builder per target and blocks for the results.
