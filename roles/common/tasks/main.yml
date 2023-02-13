@@ -59,13 +59,13 @@
 - name: Disallow password-based login for all users
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: 'PasswordAuthentication'
     line: 'PasswordAuthentication no'
+    insertafter: EOF
   notify: Restart sshd
 
 - name: Disallow login for root user
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: 'PermitRootLogin'
     line: 'PermitRootLogin no'
+    insertafter: EOF
   notify: Restart sshd
