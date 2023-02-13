@@ -45,10 +45,10 @@ def packagesConfig(c, repo, branches, workerNames):
 # Passed by packagesFactory to AsyncBuildGenerator to be called for each arch.
 def archTriggerStep(arch):
   return AsyncTrigger(
-    # here is the possiblibilty of running into a nasty bug. Apparently, names
-    # for virt-builders shouldn't get too long. otherwise they might not get spawned
-    # https://github.com/buildbot/buildbot/issues/3413
-    name=util.Interpolate("trigger p/%(prop:branch)s/%(kw:arch)s", arch=arch),
+    # Step name limit is 50 chars, longest is currently 48 chars:
+    # packages/openwrt-22.03/arm_cortex-a15_neon-vfpv4
+    # See https://github.com/buildbot/buildbot/issues/3413
+    name=util.Interpolate("packages/%(prop:branch)s/%(kw:arch)s", arch=arch),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/packages"],
@@ -57,7 +57,10 @@ def archTriggerStep(arch):
       'arch': arch,
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
-      'virtual_builder_name': util.Interpolate("p/%(prop:branch)s/%(kw:arch)s", arch=arch),
+      # Builder name limit is 70 characters, longest is currently 48 chars:
+      # packages/openwrt-22.03/arm_cortex-a15_neon-vfpv4
+      # See https://github.com/buildbot/buildbot/pull/3957
+      'virtual_builder_name': util.Interpolate("packages/%(prop:branch)s/%(kw:arch)s", arch=arch),
       'virtual_builder_tags': ["packages", util.Interpolate("%(prop:branch)s")],
       'falterVersion': util.Interpolate("%(prop:falterVersion)s")
       })
