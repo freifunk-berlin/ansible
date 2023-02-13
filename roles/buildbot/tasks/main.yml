@@ -176,6 +176,5 @@
     owner: buildbot
     group: root
   with_items:
-    - sign_packages.sh
     - generate_autoupdate_json.py
     - symlink_build.sh
