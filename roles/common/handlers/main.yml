@@ -1,3 +1,4 @@
+---
 - name: Restart collectd
   ansible.builtin.service:
     name: collectd

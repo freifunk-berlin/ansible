@@ -1,3 +1,4 @@
+---
 - name: Restart buildbot
   systemd:
     daemon_reload: true
