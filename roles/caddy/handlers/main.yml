@@ -1,3 +1,4 @@
+---
 - name: Restart caddy
   systemd:
     daemon_reload: true

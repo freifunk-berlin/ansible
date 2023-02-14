@@ -1,3 +1,4 @@
+---
 - name: Restart rrdcached
   systemd:
     daemon_reload: true

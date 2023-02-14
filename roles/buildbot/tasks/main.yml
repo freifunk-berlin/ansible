@@ -103,8 +103,8 @@
     group: root
   notify: Restart buildbot
   loop:
-    - { src: config.py.j2, dest: config.py }
-    - { src: secs.py.j2, dest: secs.py }
+    - {src: config.py.j2, dest: config.py}
+    - {src: secs.py.j2, dest: secs.py}
 
 - name: Add buildbot systemd-service-module
   copy:
