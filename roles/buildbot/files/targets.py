@@ -5,10 +5,7 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-from config import workerNames, builter_repo, builter_branches
-
-
-def targetsConfig(c):
+def targetsConfig(c, repo, workerNames):
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
@@ -26,7 +23,7 @@ def targetsConfig(c):
           label="branch",
           default="master"),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=builter_repo),
+        repository=util.FixedParameter(name="repository", default=repo),
         project=util.FixedParameter(name="project", default=""))],
     properties=[
         util.StringParameter(
