@@ -3,7 +3,32 @@
 
 # {{ ansible_managed }}
 
+
+# Buildbot internal database
+dbURL = 'mysql://buildbot:{{ buildbot_mariadb_user_password }}@localhost/buildbot?max_idle=300'
+
+
+# Various Buildbot settings
+wwwPort = 8010
+pbPort = 9989
+title = 'Freifunk Berlin'
+titleURL = 'https://buildbot.berlin.freifunk.net/'
+buildbotURL = 'https://buildbot.berlin.freifunk.net/'
+
+
+# OAuth Login via Github
+githubOrg = 'freifunk-berlin'
+githubClientID = '{{ githubClientID }}'
+githubClientSecret = '{{ githubClientSecret }}'
+
+
+# Automatic builds
+webhookSecret = '{{ webhook_secret }}'
+
+
+# Result notifications
 matrixHomeserver = '{{ matrixHomeserver }}'
+matrixAccessToken = '{{ matrixAccessToken }}'
 matrixRoom = '{{ matrixRoom }}'
 
 
