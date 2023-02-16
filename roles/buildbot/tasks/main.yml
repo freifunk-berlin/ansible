@@ -94,17 +94,14 @@
     - packages.py
     - targets.py
 
-- name: "Buildbot-config: render and copy dynamic stuff"
+- name: "Buildbot-config: render config.py"
   template:
-    src: "{{ item.src }}"
-    dest: "/usr/local/src/buildbot/masters/master/{{ item.dest }}"
+    src: "config.py.j2"
+    dest: "/usr/local/src/buildbot/masters/master/config.py"
     mode: 0640
     owner: buildbot
     group: root
   notify: Restart buildbot
-  loop:
-    - {src: config.py.j2, dest: config.py}
-    - {src: secs.py.j2, dest: secs.py}
 
 - name: Add buildbot systemd-service-module
   copy:
