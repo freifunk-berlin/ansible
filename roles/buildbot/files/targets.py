@@ -73,7 +73,7 @@ def targetsFactory(f):
         steps.Git(
             name="git clone",
             haltOnFailure=True,
-            repourl=builter_repo,
+            repourl=util.Interpolate("%(prop:repository)s"),
             # if using incremental, we get strange behaviors, when configuring
             # another repo, that is back the other repo. Doing full checkouts is cleaner
             method='clobber',
