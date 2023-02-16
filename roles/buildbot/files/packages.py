@@ -6,10 +6,7 @@ import re
 
 from asyncbuild import *
 
-from config import workerNames, packages_repo, packages_branches
-
-
-def packagesConfig(c):
+def packagesConfig(c, repo, branches, workerNames):
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",
@@ -23,11 +20,11 @@ def packagesConfig(c):
         "",
         branch=util.ChoiceStringParameter(
           name="branch",
-          choices=packages_branches,
+          choices=branches,
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=packages_repo),
+        repository=util.FixedParameter(name="repository", default=repo),
         project=util.FixedParameter(name="project", default=""))]))
 
   c['builders'].append(util.BuilderConfig(
