@@ -18,8 +18,10 @@ def packagesConfig(c, repo, branches, workerNames):
     codebases=[
       util.CodebaseParameter(
         "",
+        label="Build falter package feeds using falter-packages.git",
         branch=util.ChoiceStringParameter(
           name="branch",
+          label="git branch",
           choices=branches,
           default="master",
           strict=True),
