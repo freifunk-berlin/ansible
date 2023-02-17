@@ -5,7 +5,7 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-def targetsConfig(c, repo, workerNames):
+def targetsConfig(c, repo, branches, releaseBranches, workerNames):
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
@@ -17,19 +17,22 @@ def targetsConfig(c, repo, workerNames):
     codebases=[
       util.CodebaseParameter(
         "",
-        label="falter-builter repository",
-        branch=util.StringParameter(
+        label="Build falter targets using falter-builter.git",
+        branch=util.ChoiceStringParameter(
           name="branch",
-          label="branch",
-          default="master"),
+          label="git branch",
+          choices=branches,
+          default="master",
+          strict=True),
         revision=util.FixedParameter(name="revision", default=""),
         repository=util.FixedParameter(name="repository", default=repo),
         project=util.FixedParameter(name="project", default=""))],
     properties=[
-        util.StringParameter(
-            name="release",
-            label="falter release branch",
-            default="snapshot")],
+        util.ChoiceStringParameter(
+          name="release",
+          label="falter release branch",
+          choices=releaseBranches,
+          strict=True)],
     reason=util.FixedParameter(name="reason", default="manual", hide=True)))
 
   c['builders'].append(util.BuilderConfig(
@@ -51,7 +54,7 @@ def targetTriggerStep(target):
     # here is the possiblibilty of running into a nasty bug. Apparently, names
     # for virt-builders shouldn't get too long. otherwise they might not get spawned
     # https://github.com/buildbot/buildbot/issues/3413
-    name=util.Interpolate("trigger t/%(prop:branch)s/%(kw:target)s", target=target),
+    name=util.Interpolate("trigger t/%(prop:release)s/%(kw:target)s", target=target),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/targets"],
@@ -60,8 +63,8 @@ def targetTriggerStep(target):
       'target': target,
       'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
-      'virtual_builder_name': util.Interpolate("t/%(prop:branch)s/%(kw:target)s", target=target),
-      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:branch)s")]})
+      'virtual_builder_name': util.Interpolate("t/%(prop:release)s/%(kw:target)s", target=target),
+      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:release)s")]})
 
 # Fans out to one builder per target and blocks for the results.
 def targetsFactory(f):
