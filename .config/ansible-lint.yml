@@ -1,9 +1,9 @@
 ---
 exclude_paths:
-  - .github/
-  - .git
-  - external_roles
-  - collections
+  - ../.github/
+  - ../.git
+  - ../external_roles
+  - ../collections
 
 skip_list:
   - fqcn-builtins
