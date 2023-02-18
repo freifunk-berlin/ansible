@@ -3,9 +3,10 @@
 
 extends: default
 
-# ignore possible venv directory and encrypted ansible vault files in the worker directories
+# ignore possible venv directory and encrypted ansible vault files in the buildbot and worker directories
 ignore: |
   venv
+  inventory/host_vars/buildbot.berlin.freifunk.net/main.yml
   inventory/host_vars/buildbot-worker-*/main.yml
 
 rules:
