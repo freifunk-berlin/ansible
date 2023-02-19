@@ -50,6 +50,10 @@ This separation makes using the monorepo approach easier, since we can just excl
 └── Vagrantfile                  # A Vagrant file to run test machines with Vagrant
 ```
 
+## Tutorials
+
+We provide step by step tutorials for some common workflows in [Tutorials.md](Tutorials.md).
+
 ## How to contribute
 
 If you want to help us, you are very welcome.
@@ -57,28 +61,3 @@ If you want to help us, you are very welcome.
 The easiest way is to ask `@akira` or `@rtznprmpftl` in our [matrix](https://app.element.io/#/room/#berlin.freifunk.net:matrix.org) chatroom.
 
 Alternatively you can use the GitHub bugtracker, if you discover any issues on the infrastructure side.
-
-## Tutorial for provisioning a new machine
-
-Provisioning a new machine happens in two stages:
-
-1. Set up the users and basic installation
-2. Setting it up for its actual purpose
-
-### 1. Set up the basic installation
-
-For this stage, you need to access the machine as root user. Add the machine to the `hosts`-file and write it into the right section to tag its purpose. For defining a machine to serve as a buildbot worker, it should look like something similar to this:
-
-```txt
-[...]
-
-[buildbotworker]
-testmachine ansible_host=example.org
-
-```
-
-After that, you can start the first provision stage with `ansible-playbook play.yml --limit=testmachine --tags=user_provision --user root`. As there are no other users yet, you should not forget the `--user root` option.
-
-### 2. Provision machine for its actual purpose
-
-After that, just run the rest of the playbooks for the given machine, accessing it with your own ssh login: `ansible-playbook play.yml --limit=testmachine`.
