@@ -116,10 +116,23 @@ cat build/targets-%(prop:branch)s.txt \
 | grep -v '#' | grep . \
 | cut -d' ' -f1 \
 """)]))
+
+    wwwdir = util.Interpolate(
+        "/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:buildnumber)s")
+    pubdir = util.Interpolate(
+        "/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages")
     f.addStep(
-        steps.ShellCommand(
-            name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
-            command=["true"]))
+        steps.MasterShellCommand(
+            name="publish",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate("""\
+mkdir -p %(kw:p)s %(kw:p)s.new \
+    && cp -a %(kw:w)s/* %(kw:p)s.new/ \
+    && mv %(kw:p)s %(kw:p)s.prev \
+    && mv %(kw:p)s.new %(kw:p)s \
+    && rm -rf %(kw:p)s.prev \
+""",
+                w=wwwdir, p=pubdir)]))
 
     return f
 

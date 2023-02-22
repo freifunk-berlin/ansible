@@ -109,16 +109,29 @@ for t in $targets; do \
     fi ; \
 done \
 ''')]))
+
+    wwwdir = util.Interpolate(
+        "/usr/local/src/www/htdocs/buildbot/builds/targets/%(prop:buildnumber)s")
+    pubdir = util.Interpolate(
+        "/usr/local/src/www/htdocs/buildbot/unstable/%(prop:release)s")
     f.addStep(
-        steps.ShellCommand(
-            name=util.Interpolate("%(prop:asyncSuccess)s of %(prop:asyncTotal)s succeeded"),
-            command=["true"]))
+        steps.MasterShellCommand(
+            name="publish",
+            haltOnFailure=True,
+            command=["sh", "-c", util.Interpolate("""\
+mkdir -p %(kw:p)s %(kw:p)s.new \
+    && rm -rf %(kw:p)s.new/* %(kw:p)s.prev \
+    && mv %(kw:w)s/* %(kw:p)s.new/ \
+    && mv %(kw:p)s %(kw:p)s.prev \
+    && mv %(kw:p)s.new %(kw:p)s \
+    && rm -rf %(kw:p)s.prev \
+""",
+                w=wwwdir, p=pubdir)]))
 
     return f
 
-
 @util.renderer
-def targetTarFile(props):
+def targetsTarFile(props):
   t, st = props['target'].split('/')
   return "targets-{0}-{1}_{2}.tar".format(props['origbuildnumber'], t, st)
 
@@ -154,7 +167,7 @@ podman run -i --rm --timeout=32400 --log-driver=none docker.io/library/alpine:ed
 && tar -c *' > out.tar \
 """)]))
 
-    tarfile = targetTarFile
+    tarfile = targetsTarFile
     wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
     wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
     wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
