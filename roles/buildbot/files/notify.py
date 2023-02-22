@@ -59,7 +59,7 @@ class MatrixNotifier(ReporterBase):
         b = reports[0]['builds'][0]
         builder = b['builder']['name']
 
-        if b['complete'] != True or (builder != 'builds/targets' and builder != 'builds/packages'):
+        if 'number' not in b or b['complete'] != True or (builder != 'builds/targets' and builder != 'builds/packages'):
             return
 
         # pp = pprint.PrettyPrinter(indent=4)
