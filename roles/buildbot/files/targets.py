@@ -142,7 +142,7 @@ def targetsTargetFactory(f):
                 #     https://github.com/containers/podman/issues/13779
                 #
                 """\
-podman run -i --rm --timeout=21600 --log-driver=none docker.io/library/alpine:edge sh -c '\
+podman run -i --rm --timeout=32400 --log-driver=none docker.io/library/alpine:edge sh -c '\
 ( \
     apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
