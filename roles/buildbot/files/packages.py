@@ -32,7 +32,8 @@ def packagesConfig(c, repo, branches, workerNames):
   c['builders'].append(util.BuilderConfig(
     name="builds/packages",
     workernames=["masterworker"],
-    factory=packagesFactory(util.BuildFactory())))
+    factory=packagesFactory(util.BuildFactory()),
+    collapseRequests=False))
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/packages",
@@ -45,10 +46,10 @@ def packagesConfig(c, repo, branches, workerNames):
 # Passed by packagesFactory to AsyncBuildGenerator to be called for each arch.
 def archTriggerStep(arch):
   return AsyncTrigger(
-    # Step name limit is 50 chars, longest is currently 48 chars:
-    # packages/openwrt-22.03/arm_cortex-a15_neon-vfpv4
+    # Step name limit is 50 chars, longest is currently 33 chars:
+    # "trigger arm_cortex-a15_neon-vfpv4"
     # See https://github.com/buildbot/buildbot/issues/3413
-    name=util.Interpolate("packages/%(prop:branch)s/%(kw:arch)s", arch=arch),
+    name=util.Interpolate("trigger %(kw:arch)s", arch=arch),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/packages"],
@@ -125,7 +126,31 @@ cat build/targets-%(prop:branch)s.txt \
         steps.MasterShellCommand(
             name="publish",
             haltOnFailure=True,
-            command=["sh", "-c", util.Interpolate("""\
+            command=["sh", "-c", util.Interpolate(
+                # Publish build in a way that minimizes downtime.
+                #
+                # We call the currently published artifacts "current",
+                # which is e.g. /unstable/1.3.0-snapshot or /unstable/snapshot.
+                # We also use two temporary directories called "new" and "prev".
+                #
+                # 1. Remove "new" and "prev" leftovers from previous builds
+                # 2. Move build artifacts into "new"
+                # 3. Rename "current" published stuff to "prev"
+                # 4. Publish "new" by renaming it to "current"
+                # 5. Remove "prev"
+                #
+                # This is slightly different from targets builds,
+                # where we only move instead of copy+move.
+                # That means /builds/packages/%d is available after publishing,
+                # while it's empty for targets builds.
+                #
+                # Packages downloads are only unavailable after step 3 and
+                # before step 4 has completed.
+                #
+                # Just symlinking from /builds/packages/%d is not a good option,
+                # since we want to be able to just delete that at any time,
+                # without worrying about symlinks pointing to deleted stuff.
+                """\
 mkdir -p %(kw:p)s %(kw:p)s.new \
     && cp -a %(kw:w)s/* %(kw:p)s.new/ \
     && mv %(kw:p)s %(kw:p)s.prev \

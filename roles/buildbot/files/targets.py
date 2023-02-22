@@ -38,7 +38,8 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
   c['builders'].append(util.BuilderConfig(
     name="builds/targets",
     workernames=["masterworker"],
-    factory=targetsFactory(util.BuildFactory())))
+    factory=targetsFactory(util.BuildFactory()),
+    collapseRequests=False))
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/targets",
@@ -51,10 +52,10 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
 def targetTriggerStep(target):
   return AsyncTrigger(
-    # Step name limit is 50 chars, longest is currently 40 chars:
-    # targets/openwrt-22.03/lantiq/xway_legacy
+    # Step name limit is 50 chars, longest is currently 26 chars:
+    # "trigger lantiq/xway_legacy"
     # See https://github.com/buildbot/buildbot/issues/3413
-    name=util.Interpolate("targets/%(prop:release)s/%(kw:target)s", target=target),
+    name=util.Interpolate("trigger %(kw:target)s", target=target),
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/targets"],
@@ -118,7 +119,32 @@ done \
         steps.MasterShellCommand(
             name="publish",
             haltOnFailure=True,
-            command=["sh", "-c", util.Interpolate("""\
+            command=["sh", "-c", util.Interpolate(
+                # Publish build in a way that minimizes downtime.
+                #
+                # We call the currently published artifacts "current",
+                # which is e.g. /unstable/1.3.0-snapshot or /unstable/snapshot.
+                # We also use two temporary directories called "new" and "prev".
+                #
+                # 1. Remove "new" and "prev" leftovers from previous builds
+                # 2. Move build artifacts into "new"
+                # 3. Rename "current" published stuff to "prev"
+                # 4. Publish "new" by renaming it to "current"
+                # 5. Remove "prev"
+                #
+                # This is slightly different from packages builds,
+                # where we copy+move instead of just move.
+                # We just don't have the hardware to copy >50 GB quickly.
+                # That means /builds/targets/%d is empty after publishing,
+                # while it's kept available for packages builds.
+                #
+                # Targets downloads are only unavailable after step 3 and
+                # before step 4 has completed.
+                #
+                # Just symlinking from /builds/targets/%d is not a good option,
+                # since we want to be able to just delete that at any time,
+                # without worrying about symlinks pointing to deleted stuff.
+                """\
 mkdir -p %(kw:p)s %(kw:p)s.new \
     && rm -rf %(kw:p)s.new/* %(kw:p)s.prev \
     && mv %(kw:w)s/* %(kw:p)s.new/ \
@@ -153,6 +179,11 @@ def targetsTargetFactory(f):
                 # * --log-driver so we don't pump huge tarballs into the logging facility
                 #   * it'd also trigger a segfault in ~15% of concurrent runs:
                 #     https://github.com/containers/podman/issues/13779
+                #
+                # We tried to speed things up with a ramdisk filesystem,
+                # but this had very little performance impact in production:
+                # --tmpfs /root:rw,size=6291456k,mode=1777
+                # For larger targets, 6 GiB wasn't enough.
                 #
                 """\
 podman run -i --rm --timeout=32400 --log-driver=none docker.io/library/alpine:edge sh -c '\
