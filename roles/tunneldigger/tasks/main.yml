@@ -23,13 +23,13 @@
     force: true
   notify: Restart tunneldigger
 
-- name: create tunneldigger venv
-  shell: "python3 -m venv {{ tunneldigger_path }}/env"
+- name: Create tunneldigger venv
+  command: "/usr/bin/python3 -m venv {{ tunneldigger_path }}/env"
   args:
     creates: "{{ tunneldigger_path }}/env"
   notify: Restart tunneldigger
 
-- name: install tunneldigger in venv
+- name: Install tunneldigger in venv
   shell: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && python setup.py install"
   args:
     creates: "{{ tunneldigger_path }}/broker/dist/"
@@ -39,7 +39,7 @@
   template:
     src: "tunneldigger.service.j2"
     dest: /etc/systemd/system/tunneldigger.service
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -48,7 +48,7 @@
   template:
     src: "l2tp_broker.cfg.j2"
     dest: "{{ tunneldigger_path }}/broker/l2tp_broker.cfg"
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -57,7 +57,7 @@
   template:
     src: "setup_interface.sh.j2"
     dest: "{{ tunneldigger_path }}/broker/scripts/setup_interface.sh"
-    mode: 0755
+    mode: "0755"
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -66,7 +66,7 @@
   template:
     src: "functions.sh.j2"
     dest: "{{ tunneldigger_path }}/broker/scripts/functions.sh"
-    mode: 0755
+    mode: "0755"
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -75,7 +75,7 @@
   template:
     src: modules-tunneldigger.conf.j2
     dest: /etc/modules-load.d/tunneldigger.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Restart tunneldigger
@@ -84,7 +84,7 @@
   template:
     src: "dnsmasq.conf.j2"
     dest: /etc/dnsmasq.conf
-    mode: 0644
+    mode: "0644"
     owner: root
     group: root
   notify: Restart dnsmasq
