@@ -5,10 +5,12 @@
       - bridge-utils
       - dnsmasq
       - git
-      - iproute
+      - iproute2
       - libevent-dev
+      - nftables
       - python-dev
-      - python3-virtualenv
+      - python3-venv
+      - python3-pip
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -21,13 +23,17 @@
     force: true
   notify: Restart tunneldigger
 
-# Does not work if you don't have a requirements file
-#- name: Install tunneldigger venv
-#  pip:
-#    virtualenv: "{{ tunneldigger_path }}/env"
-#    virtualenv_command: virtualenv --python=python3.7
-#    virtualenv_python: python3.7
-#  notify: Restart tunneldigger
+- name: create tunneldigger venv
+  shell: "python3 -m venv {{ tunneldigger_path }}/env"
+  args:
+    creates: "{{ tunneldigger_path }}/env"
+  notify: Restart tunneldigger
+
+- name: install tunneldigger in venv
+  shell: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && python setup.py install"
+  args:
+    creates: "{{ tunneldigger_path }}/broker/dist/"
+    executable: /bin/bash
 
 - name: Copy tunneldigger service file
   template:
@@ -41,7 +47,7 @@
 - name: Copy tunneldigger configuration file
   template:
     src: "l2tp_broker.cfg.j2"
-    dest: /opt/tunneldigger/broker/l2tp_broker.cfg
+    dest: "{{ tunneldigger_path }}/broker/l2tp_broker.cfg"
     mode: 0644
     owner: root
     group: root
@@ -50,7 +56,7 @@
 - name: "Copy tunneldigger scripts: setup_interface.sh"
   template:
     src: "setup_interface.sh.j2"
-    dest: /opt/tunneldigger/broker/scripts/setup_interface.sh
+    dest: "{{ tunneldigger_path }}/broker/scripts/setup_interface.sh"
     mode: 0755
     owner: root
     group: root
@@ -59,7 +65,7 @@
 - name: "Copy tunneldigger scripts: functions.sh"
   template:
     src: "functions.sh.j2"
-    dest: /opt/tunneldigger/broker/scripts/functions.sh
+    dest: "{{ tunneldigger_path }}/broker/scripts/functions.sh"
     mode: 0755
     owner: root
     group: root
