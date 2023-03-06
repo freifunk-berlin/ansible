@@ -12,3 +12,6 @@ roles:
     version: 2.1.0
   - src: alvistack.podman
     version: 6.3.1
+collections:
+  - name: ansible.posix
+    version: 1.5.1
