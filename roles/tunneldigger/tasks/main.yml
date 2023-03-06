@@ -88,3 +88,9 @@
     owner: root
     group: root
   notify: Restart dnsmasq
+
+- name: Allow ipv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
