@@ -1,0 +1,16 @@
+#!/bin/sh
+# {{ ansible_managed }}
+
+PROMETHEUS_FILE=/var/lib/prometheus/node-exporter/tunneldigger.prom
+
+
+TUNNELDIGGER_CLIENTS="
+# HELP tunneldigger_clients currently connected tunneldigger clients
+# TYPE tunneldigger_clients gauge
+tunneldigger_clients $(ip l | grep -c l2tp)
+"
+
+# Tunneldigger
+cat <<EOT > $PROMETHEUS_FILE
+$TUNNELDIGGER_CLIENTS
+EOT
