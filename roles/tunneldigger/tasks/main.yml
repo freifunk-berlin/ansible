@@ -53,23 +53,22 @@
     group: root
   notify: Restart tunneldigger
 
-- name: "Copy tunneldigger scripts: setup_interface.sh"
+- name: "Copy tunneldigger scripts"
   template:
-    src: "setup_interface.sh.j2"
-    dest: "{{ tunneldigger_path }}/broker/scripts/setup_interface.sh"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     mode: "0755"
     owner: root
     group: root
   notify: Restart tunneldigger
+  loop:
+    - { src: 'setup_interface.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/setup_interface.sh' }
+    - { src: 'functions.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/functions.sh' }
+    - { src: 'mtu_changes.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/mtu_changes.sh' }
+    - { src: 'session.down.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.down.sh' }
+    - { src: 'session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.mtu-changed.sh' }
+    - { src: 'session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.up.sh' }
 
-- name: "Copy tunneldigger scripts: functions.sh"
-  template:
-    src: "functions.sh.j2"
-    dest: "{{ tunneldigger_path }}/broker/scripts/functions.sh"
-    mode: "0755"
-    owner: root
-    group: root
-  notify: Restart tunneldigger
 
 - name: "Make sure the correct Kernel modules will load on boot"
   template:
@@ -94,3 +93,26 @@
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: true
+
+- name: Copy prometheus node_exporter script for tunneldigger
+  template:
+    src: "tunneldigger_exporter.sh.j2"
+    dest: /opt/tunneldigger_exporter.sh
+    mode: "0750"
+    owner: root
+    group: root
+
+- name: Run Prometheus Exporter every minute
+  ansible.builtin.cron:
+    name: "Prometheus tunneldigger exporter"
+    minute: "*"
+    job: "/opt/tunneldigger_exporter.sh"
+    user: root
+
+- name: Set conntrack size
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/conntrack.conf
+    line: options nf_conntrack hashsize=32768
+    owner: root
+    group: root
+    mode: '0644'
