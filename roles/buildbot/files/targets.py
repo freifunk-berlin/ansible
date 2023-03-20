@@ -174,19 +174,25 @@ def targetsTargetFactory(f):
                 # * -i so we get output
                 # * no -t because it messes with stdout/stderr
                 # * --rm so we don't fill up the disk with old containers
-                # * --timeout so we don't accumulate hanging containers
-                #   * requires Podman >= 3.2.0
                 # * --log-driver so we don't pump huge tarballs into the logging facility
                 #   * it'd also trigger a segfault in ~15% of concurrent runs:
                 #     https://github.com/containers/podman/issues/13779
                 #
+                # Originally we'd also set --timeout, but the workers perf is
+                # very inconsistent. Build times regularly went very long,
+                # so long that --timeout didn't make sense anymore.
+                # It was more of a preventive measure anyway,
+                # since hanging builds aren't a problem that we've had so far.
+                # In addition, manual build cancellation is very reliable
+                # and would be an effective countermeasure.
+                #
                 # We tried to speed things up with a ramdisk filesystem,
                 # but this had very little performance impact in production:
                 # --tmpfs /root:rw,size=6291456k,mode=1777
-                # For larger targets, 6 GiB wasn't enough.
+                # Also larger targets seemed to need more than 6 GiB.
                 #
                 """\
-podman run -i --rm --timeout=32400 --log-driver=none docker.io/library/alpine:edge sh -c '\
+podman run -i --rm --log-driver=none docker.io/library/alpine:edge sh -c '\
 ( \
     apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
