@@ -1,0 +1,13 @@
+#!/bin/sh
+# {{ ansible_managed }}
+
+cmd="$1"
+mac="$2"
+ip="$3"
+hostname="$4"
+
+if [ "$cmd" = "add" ] || [ "$cmd" = "old" ]; then
+        if [ ! -z "$DNSMASQ_INTERFACE" ]; then
+                ip route add $ip dev $DNSMASQ_INTERFACE
+        fi
+fi

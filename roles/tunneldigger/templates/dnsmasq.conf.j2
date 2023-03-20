@@ -1,11 +1,9 @@
 # {{ ansible_managed }}
 
-# Do not listen on the outside interface and tun devices
-except-interface=eth0
-except-interface=tun-udp
-except-interface=tun-tcp
+listen-address=172.31.224.1
 dhcp-range=172.31.224.100,172.31.239.254,255.255.240.0,1h
 dhcp-option=6
 dhcp-lease-max=3991
+dhcp-script=/opt/tunneldigger/broker/scripts/dhcp-script.sh
 
 port=0

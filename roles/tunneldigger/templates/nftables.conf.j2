@@ -1,0 +1,22 @@
+#!/usr/sbin/nft -f
+# {{ ansible_managed }}
+
+flush ruleset
+
+table ip nat {
+        chain postrouting {
+                type nat hook postrouting priority srcnat; policy accept;
+                ip saddr 172.31.224.0/20 oif "eth0" snat to {{ tunneldigger_snat_ip }}
+        }
+}
+table ip filter {
+        chain forward {
+                type filter hook forward priority filter; policy accept;
+                oifname "eth0" ip daddr 10.0.0.0/8 counter packets 0 bytes 0 reject with icmp type net-prohibited
+                oifname "eth0" ip daddr 172.16.0.0/12 counter packets 0 bytes 0 reject with icmp type net-prohibited
+                oifname "eth0" ip daddr 192.168.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
+                oifname "eth0" ip daddr 169.254.0.0/16 counter packets 0 bytes 0 reject with icmp type net-prohibited
+                tcp flags syn tcp option maxseg size set rt mtu
+        }
+}
+
