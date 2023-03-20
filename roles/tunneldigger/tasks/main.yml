@@ -4,13 +4,16 @@
     name:
       - bridge-utils
       - dnsmasq
+      - gcc
       - git
       - iproute2
       - libevent-dev
+      - libnetfilter-conntrack-dev
+      - libnfnetlink-dev
       - nftables
-      - python-dev
-      - python3-venv
+      - python3-dev
       - python3-pip
+      - python3-venv
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -18,7 +21,7 @@
 - name: Checkout tunneldigger
   git:
     repo: 'https://github.com/wlanslovenija/tunneldigger.git'
-    version: master
+    version: c50ef46d78d797750979ebf2f8ddc5aa993a02ae
     dest: "{{ tunneldigger_path }}"
     force: true
   notify: Restart tunneldigger
@@ -62,13 +65,9 @@
     group: root
   notify: Restart tunneldigger
   loop:
-    - { src: 'setup_interface.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/setup_interface.sh' }
-    - { src: 'functions.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/functions.sh' }
-    - { src: 'mtu_changes.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/mtu_changes.sh' }
-    - { src: 'session.down.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.down.sh' }
-    - { src: 'session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.mtu-changed.sh' }
-    - { src: 'session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/session.up.sh' }
-
+    - { src: 'ff.session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh' }
+    - { src: 'ff.session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh' }
+    - { src: 'dhcp-script.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh' }
 
 - name: "Make sure the correct Kernel modules will load on boot"
   template:
@@ -116,3 +115,13 @@
     owner: root
     group: root
     mode: '0644'
+    create: true
+
+- name: Set nftables conf
+  template:
+    src: "nftables.conf.j2"
+    dest: /etc/nftables.conf
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Load nftables rules

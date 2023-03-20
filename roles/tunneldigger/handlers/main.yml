@@ -12,3 +12,6 @@
     name: dnsmasq
     enabled: true
     state: restarted
+
+- name: Load nftables rules
+  command: "/usr/sbin/nft -f /etc/nftables.conf"
