@@ -49,3 +49,9 @@
   roles:
     - caddy
     - ff_monitor
+
+- name: Set up tunneldigger
+  hosts: f.tunnel.berlin.freifunk.net
+  become: true
+  roles:
+    - tunneldigger
