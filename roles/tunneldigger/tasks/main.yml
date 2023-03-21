@@ -18,6 +18,18 @@
     update_cache: true
     cache_valid_time: 3600
 
+- name: Set nftables conf
+  template:
+    src: "nftables.conf.j2"
+    dest: /etc/nftables.conf
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Load nftables rules
+
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Checkout tunneldigger
   git:
     repo: 'https://github.com/wlanslovenija/tunneldigger.git'
@@ -65,9 +77,9 @@
     group: root
   notify: Restart tunneldigger
   loop:
-    - { src: 'ff.session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh' }
-    - { src: 'ff.session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh' }
-    - { src: 'dhcp-script.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh' }
+    - {src: 'ff.session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh'}
+    - {src: 'ff.session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh'}
+    - {src: 'dhcp-script.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh'}
 
 - name: "Make sure the correct Kernel modules will load on boot"
   template:
@@ -116,12 +128,3 @@
     group: root
     mode: '0644'
     create: true
-
-- name: Set nftables conf
-  template:
-    src: "nftables.conf.j2"
-    dest: /etc/nftables.conf
-    mode: "0644"
-    owner: root
-    group: root
-  notify: Load nftables rules
