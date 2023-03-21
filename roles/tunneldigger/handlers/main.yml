@@ -1,10 +1,10 @@
+---
 - name: Restart tunneldigger
   systemd:
     daemon_reload: true
     name: tunneldigger
     enabled: true
     state: restarted
-
 
 - name: Restart dnsmasq
   systemd:
