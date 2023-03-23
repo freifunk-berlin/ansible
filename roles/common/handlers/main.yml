@@ -22,3 +22,9 @@
     name: sshd
     enabled: true
     state: restarted
+
+- name: Restart journald
+  ansible.builtin.service:
+    name: systemd-journald
+    enabled: true
+    state: restarted
