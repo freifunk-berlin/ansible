@@ -53,35 +53,34 @@ def archTriggerStep(arch):
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/packages"],
-    copy_properties=['repository', 'branch', 'revision', 'got_revision'],
+    copy_properties=['repository', 'branch', 'revision', 'got_revision', 'falterBranch'],
     set_properties={
       'arch': arch,
-      'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
       # Builder name limit is 70 characters, longest is currently 48 chars:
       # packages/openwrt-22.03/arm_cortex-a15_neon-vfpv4
       # See https://github.com/buildbot/buildbot/pull/3957
       'virtual_builder_name': util.Interpolate("packages/%(prop:branch)s/%(kw:arch)s", arch=arch),
       'virtual_builder_tags': ["packages", util.Interpolate("%(prop:branch)s")],
-      'falterVersion': util.Interpolate("%(prop:falterVersion)s")
       })
 
-
-def extract_falter_version(rc, stdout, stderr):
-    """provides some logic and regex magic to get a falter-version from a
-    freifunk_release file.
-    """
-    try:
-        versionString = re.search("FREIFUNK_RELEASE=['\"](.*)['\"]", stdout)
-        falterVersion = versionString.group(1)
-    except:
-        falterVersion = 'unknown'
-
-    return {'falterVersion': falterVersion}
+# Only needed for publishing, see pubdir further below.
+# Apart from that only used for targets builds.
+@util.renderer
+def branchToFalterBranch(props):
+    o2f = { 'master':'snapshot',
+            'openwrt-22.03':'1.3.0-snapshot',
+            'openwrt-21.02':'1.2.3-snapshot' }
+    return o2f.get(props['branch'])
 
 # Fans out to one builder per arch and blocks for the results.
 def packagesFactory(f):
     f.buildClass = AsyncBuild
+    f.addStep(
+        steps.SetProperty(
+            name=util.Interpolate("falterBranch = %(kw:fv)s", fv=branchToFalterBranch),
+            property="falterBranch",
+            value=branchToFalterBranch))
     f.addStep(
         steps.Git(
             name="git clone",
@@ -91,15 +90,6 @@ def packagesFactory(f):
             # another repo, that is back the other repo. Doing full checkouts is cleaner
             method='clobber',
             mode='full'))
-    f.addStep(
-        steps.SetPropertyFromCommand(
-            # fetch upload-dir from FREIFUNK_RELEASE variable in freifunk_release file.
-            # this file shows the falter-version the feed is intended for
-            name="fetch falter feed-version",
-            haltOnFailure=True,
-            command=["cat",
-                util.Interpolate("%(prop:builddir)s/build/packages/falter-common/files-common/etc/freifunk_release")],
-            extract_fn=extract_falter_version))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
             name="generate builds",
@@ -121,7 +111,7 @@ cat build/targets-%(prop:branch)s.txt \
     wwwdir = util.Interpolate(
         "/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:buildnumber)s")
     pubdir = util.Interpolate(
-        "/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages")
+        "/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterBranch)s/packages")
     f.addStep(
         steps.MasterShellCommand(
             name="publish",
@@ -197,8 +187,6 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
     wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
-    symlinksrc = util.Interpolate("/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterVersion)s/packages/")
-    symlinkdest = util.Interpolate("/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:origbuildnumber)s/*")
     wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(

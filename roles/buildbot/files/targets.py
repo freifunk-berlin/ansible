@@ -13,11 +13,12 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
 
   c['schedulers'].append(schedulers.ForceScheduler(
     name="force-targets",
+    label="Snapshot",
     builderNames=["builds/targets"],
     codebases=[
       util.CodebaseParameter(
         "",
-        label="Build falter targets using falter-builter.git",
+        label="Build falter snapshot images using falter-builter.git",
         branch=util.ChoiceStringParameter(
           name="branch",
           label="git branch",
@@ -29,10 +30,33 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
         project=util.FixedParameter(name="project", default=""))],
     properties=[
         util.ChoiceStringParameter(
-          name="release",
+          name="falterBranch",
           label="falter release branch",
           choices=releaseBranches,
           strict=True)],
+    reason=util.FixedParameter(name="reason", default="manual", hide=True)))
+
+  c['schedulers'].append(schedulers.ForceScheduler(
+    name="force-release",
+    label="Release",
+    builderNames=["builds/targets"],
+    codebases=[
+      util.CodebaseParameter(
+        "",
+        label="Build falter release",
+        branch=util.ChoiceStringParameter(
+          name="branch",
+          label="git branch",
+          choices=branches,
+          default="master",
+          strict=True),
+        revision=util.FixedParameter(name="revision", default=""),
+        repository=util.FixedParameter(name="repository", default=repo),
+        project=util.FixedParameter(name="project", default=""))],
+    properties=[
+        util.StringParameter(
+          name="falterVersion",
+          label="falter release version - e.g. 1.2.3 or 1.1.1-rc1")],
     reason=util.FixedParameter(name="reason", default="manual", hide=True)))
 
   c['builders'].append(util.BuilderConfig(
@@ -59,20 +83,54 @@ def targetTriggerStep(target):
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/targets"],
-    copy_properties=['repository', 'branch', 'revision', 'got_revision', 'release'],
+    copy_properties=['repository', 'branch', 'revision', 'got_revision', 'falterBranch', 'falterVersion'],
     set_properties={
       'target': target,
-      'branch': util.Interpolate("%(prop:branch)s"),
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
       # Builder name limit is 70 characters, longest is currently 40 chars:
       # targets/openwrt-22.03/lantiq/xway_legacy
       # See https://github.com/buildbot/buildbot/pull/3957
-      'virtual_builder_name': util.Interpolate("targets/%(prop:release)s/%(kw:target)s", target=target),
-      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:release)s")]})
+      'virtual_builder_name': util.Interpolate("targets/%(prop:falterBranch)s/%(kw:target)s", target=target),
+      'virtual_builder_tags': ["targets", util.Interpolate("%(prop:falterBranch)s")]})
+
+@util.renderer
+def targetsFalterBranch(props):
+  fb = props.getProperty("falterBranch", "")
+  fv = props.getProperty("falterVersion", "")
+  if fb != "":
+    return fb
+  elif fv.startswith("1.2.3"):
+    return "1.2.3-snapshot"
+  elif fv.startswith("1.3.0"):
+    return "1.3.0-snapshot"
+  else:
+    return "snapshot"
+
+@util.renderer
+def targetsFalterVersion(props):
+  return props.getProperty("falterVersion", props.getProperty("falterBranch", ""))
+
+@util.renderer
+def targetsPubDir(props):
+  fv = props.getProperty("falterVersion", "")
+  if '-' in fv or 'snapshot' in fv:
+    return "/usr/local/src/www/htdocs/buildbot/unstable/"+fv
+  else:
+    return "/usr/local/src/www/htdocs/buildbot/stable/"+fv
 
 # Fans out to one builder per target and blocks for the results.
 def targetsFactory(f):
     f.buildClass = AsyncBuild
+    f.addStep(
+        steps.SetProperty(
+            name=util.Interpolate("falterBranch = %(kw:fb)s", fb=targetsFalterBranch),
+            property="falterBranch",
+            value=targetsFalterBranch))
+    f.addStep(
+        steps.SetProperty(
+            name=util.Interpolate("falterVersion = %(kw:fv)s", fv=targetsFalterVersion),
+            property="falterVersion",
+            value=targetsFalterVersion))
     f.addStep(
         steps.Git(
             name="git clone",
@@ -98,13 +156,13 @@ def targetsFactory(f):
                 # TODO: doesn't fail if targets-*.txt doesn't exist
                 '''\
 targets=$(\
-    cat .buildconf/targets-%(prop:release)s.txt \
+    cat .buildconf/targets-%(prop:falterBranch)s.txt \
     | grep -v "#" | grep . \
     | cut -d" " -f2- \
     | xargs -n1 echo | sort \
 ) ; \
 for t in $targets; do \
-    if ! cat .buildconf/broken-%(prop:release)s.txt | grep -F "$t" >/dev/null ; \
+    if ! cat .buildconf/broken-%(prop:falterBranch)s.txt | grep -F "$t" >/dev/null ; \
     then \
         echo "$t" ; \
     fi ; \
@@ -113,8 +171,6 @@ done \
 
     wwwdir = util.Interpolate(
         "/usr/local/src/www/htdocs/buildbot/builds/targets/%(prop:buildnumber)s")
-    pubdir = util.Interpolate(
-        "/usr/local/src/www/htdocs/buildbot/unstable/%(prop:release)s")
     f.addStep(
         steps.MasterShellCommand(
             name="publish",
@@ -152,7 +208,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
     && mv %(kw:p)s.new %(kw:p)s \
     && rm -rf %(kw:p)s.prev \
 """,
-                w=wwwdir, p=pubdir)]))
+                w=wwwdir, p=targetsPubDir)]))
 
     return f
 
@@ -198,7 +254,7 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:edge sh -c '\
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
-    && ./build_falter -p all -v %(prop:release)s -t %(prop:target)s \
+    && ./build_falter -p all -v %(prop:falterVersion)s -t %(prop:target)s \
 ) >&2 \
 && cd /root/falter-builter/firmwares \
 && tar -c *' > out.tar \
