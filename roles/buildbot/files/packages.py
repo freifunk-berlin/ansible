@@ -6,7 +6,7 @@ import re
 
 from asyncbuild import *
 
-def packagesConfig(c, repo, branches, workerNames):
+def packagesConfig(c, repo, branches, workerNames, alpineVersion):
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",
@@ -38,7 +38,7 @@ def packagesConfig(c, repo, branches, workerNames):
   c['builders'].append(util.BuilderConfig(
     name="dummy/packages",
     workernames=workerNames,
-    factory=packagesArchFactory(util.BuildFactory()),
+    factory=packagesArchFactory(util.BuildFactory(), alpineVersion),
     collapseRequests=False))
 
   return c
@@ -152,7 +152,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
     return f
 
 # Runs build.sh with prop:arch and prop:branch, and uploads the result to master.
-def packagesArchFactory(f):
+def packagesArchFactory(f, alpineVersion):
     f.addStep(
         steps.ShellCommand(
             name="build",
@@ -172,7 +172,7 @@ def packagesArchFactory(f):
                 #     https://github.com/containers/podman/issues/13779
                 #
                 """\
-podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edge sh -c '\
+podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl \
     && git clone %(prop:repository)s /root/falter-packages \
@@ -182,7 +182,7 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:edg
 ) >&2 \
 && cd /root/falter-packages/out/ \
 && tar -c *' > out.tar \
-""")]))
+""", alpineVersion=alpineVersion)]))
 
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")

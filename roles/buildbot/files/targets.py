@@ -5,7 +5,7 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-def targetsConfig(c, repo, branches, releaseBranches, workerNames):
+def targetsConfig(c, repo, branches, releaseBranches, workerNames, alpineVersion):
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
@@ -68,7 +68,7 @@ def targetsConfig(c, repo, branches, releaseBranches, workerNames):
   c['builders'].append(util.BuilderConfig(
     name="dummy/targets",
     workernames=workerNames,
-    factory=targetsTargetFactory(util.BuildFactory()),
+    factory=targetsTargetFactory(util.BuildFactory(), alpineVersion),
     collapseRequests=False))
 
   return c
@@ -217,7 +217,7 @@ def targetsTarFile(props):
   t, st = props['target'].split('/')
   return "targets-{0}-{1}_{2}.tar".format(props['origbuildnumber'], t, st)
 
-def targetsTargetFactory(f):
+def targetsTargetFactory(f, alpineVersion):
     f.addStep(
         steps.ShellCommand(
             name="build",
@@ -248,7 +248,7 @@ def targetsTargetFactory(f):
                 # Also larger targets seemed to need more than 6 GiB.
                 #
                 """\
-podman run -i --rm --log-driver=none docker.io/library/alpine:edge sh -c '\
+podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget xz coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
@@ -258,7 +258,7 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:edge sh -c '\
 ) >&2 \
 && cd /root/falter-builter/firmwares \
 && tar -c *' > out.tar \
-""")]))
+""", alpineVersion=alpineVersion)]))
 
     tarfile = targetsTarFile
     wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
