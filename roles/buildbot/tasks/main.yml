@@ -174,4 +174,3 @@
     group: root
   with_items:
     - generate_autoupdate_json.py
-    - symlink_build.sh
