@@ -123,9 +123,9 @@
 - name: Checkout CGP Repo
   become_user: www-data
   ansible.builtin.git:
-    repo: https://github.com/pommi/CGP.git
+    repo: https://github.com/freifunk-berlin/CGP.git
     dest: /srv/www/monitor.berlin.freifunk.net/cgp/
-    version: 5daa8b3a98818e7bbedf8e0e2a27a4672ee6dfdd
+    version: master
 
 - name: Copy CGP config
   template:
