@@ -25,7 +25,7 @@
   template:
     dest: /etc/prometheus/prometheus.yml
     src: prometheus.yml.j2
-    mode: 0640
+    mode: '0640'
     owner: prometheus
     group: prometheus
   notify: Restart prometheus
@@ -34,7 +34,7 @@
   template:
     dest: /etc/default/prometheus
     src: prometheus.j2
-    mode: 0640
+    mode: '0640'
     owner: root
     group: root
   notify: Restart prometheus
@@ -53,7 +53,7 @@
   template:
     dest: /etc/grafana/grafana.ini
     src: grafana.ini.j2
-    mode: 0640
+    mode: '0640'
     owner: grafana
     group: grafana
   notify: Restart grafana
@@ -62,7 +62,7 @@
   template:
     dest: /etc/collectd/collectd.conf
     src: collectd.conf.j2
-    mode: 0644
+    mode: '0644'
     owner: root
     group: root
   notify: Restart collectd
@@ -72,7 +72,7 @@
     name: remove old rrd files
     special_time: daily
     user: root
-    job: "find /mnt/collectd/rrd/ -type f -mtime +30 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
+    job: "find /mnt/collectd/rrd/ -type f -mtime +14 -delete; find /mnt/collectd/rrd/ -type d -empty -delete"
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
@@ -91,6 +91,7 @@
   ansible.builtin.copy:
     src: files/firmwaremetrics/
     dest: /srv/www/monitor.berlin.freifunk.net/metrics/firmware/
+    mode: '0750'
     owner: www-data
     group: www-data
 
@@ -130,6 +131,6 @@
   template:
     dest: /srv/www/monitor.berlin.freifunk.net/cgp/conf/config.local.php
     src: config.local.php.j2
-    mode: 0644
+    mode: '0644'
     owner: www-data
     group: www-data
