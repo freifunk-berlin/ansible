@@ -6,7 +6,12 @@ import re
 
 from asyncbuild import *
 
-def packagesConfig(c, repo, branches, workerNames, alpineVersion):
+def packagesConfig(c, config):
+
+  repo = config['packages_repo']
+  branches = config['packages_branches']
+  workerNames = config['workerNames']
+  alpineVersion = config['alpineVersion']
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",

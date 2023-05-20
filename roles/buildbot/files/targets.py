@@ -5,7 +5,13 @@ from buildbot.plugins import *
 
 from asyncbuild import *
 
-def targetsConfig(c, repo, branches, releaseBranches, workerNames, alpineVersion):
+def targetsConfig(c, config):
+
+  repo = config['builter_repo']
+  branches = config['builter_branches']
+  releaseBranches = config['builter_releaseBranches']
+  workerNames = config['workerNames']
+  alpineVersion = config['alpineVersion']
 
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
