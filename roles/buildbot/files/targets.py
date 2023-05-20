@@ -7,12 +7,6 @@ from asyncbuild import *
 
 def targetsConfig(c, config):
 
-  repo = config['builter_repo']
-  branches = config['builter_branches']
-  releaseBranches = config['builter_releaseBranches']
-  workerNames = config['workerNames']
-  alpineVersion = config['alpineVersion']
-
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/targets",
     builderNames=["dummy/targets"]))
@@ -28,17 +22,17 @@ def targetsConfig(c, config):
         branch=util.ChoiceStringParameter(
           name="branch",
           label="git branch",
-          choices=branches,
+          choices=config['builter_branches'],
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=config['builter_repo']),
         project=util.FixedParameter(name="project", default=""))],
     properties=[
         util.ChoiceStringParameter(
           name="falterBranch",
           label="falter release branch",
-          choices=releaseBranches,
+          choices=config['builter_releaseBranches'],
           strict=True)],
     reason=util.FixedParameter(name="reason", default="manual", hide=True)))
 
@@ -53,11 +47,11 @@ def targetsConfig(c, config):
         branch=util.ChoiceStringParameter(
           name="branch",
           label="git branch",
-          choices=branches,
+          choices=config['builter_branches'],
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=config['builter_repo']),
         project=util.FixedParameter(name="project", default=""))],
     properties=[
         util.StringParameter(
@@ -68,13 +62,13 @@ def targetsConfig(c, config):
   c['builders'].append(util.BuilderConfig(
     name="builds/targets",
     workernames=["masterworker"],
-    factory=targetsFactory(util.BuildFactory()),
+    factory=targetsFactory(util.BuildFactory(), config['publishDir']),
     collapseRequests=False))
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/targets",
-    workernames=workerNames,
-    factory=targetsTargetFactory(util.BuildFactory(), alpineVersion),
+    workernames=config['workerNames'],
+    factory=targetsTargetFactory(util.BuildFactory(), config['publishDir'], config['publishURL'], config['alpineVersion']),
     collapseRequests=False))
 
   return c
@@ -120,12 +114,12 @@ def targetsFalterVersion(props):
 def targetsPubDir(props):
   fv = props.getProperty("falterVersion", "")
   if '-' in fv or 'snapshot' in fv:
-    return "/usr/local/src/www/htdocs/buildbot/unstable/"+fv
+    return "unstable/"+fv
   else:
-    return "/usr/local/src/www/htdocs/buildbot/stable/"+fv
+    return "stable/"+fv
 
 # Fans out to one builder per target and blocks for the results.
-def targetsFactory(f):
+def targetsFactory(f, wwwPrefix):
     f.buildClass = AsyncBuild
     f.addStep(
         steps.SetProperty(
@@ -176,7 +170,9 @@ done \
 ''')]))
 
     wwwdir = util.Interpolate(
-        "/usr/local/src/www/htdocs/buildbot/builds/targets/%(prop:buildnumber)s")
+        "%(kw:prefix)s/builds/targets/%(prop:buildnumber)s", prefix=wwwPrefix)
+    pubdir = util.Interpolate(
+        "%(kw:pr)s/%(kw:pd)s", pr=wwwPrefix, pd=targetsPubDir)
     f.addStep(
         steps.MasterShellCommand(
             name="publish",
@@ -214,7 +210,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
     && mv %(kw:p)s.new %(kw:p)s \
     && rm -rf %(kw:p)s.prev \
 """,
-                w=wwwdir, p=targetsPubDir)]))
+                w=wwwdir, p=pubdir)]))
 
     return f
 
@@ -223,7 +219,7 @@ def targetsTarFile(props):
   t, st = props['target'].split('/')
   return "targets-{0}-{1}_{2}.tar".format(props['origbuildnumber'], t, st)
 
-def targetsTargetFactory(f, alpineVersion):
+def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
     f.addStep(
         steps.ShellCommand(
             name="build",
@@ -268,8 +264,8 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
 
     tarfile = targetsTarFile
     wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
-    wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
-    wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
+    wwwdir = util.Interpolate("%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath)
+    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
             name="upload",

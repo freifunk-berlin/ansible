@@ -8,11 +8,6 @@ from asyncbuild import *
 
 def packagesConfig(c, config):
 
-  repo = config['packages_repo']
-  branches = config['packages_branches']
-  workerNames = config['workerNames']
-  alpineVersion = config['alpineVersion']
-
   c['schedulers'].append(schedulers.Triggerable(
     name="dummy/packages",
     builderNames=["dummy/packages"]))
@@ -27,23 +22,23 @@ def packagesConfig(c, config):
         branch=util.ChoiceStringParameter(
           name="branch",
           label="git branch",
-          choices=branches,
+          choices=config['packages_branches'],
           default="master",
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
-        repository=util.FixedParameter(name="repository", default=repo),
+        repository=util.FixedParameter(name="repository", default=config['packages_repo']),
         project=util.FixedParameter(name="project", default=""))]))
 
   c['builders'].append(util.BuilderConfig(
     name="builds/packages",
     workernames=["masterworker"],
-    factory=packagesFactory(util.BuildFactory()),
+    factory=packagesFactory(util.BuildFactory(), config['publishDir']),
     collapseRequests=False))
 
   c['builders'].append(util.BuilderConfig(
     name="dummy/packages",
-    workernames=workerNames,
-    factory=packagesArchFactory(util.BuildFactory(), alpineVersion),
+    workernames=config['workerNames'],
+    factory=packagesArchFactory(util.BuildFactory(), config['publishDir'], config['publishURL'], config['alpineVersion']),
     collapseRequests=False))
 
   return c
@@ -79,7 +74,7 @@ def branchToFalterBranch(props):
     return o2f.get(props['branch'])
 
 # Fans out to one builder per arch and blocks for the results.
-def packagesFactory(f):
+def packagesFactory(f, wwwPrefix):
     f.buildClass = AsyncBuild
     f.addStep(
         steps.SetProperty(
@@ -114,9 +109,9 @@ cat build/targets-%(prop:branch)s.txt \
 """)]))
 
     wwwdir = util.Interpolate(
-        "/usr/local/src/www/htdocs/buildbot/builds/packages/%(prop:buildnumber)s")
+        "%(kw:prefix)s/builds/packages/%(prop:buildnumber)s", prefix=wwwPrefix)
     pubdir = util.Interpolate(
-        "/usr/local/src/www/htdocs/buildbot/feed/%(prop:falterBranch)s/packages")
+        "%(kw:prefix)s/feed/%(prop:falterBranch)s/packages", prefix=wwwPrefix)
     f.addStep(
         steps.MasterShellCommand(
             name="publish",
@@ -157,7 +152,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
     return f
 
 # Runs build.sh with prop:arch and prop:branch, and uploads the result to master.
-def packagesArchFactory(f, alpineVersion):
+def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
     f.addStep(
         steps.ShellCommand(
             name="build",
@@ -191,8 +186,8 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:%(k
 
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
-    wwwdir = util.Interpolate("/usr/local/src/www/htdocs/buildbot/%(kw:wwwpath)s", wwwpath=wwwpath)
-    wwwurl = util.Interpolate("https://firmware.berlin.freifunk.net/%(kw:wwwpath)s", wwwpath=wwwpath)
+    wwwdir = util.Interpolate("%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath)
+    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
             name="upload",
