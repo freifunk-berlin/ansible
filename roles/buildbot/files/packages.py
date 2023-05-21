@@ -14,6 +14,7 @@ def packagesConfig(c, config):
 
   c['schedulers'].append(schedulers.ForceScheduler(
     name="force-packages",
+    buttonName="Build Package Feed",
     builderNames=["builds/packages"],
     codebases=[
       util.CodebaseParameter(
