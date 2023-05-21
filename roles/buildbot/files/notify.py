@@ -7,6 +7,7 @@ from buildbot.reporters.generators.build import BuildStartEndStatusGenerator
 from buildbot.reporters.generators.buildrequest import BuildRequestGenerator
 from buildbot.reporters.message import MessageFormatterRenderable
 from buildbot.util import httpclientservice
+from buildbot.process.results import statusToString
 
 from twisted.internet import defer
 from twisted.python import log
@@ -65,22 +66,25 @@ class MatrixNotifier(ReporterBase):
         # pp = pprint.PrettyPrinter(indent=4)
         # log.msg(f'MatrixNotifier.sendMessage - {pp.pformat(reports)}')
 
-        buildno = b['number']
-        branch = b['properties']['branch'][0]
-        branchlabel = 'branch'
+        version = b['properties']['branch'][0]
         if builder == 'builds/targets':
-            branch = b['properties']['release'][0]
-            branchlabel = 'release'
-        total = b['properties'].get('asyncTotal', (0, ''))[0]
-        success = b['properties'].get('asyncSuccess', (0, ''))[0]
+            version = b['properties']['falterVersion'][0]
+
+        result = statusToString(b['results'])
+        color = '#ff0000'
+        if b['results'] == 0:
+            color = '#008000'
+
         url = b['url']
 
-        msg = f'finished · {branchlabel}: {branch} · success: {success} of {total} · details: {url} · artifacts: https://firmware.berlin.freifunk.net/{builder}/{buildno}/'
+        msg = f'{builder} @ {version} · {result} · {url}'
+        htmlmsg = f'{builder} @ {version} · <font color="{color}">{result}</font> · {url}'
 
         http = yield httpclientservice.HTTPClientService.getService(
             self.master, self.homeserver)
 
         res = http.post(
             f'/_matrix/client/r0/rooms/{self.room}/send/m.room.message?access_token={self.accessToken}',
-            json={'msgtype':'m.text','body':msg})
+            json={'msgtype':'m.notice', 'body':msg,
+                'format':'org.matrix.custom.html', 'formatted_body':htmlmsg})
 
