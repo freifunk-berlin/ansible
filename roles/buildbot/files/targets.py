@@ -14,6 +14,7 @@ def targetsConfig(c, config):
   c['schedulers'].append(schedulers.ForceScheduler(
     name="force-targets",
     label="Snapshot",
+    buttonName="Build Snapshot",
     builderNames=["builds/targets"],
     codebases=[
       util.CodebaseParameter(
@@ -40,6 +41,7 @@ def targetsConfig(c, config):
   c['schedulers'].append(schedulers.ForceScheduler(
     name="force-release",
     label="Release",
+    buttonName="Build Release",
     builderNames=["builds/targets"],
     codebases=[
       util.CodebaseParameter(
