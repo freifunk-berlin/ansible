@@ -53,7 +53,7 @@ def archTriggerStep(arch):
     waitForFinish=True,
     warnOnFailure=True,
     schedulerNames=["dummy/packages"],
-    copy_properties=['repository', 'branch', 'revision', 'got_revision', 'falterBranch'],
+    copy_properties=['repository', 'branch', 'revision', 'got_revision'],
     set_properties={
       'arch': arch,
       'origbuildnumber': util.Interpolate("%(prop:buildnumber)s"),
@@ -70,7 +70,8 @@ def archTriggerStep(arch):
 def branchToFalterBranch(props):
     o2f = { 'master':'snapshot',
             'openwrt-22.03':'1.3.0-snapshot',
-            'openwrt-21.02':'1.2.3-snapshot' }
+            'openwrt-21.02':'1.2.3-snapshot',
+            'testbuildbot':'testbuildbot' }
     return o2f.get(props['branch'])
 
 # Fans out to one builder per arch and blocks for the results.

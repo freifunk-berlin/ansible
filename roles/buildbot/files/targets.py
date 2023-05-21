@@ -114,7 +114,7 @@ def targetsFalterVersion(props):
 @util.renderer
 def targetsPubDir(props):
   fv = props.getProperty("falterVersion", "")
-  if '-' in fv or 'snapshot' in fv:
+  if '-' in fv or 'snapshot' in fv or 'testbuildbot' in fv:
     return "unstable/"+fv
   else:
     return "stable/"+fv
