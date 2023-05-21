@@ -23,7 +23,7 @@ def targetsConfig(c, config):
           name="branch",
           label="git branch",
           choices=config['builter_branches'],
-          default="master",
+          default=config['builter_branches'][0],
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
         repository=util.FixedParameter(name="repository", default=config['builter_repo']),
@@ -33,6 +33,7 @@ def targetsConfig(c, config):
           name="falterBranch",
           label="falter release branch",
           choices=config['builter_releaseBranches'],
+          default=config['builter_releaseBranches'][0],
           strict=True)],
     reason=util.FixedParameter(name="reason", default="manual", hide=True)))
 
@@ -48,7 +49,7 @@ def targetsConfig(c, config):
           name="branch",
           label="git branch",
           choices=config['builter_branches'],
-          default="master",
+          default=config['builter_branches'][0],
           strict=True),
         revision=util.FixedParameter(name="revision", default=""),
         repository=util.FixedParameter(name="repository", default=config['builter_repo']),
