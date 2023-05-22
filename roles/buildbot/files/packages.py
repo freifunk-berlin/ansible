@@ -70,6 +70,7 @@ def archTriggerStep(arch):
 @util.renderer
 def branchToFalterBranch(props):
     o2f = { 'master':'snapshot',
+            'openwrt-23.05':'1.4.0-snapshot',
             'openwrt-22.03':'1.3.0-snapshot',
             'openwrt-21.02':'1.2.3-snapshot',
             'testbuildbot':'testbuildbot' }
