@@ -6,6 +6,8 @@ from buildbot.process import build, buildstep, factory, logobserver
 from twisted.internet import defer
 from twisted.python import log
 
+from typing import List
+
 # AsyncBuildGenerator dynamically generates build steps from command output.
 #
 # It runs stepFunc for every line of stdout from specified command.
@@ -94,7 +96,7 @@ class AsyncTrigger(steps.Trigger):
 #
 # Adapted from @vit9696's code at https://github.com/buildbot/buildbot/issues/3088
 class AsyncBuild(build.Build):
-    waiters = []
+    waiters: List[defer.Deferred] = []
 
     def setupBuild(self):
         """
