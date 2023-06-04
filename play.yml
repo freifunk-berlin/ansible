@@ -10,8 +10,8 @@
     - ryandaniels.create_users
   tags: user_provision
 
-- name: Apply common configuration and packagaes
-  hosts: all,!c.tunnel.berlin.freifunk.net,!d.tunnel.berlin.freifunk.net
+- name: Apply common configuration and packages
+  hosts: all,!d.tunnel.berlin.freifunk.net
   become: true
   roles:
     - common
@@ -51,7 +51,7 @@
     - ff_monitor
 
 - name: Set up tunneldigger
-  hosts: f.tunnel.berlin.freifunk.net
+  hosts: c.tunnel.berlin.freifunk.net,f.tunnel.berlin.freifunk.net
   become: true
   roles:
     - tunneldigger
