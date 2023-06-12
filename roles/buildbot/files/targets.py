@@ -144,7 +144,8 @@ def targetsFactory(f, wwwPrefix):
             # if using incremental, we get strange behaviors, when configuring
             # another repo, that is back the other repo. Doing full checkouts is cleaner
             method='clobber',
-            mode='full'))
+            mode='full',
+            submodules=True))
     f.addStep(
         AsyncBuildGenerator(targetTriggerStep,
             name="generate builds",
@@ -261,6 +262,8 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
+    && git submodule init \
+    && git submodule update \
     && ./build_falter -p all -v %(prop:falterVersion)s -t %(prop:target)s \
 ) >&2 \
 && cd /root/falter-builter/firmwares \
