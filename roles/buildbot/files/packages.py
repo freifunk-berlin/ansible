@@ -92,7 +92,8 @@ def packagesFactory(f, wwwPrefix):
             # if using incremental, we get strange behaviors, when configuring
             # another repo, that is back the other repo. Doing full checkouts is cleaner
             method='clobber',
-            mode='full'))
+            mode='full',
+            submodules=True))
     f.addStep(
         AsyncBuildGenerator(archTriggerStep,
             name="generate builds",
@@ -181,6 +182,8 @@ podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:%(k
     && git clone %(prop:repository)s /root/falter-packages \
     && cd /root/falter-packages/ \
     && git checkout %(prop:got_revision)s \
+    && git submodule init \
+    && git submodule update \
     && build/build.sh %(prop:branch)s %(prop:arch)s out/ \
 ) >&2 \
 && cd /root/falter-packages/out/ \
