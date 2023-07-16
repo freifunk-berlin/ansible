@@ -6,7 +6,7 @@ flush ruleset
 table ip nat {
         chain postrouting {
                 type nat hook postrouting priority srcnat; policy accept;
-                ip saddr 172.31.224.0/20 oif "eth0" snat to {{ tunneldigger_snat_ip }}
+                ip saddr 172.31.224.0/20 oif "{{ ansible_default_ipv4.interface }}" snat to {{ tunneldigger_snat_ip }}
         }
 }
 table ip filter {

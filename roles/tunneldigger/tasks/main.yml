@@ -7,6 +7,7 @@
       - gcc
       - git
       - iproute2
+      - iptables
       - libevent-dev
       - libnetfilter-conntrack-dev
       - libnfnetlink-dev
@@ -25,7 +26,7 @@
     mode: "0644"
     owner: root
     group: root
-  notify: Load nftables rules
+  notify: Restart nftables
 
 - name: Flush handlers
   meta: flush_handlers
@@ -45,7 +46,7 @@
   notify: Restart tunneldigger
 
 - name: Install tunneldigger in venv
-  shell: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && python setup.py install"
+  shell: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && pip install --upgrade setuptools && python setup.py install"
   args:
     creates: "{{ tunneldigger_path }}/broker/dist/"
     executable: /bin/bash

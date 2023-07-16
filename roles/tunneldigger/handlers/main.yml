@@ -13,5 +13,10 @@
     enabled: true
     state: restarted
 
-- name: Load nftables rules
-  command: "/usr/sbin/nft -f /etc/nftables.conf"
+
+- name: Restart nftables
+  systemd:
+    daemon_reload: true
+    name: nftables
+    enabled: true
+    state: restarted
