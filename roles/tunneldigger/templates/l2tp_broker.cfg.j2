@@ -6,7 +6,7 @@ address={{ tunneldigger_listen_ip }}
 ; port=8942
 port=8942
 ; Interface with that IP address
-interface=eth0
+interface={{ ansible_default_ipv4.interface }}
 ; Maximum number of tunnels that will be allowed by the broker
 max_tunnels=3991
 ; Tunnel port base. This port is not visible to clients, but must be free on the server.
@@ -30,8 +30,7 @@ pmtu=0
 ; Verbosity
 verbosity=DEBUG
 ; Should IP addresses be logged or not
-log_ip_addresses=true
-; todo changemeback
+log_ip_addresses=false
 
 [hooks]
 ; Note that hooks are called asynchonously!
