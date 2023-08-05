@@ -6,9 +6,10 @@ domain = monitor.berlin.freifunk.net
 
 enforce_domain = false
 
-root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/
+#root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/
+root_url = https://monitor.berlin.freifunk.net/grafana/
 
-serve_from_sub_path = true
+serve_from_sub_path = false
 
 router_logging = false
 
@@ -25,6 +26,9 @@ enabled = true
 org_name = freifunk berlin
 org_role = Viewer
 hide_version = true
+
+[auth.github]
+{{ grafana_github_config }}
 
 [log]
 # Either "console", "file", "syslog". Default is console and  file
@@ -89,12 +93,12 @@ enabled = false
 enabled = true
 
 [metrics]
-enabled  = false
+enabled  = true
 
 [plugins]
-allow_loading_unsigned_plugins = grafana-map-panel,panodata-map-panel
+allow_loading_unsigned_plugins = panodata-map-panel
 
 [feature_toggles]
 publicDashboards = true
 [unified_alerting]
-enabled = false
+enabled = true
