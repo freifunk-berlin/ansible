@@ -15,7 +15,9 @@
       - mosh
       - nano
       - prometheus-node-exporter
+      - tcpdump
       - tmux
+      - vnstat
       - zsh
     state: present
     update_cache: true

@@ -32,6 +32,10 @@ scrape_configs:
       - targets: ['monitor.berlin.freifunk.net:9104']
     honor_timestamps: true
 
+  - job_name: grafana
+    static_configs:
+      - targets: ['127.0.0.1:8080']
+
   - job_name: servers
     static_configs:
       - targets:
