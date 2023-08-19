@@ -3,24 +3,22 @@
 ; IP address the broker will listen and accept tunnels on
 address={{ tunneldigger_listen_ip }}
 ; Ports where the broker will listen on
-; port=8942
 port=8942
 ; Interface with that IP address
 interface={{ ansible_default_ipv4.interface }}
 ; Maximum number of tunnels that will be allowed by the broker
 max_tunnels=3991
-; Tunnel port base. This port is not visible to clients, but must be free on the server.
-; This port is used by the actual l2tp tunnel, but tunneldigger sets up NAT rules so that clients
-; can keep using the control port.
-port_base=20000
 ; Tunnel id base
 tunnel_id_base=100
-; Namespace (for running multiple brokers); note that you must also
-; configure disjunct ports, and tunnel identifiers in order for
-; namespacing to work
-namespace=default
-; Reject connections if there are less than N seconds since the last connection
-connection_rate_limit=1
+; Reject connections if there are less than N seconds since the last connection.
+; Can be less than a second (e.g., 0.1). Note that this is applied *per broker port*.
+; Disabled if set to 0.
+connection_rate_limit=0.2
+; Reject connection if an IP address connects more than COUNT times in TIME seconds to
+; the same broker port. Also runs "broker.connection-rate-limit" hook (e.g. to block client via iptables).
+; Disabled when at least one value is 0 (the default).
+;connection_rate_limit_per_ip_count=20
+;connection_rate_limit_per_ip_time=60
 ; Set PMTU to a fixed value.  Use 0 for automatic PMTU discovery.  A non-0 value also disables
 ; PMTU discovery on the client side, by having the server not respond to client-side PMTU
 ; discovery probes.
@@ -54,3 +52,5 @@ session.pre-down=
 session.down=
 ; Called after the tunnel MTU gets changed because of PMTU discovery
 session.mtu-changed=/opt/tunneldigger/broker/scripts/ff.session.mtu-changed.sh
+; Called when the tunnel connection rate per ip limit is exceeded
+broker.connection-rate-limit=
