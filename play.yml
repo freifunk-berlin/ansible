@@ -11,7 +11,7 @@
   tags: user_provision
 
 - name: Apply common configuration and packages
-  hosts: all
+  hosts: all,!other
   become: true
   roles:
     - common

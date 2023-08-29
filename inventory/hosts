@@ -21,4 +21,7 @@ b.tunnel.berlin.freifunk.net # freifunk-gw01
 c.tunnel.berlin.freifunk.net # vpn03d.berlin.freifunk.net
 d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
 f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net
+t-löffel.de
 
+[other]
+util.berlin.freifunk.net
