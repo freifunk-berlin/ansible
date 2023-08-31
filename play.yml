@@ -11,7 +11,7 @@
   tags: user_provision
 
 - name: Apply common configuration and packages
-  hosts: all
+  hosts: all,!other
   become: true
   roles:
     - common
@@ -52,7 +52,7 @@
     - ff_monitor
 
 - name: Set up tunneldigger
-  hosts: c.tunnel.berlin.freifunk.net,f.tunnel.berlin.freifunk.net,d.tunnel.berlin.freifunk.net
+  hosts: tunneldigger,!b.tunnel.berlin.freifunk.net
   become: true
   roles:
     - tunneldigger

@@ -1,13 +1,13 @@
 ---
 - name: Restart tunneldigger
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: tunneldigger
     enabled: true
     state: restarted
 
 - name: Restart dnsmasq
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: dnsmasq
     enabled: true
@@ -15,7 +15,7 @@
 
 
 - name: Restart nftables
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: nftables
     enabled: true

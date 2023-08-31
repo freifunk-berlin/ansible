@@ -1,6 +1,6 @@
 ---
 - name: Install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - bridge-utils
       - dnsmasq
@@ -20,7 +20,7 @@
     cache_valid_time: 3600
 
 - name: Set nftables conf
-  template:
+  ansible.builtin.template:
     src: "nftables.conf.j2"
     dest: /etc/nftables.conf
     mode: "0644"
@@ -29,10 +29,10 @@
   notify: Restart nftables
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Checkout tunneldigger
-  git:
+  ansible.builtin.git:
     repo: 'https://github.com/wlanslovenija/tunneldigger.git'
     version: c50ef46d78d797750979ebf2f8ddc5aa993a02ae
     dest: "{{ tunneldigger_path }}"
@@ -40,19 +40,20 @@
   notify: Restart tunneldigger
 
 - name: Create tunneldigger venv
-  command: "/usr/bin/python3 -m venv {{ tunneldigger_path }}/env"
+  ansible.builtin.command: "/usr/bin/python3 -m venv {{ tunneldigger_path }}/env"
   args:
     creates: "{{ tunneldigger_path }}/env"
   notify: Restart tunneldigger
 
 - name: Install tunneldigger in venv
-  shell: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && pip install --upgrade setuptools && python setup.py install"
+  ansible.builtin.shell:
   args:
+    cmd: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && pip install --upgrade setuptools && python setup.py install"
     creates: "{{ tunneldigger_path }}/broker/dist/"
     executable: /bin/bash
 
 - name: Copy tunneldigger service file
-  template:
+  ansible.builtin.template:
     src: "tunneldigger.service.j2"
     dest: /etc/systemd/system/tunneldigger.service
     mode: "0644"
@@ -61,7 +62,7 @@
   notify: Restart tunneldigger
 
 - name: Copy tunneldigger configuration file
-  template:
+  ansible.builtin.template:
     src: "l2tp_broker.cfg.j2"
     dest: "{{ tunneldigger_path }}/broker/l2tp_broker.cfg"
     mode: "0644"
@@ -70,7 +71,7 @@
   notify: Restart tunneldigger
 
 - name: "Copy tunneldigger scripts"
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0755"
@@ -83,7 +84,7 @@
     - {src: 'dhcp-script.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh'}
 
 - name: "Make sure the correct Kernel modules will load on boot"
-  template:
+  ansible.builtin.template:
     src: modules-tunneldigger.conf.j2
     dest: /etc/modules-load.d/tunneldigger.conf
     mode: "0644"
@@ -92,7 +93,7 @@
   notify: Restart tunneldigger
 
 - name: "Copy dnsmasq config"
-  template:
+  ansible.builtin.template:
     src: "dnsmasq.conf.j2"
     dest: /etc/dnsmasq.conf
     mode: "0644"
@@ -107,7 +108,7 @@
     sysctl_set: true
 
 - name: Copy prometheus node_exporter script for tunneldigger
-  template:
+  ansible.builtin.template:
     src: "tunneldigger_exporter.sh.j2"
     dest: /opt/tunneldigger_exporter.sh
     mode: "0750"
