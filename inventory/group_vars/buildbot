@@ -1,5 +1,6 @@
 ---
-buildbot_version: "3.6.0"
+# requires `buildbot upgrade-master` after every update
+buildbot_version: "3.9.2"
 
 githubClientID: !vault |
   $ANSIBLE_VAULT;1.1;AES256
