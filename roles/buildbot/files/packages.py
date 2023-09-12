@@ -169,14 +169,12 @@ def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
                 # * -i so we get output
                 # * no -t because it messes with stdout/stderr
                 # * --rm so we don't fill up the disk with old containers
-                # * --timeout so we don't accumulate hanging containers
-                #   * requires Podman >= 3.2.0
                 # * --log-driver so we don't pump huge tarballs into the logging facility
                 #   * it'd also trigger a segfault in ~15% of concurrent runs:
                 #     https://github.com/containers/podman/issues/13779
                 #
                 """\
-podman run -i --rm --timeout=1800 --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl \
     && git clone %(prop:repository)s /root/falter-packages \
