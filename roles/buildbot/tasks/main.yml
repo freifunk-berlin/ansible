@@ -3,11 +3,12 @@
   apt:
     name:
       - build-essential
-      - default-libmysqlclient-dev
+      - pkg-config
       - git
       - mariadb-server
-      - python3-dev
+      - default-libmysqlclient-dev
       - python3-mysqldb
+      - python3-dev
       - virtualenv
     state: present
     update_cache: true
@@ -62,14 +63,16 @@
       # - txrequests # the software stated, that treq would be faster by 2.8 times or so...
       - treq
     virtualenv: /usr/local/src/buildbot/env
-  notify: Initialise buildbot
 
 - name: Install buildbot in venv
   pip:
     name: buildbot[bundle]
     version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
-  notify: Initialise buildbot
+  notify:
+    - Initialise buildbot
+    - Upgrade buildbot database
+    - Restart buildbot
 
 - name: Install mysql dependencies in venv
   pip:

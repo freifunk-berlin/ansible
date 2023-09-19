@@ -7,7 +7,11 @@
     state: restarted
 
 - name: Initialize buildbot
-  command: /usr/local/src/buildbot/env/bin/buildbot create-master /usr/local/src/buildbot/masters/master
+  command: /usr/local/src/buildbot/env/bin/buildbot create-master -f /usr/local/src/buildbot/masters/master
+  become_user: buildbot
+
+- name: Upgrade buildbot database
+  command: /usr/local/src/buildbot/env/bin/buildbot upgrade-master /usr/local/src/buildbot/masters/master
   become_user: buildbot
 
 - name: Restart mariadb
