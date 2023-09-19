@@ -8,7 +8,7 @@ After=network.target
 User=bbworker
 Group=bbworker
 WorkingDirectory={{ bbworker_path }}
-ExecStart=/usr/local/bin/buildbot-worker start --nodaemon
+ExecStart={{ bbworker_path }}/env/bin/buildbot-worker start --nodaemon
 
 [Install]
 WantedBy=multi-user.target
