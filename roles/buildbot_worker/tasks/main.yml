@@ -4,6 +4,7 @@
   apt:
     name:
       - git
+      - virtualenv
       - rsync
       - time
       - podman
@@ -17,10 +18,14 @@
 
 - name: Install buildbot-worker
   pip:
-    name:
-      - buildbot-worker
+    name: buildbot-worker
+    version: "{{ buildbot_version }}"
     state: present
-  notify: Initialise buildbot-worker
+    virtualenv: "{{ bbworker_path }}env"
+  become_user: "{{ machine_user }}"
+  notify:
+    - Initialise buildbot-worker
+    - Restart buildbot-worker
 
 - name: Flush handlers
   meta: flush_handlers
