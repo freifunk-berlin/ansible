@@ -5,6 +5,11 @@ from asyncbuild import *
 from buildbot.plugins import *
 
 
+# linter should not bother us with variable "schedulers" not defined. It it
+# defined indeed and is an imported object
+# pylint: disable=E0602
+
+# jscpd:ignore-start
 def targetsConfig(c, config):
     c["schedulers"].append(
         schedulers.Triggerable(name="dummy/targets", builderNames=["dummy/targets"])
@@ -105,7 +110,7 @@ def targetsConfig(c, config):
     )
 
     return c
-
+# jscpd:ignore-end
 
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
 def targetTriggerStep(target):
