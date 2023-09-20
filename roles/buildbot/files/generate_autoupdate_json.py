@@ -6,6 +6,9 @@ import argparse
 import json
 import os
 
+# We don't care for "too long" lines. We don't use punchcards anymore!
+# flake8: noqa
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-v",
@@ -52,7 +55,7 @@ for fpath in file_list:
 
     # get target and create dict, if not already created
     target = "/".join(fpath.split("/")[-3:-1])
-    if autoupdate_json.get("target").get(target) == None:
+    if autoupdate_json.get("target").get(target) is None:
         autoupdate_json["target"][target] = {}
 
     # get hashsums
@@ -65,7 +68,7 @@ for fpath in file_list:
                 break
 
         # add information to autoupdate.json
-        if autoupdate_json.get("target").get(target).get(model) == None:
+        if autoupdate_json.get("target").get(target).get(model) is None:
             autoupdate_json["target"][target][model] = {}
 
         if sha256 is not None:
