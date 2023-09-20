@@ -1,12 +1,13 @@
 # -*- python -*-
 # ex: set filetype=python:
 
-from buildbot.plugins import util, steps
+from typing import List
+
+from buildbot.plugins import steps, util
 from buildbot.process import build, buildstep, factory, logobserver
 from twisted.internet import defer
 from twisted.python import log
 
-from typing import List
 
 # AsyncBuildGenerator dynamically generates build steps from command output.
 #
@@ -19,14 +20,14 @@ class AsyncBuildGenerator(buildstep.ShellMixin, steps.BuildStep):
         kwargs = self.setupShellMixin(kwargs)
         super().__init__(**kwargs)
         self.observer = logobserver.BufferLogObserver()
-        self.addLogObserver('stdio', self.observer)
+        self.addLogObserver("stdio", self.observer)
         self.stepFunc = stepFunc
 
     def getLines(self, stdout):
         archs = []
-        for line in stdout.split('\n'):
+        for line in stdout.split("\n"):
             arch = str(line.strip())
-            if arch and not arch.startswith('#'):
+            if arch and not arch.startswith("#"):
                 archs.append(arch)
         return archs
 
@@ -36,10 +37,11 @@ class AsyncBuildGenerator(buildstep.ShellMixin, steps.BuildStep):
         yield self.runCommand(cmd)
         result = cmd.results()
         if result == util.SUCCESS:
-            self.build.addStepsAfterCurrentStep([
-                self.stepFunc(a) for a in self.getLines(self.observer.getStdout())
-            ])
+            self.build.addStepsAfterCurrentStep(
+                [self.stepFunc(a) for a in self.getLines(self.observer.getStdout())]
+            )
         return result
+
 
 # AsyncTrigger is a Trigger step which executes in parallel with other AsyncTriggers.
 # It's a useful middleground between waitForFinish=False and waitForFinish=True.
@@ -60,8 +62,8 @@ class AsyncTrigger(steps.Trigger):
         self.name = yield self.build.render(self.name)
         self.build.setUniqueStepName(self)
         self.stepid, self.number, self.name = yield self.master.data.updates.addStep(
-            buildid=self.build.buildid,
-            name=self.name)
+            buildid=self.build.buildid, name=self.name
+        )
 
     @defer.inlineCallbacks
     def addStep(self):
@@ -90,6 +92,7 @@ class AsyncTrigger(steps.Trigger):
             self.waiter.callback(None)
 
         return results
+
 
 # AsyncBuild is a Build which can execute AsyncTrigger steps in parallel.
 # It's a useful middleground between waitForFinish=False and waitForFinish=True.

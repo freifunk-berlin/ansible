@@ -6,23 +6,33 @@ import argparse
 import json
 import os
 
-
 parser = argparse.ArgumentParser()
-parser.add_argument('-v', dest='version', type=str, required=True,
-                    help='falter-version that the autoupdate-file is for.')
-parser.add_argument('-p', dest='dir', type=str, required=True,
-                    help='version directory, in which there are tunneldigger- and notunnel- dirs. autoupdate.json will be placed in that directory too.')
+parser.add_argument(
+    "-v",
+    dest="version",
+    type=str,
+    required=True,
+    help="falter-version that the autoupdate-file is for.",
+)
+parser.add_argument(
+    "-p",
+    dest="dir",
+    type=str,
+    required=True,
+    help="version directory, in which there are tunneldigger- and notunnel- dirs. autoupdate.json will be placed in that directory too.",
+)
 args = parser.parse_args()
 
 # build autoupdate.json
 autoupdate_json = {}
 autoupdate_json[
-    "image_url"] = "https://firmware.berlin.freifunk.net/stable/{falter-version}/{flavour}/{target}"
+    "image_url"
+] = "https://firmware.berlin.freifunk.net/stable/{falter-version}/{flavour}/{target}"
 autoupdate_json["target"] = {}
 autoupdate_json["falter-version"] = args.version
 
 # get paths of all json-files
-file_list = os.popen('find ' + args.dir + ' -name "*.json"').read().split()
+file_list = os.popen("find " + args.dir + ' -name "*.json"').read().split()
 
 # aggregate the content of all files
 for fpath in file_list:
@@ -36,12 +46,12 @@ for fpath in file_list:
     # print(profiles)
 
     # get flavour and omit backbone-images
-    flavour = fpath.split('/')[-4]
+    flavour = fpath.split("/")[-4]
     if flavour == "backbone":
         continue
 
     # get target and create dict, if not already created
-    target = '/'.join(fpath.split('/')[-3:-1])
+    target = "/".join(fpath.split("/")[-3:-1])
     if autoupdate_json.get("target").get(target) == None:
         autoupdate_json["target"][target] = {}
 
