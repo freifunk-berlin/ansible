@@ -13,6 +13,7 @@ from buildbot.plugins import *
 # defined indeed and is an imported object
 # pylint: disable=E0602
 
+
 def packagesConfig(c, config):
     c["schedulers"].append(
         schedulers.Triggerable(name="dummy/packages", builderNames=["dummy/packages"])

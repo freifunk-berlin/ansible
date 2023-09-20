@@ -13,6 +13,7 @@ from buildbot.plugins import *
 # defined indeed and is an imported object
 # pylint: disable=E0602
 
+
 # jscpd:ignore-start
 def targetsConfig(c, config):
     c["schedulers"].append(
@@ -114,7 +115,10 @@ def targetsConfig(c, config):
     )
 
     return c
+
+
 # jscpd:ignore-end
+
 
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
 def targetTriggerStep(target):
