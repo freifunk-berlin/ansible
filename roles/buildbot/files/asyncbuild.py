@@ -4,9 +4,13 @@
 from typing import List
 
 from buildbot.plugins import steps, util
-from buildbot.process import build, buildstep, factory, logobserver
+from buildbot.process import build, buildstep, logobserver
 from twisted.internet import defer
 from twisted.python import log
+
+
+# We don't care for "too long" lines. We don't use punchcards anymore!
+# flake8: noqa
 
 
 # AsyncBuildGenerator dynamically generates build steps from command output.
