@@ -1,9 +1,8 @@
 # -*- python -*-
 # ex: set filetype=python:
 
-import pprint
 
-from buildbot.plugins import steps, util
+from buildbot.plugins import util
 from buildbot.process.results import statusToString
 from buildbot.reporters.base import ReporterBase
 from buildbot.reporters.generators.build import BuildStartEndStatusGenerator
@@ -11,7 +10,6 @@ from buildbot.reporters.generators.buildrequest import BuildRequestGenerator
 from buildbot.reporters.message import MessageFormatterRenderable
 from buildbot.util import httpclientservice
 from twisted.internet import defer
-from twisted.python import log
 
 
 class MatrixNotifier(ReporterBase):
@@ -64,7 +62,7 @@ class MatrixNotifier(ReporterBase):
 
         if (
             "number" not in b
-            or b["complete"] != True
+            or b["complete"] is not True
             or (builder != "builds/targets" and builder != "builds/packages")
         ):
             return
@@ -84,16 +82,14 @@ class MatrixNotifier(ReporterBase):
         url = b["url"]
 
         msg = f"{builder} @ {version} · {result} · {url}"
-        htmlmsg = (
-            f'{builder} @ {version} · <font color="{color}">{result}</font> · {url}'
-        )
+        htmlmsg = f'{builder} @ {version} · <font color="{color}">{result}</font> · {url}'  # noqa: E501
 
         http = yield httpclientservice.HTTPClientService.getService(
             self.master, self.homeserver
         )
 
-        res = http.post(
-            f"/_matrix/client/r0/rooms/{self.room}/send/m.room.message?access_token={self.accessToken}",
+        http.post(
+            f"/_matrix/client/r0/rooms/{self.room}/send/m.room.message?access_token={self.accessToken}",  # noqa: E501
             json={
                 "msgtype": "m.notice",
                 "body": msg,
