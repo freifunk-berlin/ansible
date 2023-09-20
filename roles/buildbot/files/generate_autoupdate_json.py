@@ -2,6 +2,9 @@
 
 # {{ ansible_managed }}
 
+# silence mypy
+# type: ignore
+
 import argparse
 import json
 import os
