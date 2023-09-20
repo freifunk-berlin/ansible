@@ -1,11 +1,17 @@
 # -*- python -*-
 # ex: set filetype=python:
 
-import re
-
 from asyncbuild import *
 from buildbot.plugins import *
 
+# shut up, flake8 and learn to deal with bulk imports instead of loading everthing
+# explicitly! We don't bother for lines longer than 80 chars too. We don't use
+# punchcards anymore!
+# flake8: noqa: F403, F405, E501
+
+# linter should not bother us with variable "schedulers" not defined. It it
+# defined indeed and is an imported object
+# pylint: disable=E0602
 
 def packagesConfig(c, config):
     c["schedulers"].append(
