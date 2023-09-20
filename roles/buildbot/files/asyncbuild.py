@@ -8,7 +8,6 @@ from buildbot.process import build, buildstep, logobserver
 from twisted.internet import defer
 from twisted.python import log
 
-
 # We don't care for "too long" lines. We don't use punchcards anymore!
 # flake8: noqa
 
