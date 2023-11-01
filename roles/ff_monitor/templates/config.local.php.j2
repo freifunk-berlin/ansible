@@ -1,8 +1,8 @@
 <?php
   $CONFIG['version'] = 5;
-#  $CONFIG['socket'] = 'unix:///var/run/collectd-socket';
-$CONFIG['socket'] = 'unix:///var/run/rrdcached.sock';
-$CONFIG['flush_type'] = 'rrdcached';
+  # $CONFIG['socket'] = 'unix:///var/run/collectd-socket';
+  $CONFIG['socket'] = 'unix:///var/run/rrdcached.sock';
+  $CONFIG['flush_type'] = 'rrdcached';
 
   $CONFIG['graph_type'] = 'hybrid';
   # default plugins to show on host page
@@ -11,6 +11,7 @@ $CONFIG['flush_type'] = 'rrdcached';
   $CONFIG['percentile'] = 95;
   $CONFIG['showload'] = false;
 
+  # Freifunk infrastructure
   $CONFIG['cat']['berlin.freifunk.net'] = array(
     'buildbot.berlin.freifunk.net',
     'config.berlin.freifunk.net',
@@ -22,82 +23,71 @@ $CONFIG['flush_type'] = 'rrdcached';
     'vmhost03.berlin.freifunk.net',
     'a36s-hyp01.berlin.freifunk.net',
   );
-
   $CONFIG['cat']['Tunnel Gateways'] = '/^vpn0|^freifunk-gw01/i';
-
   $CONFIG['cat']['Backbone Gateway Nodes'] = '/-gw$/i';
-
   $CONFIG['cat']['BBB-VPN'] = '/bbb-vpn/';
 
-  $CONFIG['cat']['Rathaus Kreuzberg'] = '/^rhxb-/';
-
-  $CONFIG['cat']['Rathaus Neukoelln'] = '/^rhnk-/';
-
-  $CONFIG['cat']['Zwingli'] = '/^zwingli-/';
-
-  $CONFIG['cat']['Samariterkirche'] = '/^sama-/';
-
-  $CONFIG['cat']['Christoperous Kirche'] = '/^chris-/i';
-
-  $CONFIG['cat']['Technik Museum'] = '/^dtmb-/i';
-
-  $CONFIG['cat']['Emmaus Kirche'] = '/^emma-/i';
-
-  $CONFIG['cat']['Flughafen Tempelhof'] = '/^flughafen/i';
-
-  $CONFIG['cat']['Finanamt Reinickendorf'] = '/^fardf/i';
-
-  $CONFIG['cat']['Philmel'] = '/^philmel/i';
-
-  $CONFIG['cat']['Segenskirche'] = '/^segen/i';
-
-  $CONFIG['cat']['Simeon'] = '/^simeon/i';
-
-  $CONFIG['cat']['Martin Luther Kirche'] = '/^mlk-nk-/';
-
+  # Locations in alphabetical order
+  $CONFIG['cat']['Andreas-Gymnasium'] = '/^agym-/i';
   $CONFIG['cat']['Berliner Hochschule für Technik (BHT)'] = '/^bht/i';
-
-  $CONFIG['cat']['Vaterhaus'] = '/^vaterhaus/i';
-
-  $CONFIG['cat']['Teufelsberg'] = '/^tberg|teufelsberg/i'; 
-
-  $CONFIG['cat']['Rixbox'] = '/^rixbox/i';
-
+  $CONFIG['cat']['Cafe Wostok'] = '/^cafe-wostok-/i';
+  $CONFIG['cat']['Christoperous Kirche'] = '/^chris-/i';
+  $CONFIG['cat']['Colbe15'] = '/^colbe15-/i';
   $CONFIG['cat']['Cottbuss'] = '/^cottbus/i';
-
-  $CONFIG['cat']['Scherer8'] = '/^scherer|basta/i';
-
-  $CONFIG['cat']['Scharni'] = '/^scharni/';
-
-  $CONFIG['cat']['Habersaath'] = '/^habersaath/i';
-
-  $CONFIG['cat']['JUP'] = '/^jup-/i';
-
-  $CONFIG['cat']['Gruni 73'] = '/^gruni73/i';
-
-  $CONFIG['cat']['HDK'] = '/^hdk/i';
-
-  $CONFIG['cat']['Haus Der Statistik'] = '/^hds|^hdm/i';
-
-  $CONFIG['cat']['Kastanienallee'] = '/^k12|^k11/i';
-
-  $CONFIG['cat']['Kiehlufer'] = '/^kiehlufer/i';
-
-  $CONFIG['cat']['Linie206'] = '/^linie206/i';
-
-  $CONFIG['cat']['Magda'] = '/^magda/i';
-
-  $CONFIG['cat']['Rauchhaus'] = '/^rauchhaus/i';
-
-  $CONFIG['cat']['Rigaer78'] = '/^rigaer78/i';
-
-  $CONFIG['cat']['Rigaer83'] = '/^rigaer83/i';
-
-  $CONFIG['cat']['Schreiner'] = '/^schreiner-/i';
-
-  $CONFIG['cat']['Glienicke'] = '/^glienicke/i';
-
-  $CONFIG['cat']['Fürstenwalde'] = '/^fffw/i';
-
+  $CONFIG['cat']['Dorfplatz'] = '/^dorfplatz-/i';
   $CONFIG['cat']['Dragonkiez'] = '/^dragonkiez/i';
-?>
+  $CONFIG['cat']['E16'] = '/^e16-|e16outdoor-/i';
+  $CONFIG['cat']['Emmaus Kirche'] = '/^emma-/i';
+  $CONFIG['cat']['Fürstenwalde'] = '/^fffw/i';
+  $CONFIG['cat']['Fesev'] = '/^fesev-/i';
+  $CONFIG['cat']['Finanamt Reinickendorf'] = '/^fardf/i';
+  $CONFIG['cat']['Flughafen Tempelhof'] = '/^flughafen/i';
+  $CONFIG['cat']['Glanz15'] = '/^glanz15-/i';
+  $CONFIG['cat']['Glienicke'] = '/^glienicke/i';
+  $CONFIG['cat']['Gruni73'] = '/^gruni73/i';
+  $CONFIG['cat']['Gub37'] = '/^gub37-/i';
+  $CONFIG['cat']['HDK'] = '/^hdk|parzelle17-/i';
+  $CONFIG['cat']['Habersaath'] = '/^habersaath/i';
+  $CONFIG['cat']['Halle'] = '/^halle-/i';
+  $CONFIG['cat']['Haus Der Statistik'] = '/^hds|^hdm/i';
+  $CONFIG['cat']['Hirschhof'] = '/^hirschhof-/i';
+  $CONFIG['cat']['JUP'] = '/^jup-/i';
+  $CONFIG['cat']['Kastanienallee'] = '/^k12|^k11/i';
+  $CONFIG['cat']['Kiehlufer'] = '/^kiehlufer/i';
+  $CONFIG['cat']['Kirchhof'] = '/^kirchhof-/i';
+  $CONFIG['cat']['Klunkerkranich'] = '/^klunker-/i';
+  $CONFIG['cat']['Kosmos'] = '/^kosmos-/i';
+  $CONFIG['cat']['L5'] = '/^l5-/i';
+  $CONFIG['cat']['Liese21'] = '/^liese-21-/i';
+  $CONFIG['cat']['Linie206'] = '/^linie206/i';
+  $CONFIG['cat']['Magda'] = '/^magda/i';
+  $CONFIG['cat']['Mahalle'] = '/^mahalle-/i';
+  $CONFIG['cat']['Manstein10'] = '/^manstein10-/i';
+  $CONFIG['cat']['Martin Luther Kirche'] = '/^mlk-nk-/';
+  $CONFIG['cat']['Philmel'] = '/^philmel/i';
+  $CONFIG['cat']['Q216'] = '/^q216-/';
+  $CONFIG['cat']['Rathaus Kreuzberg'] = '/^rhxb-/';
+  $CONFIG['cat']['Rathaus Neukoelln'] = '/^rhnk-/';
+  $CONFIG['cat']['Rauchhaus'] = '/^rauchhaus/i';
+  $CONFIG['cat']['Rigaer78'] = '/^rigaer78/i';
+  $CONFIG['cat']['Rigaer83'] = '/^rigaer83/i';
+  $CONFIG['cat']['Rio'] = '/^rio-/';
+  $CONFIG['cat']['Rixbox'] = '/^rixbox/i';
+  $CONFIG['cat']['Sama27'] = '/^sama27-/';
+  $CONFIG['cat']['Samariterkirche'] = '/^sama-/';
+  $CONFIG['cat']['Scharni'] = '/^scharni/';
+  $CONFIG['cat']['Scherer8'] = '/^scherer|basta/i';
+  $CONFIG['cat']['Schreiner'] = '/^schreiner-/i';
+  $CONFIG['cat']['Segenskirche'] = '/^segen/i';
+  $CONFIG['cat']['Sgfrd'] = '/^sgfrd-/';
+  $CONFIG['cat']['Simeon'] = '/^simeon/i';
+  $CONFIG['cat']['St.-Adalbert Kirche'] = '/^stadalbert-/i';
+  $CONFIG['cat']['Technik Museum'] = '/^dtmb-/i';
+  $CONFIG['cat']['Teufelsberg'] = '/^tberg|teufelsberg/i';
+  $CONFIG['cat']['Vaterhaus'] = '/^vaterhaus/i';
+  $CONFIG['cat']['Weidenbaum'] = '/^weidenbaum-|funkpilz|funkigel/';
+  $CONFIG['cat']['W38B'] = '/^w38b-/i';
+  $CONFIG['cat']['Wilgu10'] = '/^wilgu10-/i';
+  $CONFIG['cat']['Wuhlheide'] = '/^wuhli-|wuhlipunks-/i';
+  $CONFIG['cat']['Xdorf'] = '/^xdorf-/i';
+  $CONFIG['cat']['Zwingli'] = '/^zwingli-/';
