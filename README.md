@@ -1,4 +1,4 @@
-# Freifunk Berlin Ansible Repo
+# Freifunk Berlin Ansible Repository
 
 This repository currently contains our WIP state for the infrastructure code.
 
@@ -21,7 +21,7 @@ This repository currently manages these services:
 
 ## Requirements
 
-- Ansible 8.x 
+- Ansible 8.x
 - The secret encryption password for ansible-vault under `./.vaultpass`
   - For alternative methods look here: <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
 - Have the necessary requirements installed: `ansible-galaxy install -r requirements.yml`
