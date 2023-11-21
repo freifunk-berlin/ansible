@@ -3,3 +3,4 @@
 .vagrant
 venv/
 external_roles/
+collections/

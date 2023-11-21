@@ -21,7 +21,7 @@
 
 - name: Set nftables conf
   ansible.builtin.template:
-    src: "nftables.conf.j2"
+    src: nftables.conf.j2
     dest: /etc/nftables.conf
     mode: "0644"
     owner: root
@@ -33,14 +33,14 @@
 
 - name: Checkout tunneldigger
   ansible.builtin.git:
-    repo: 'https://github.com/wlanslovenija/tunneldigger.git'
+    repo: https://github.com/wlanslovenija/tunneldigger.git
     version: c50ef46d78d797750979ebf2f8ddc5aa993a02ae
     dest: "{{ tunneldigger_path }}"
     force: true
   notify: Restart tunneldigger
 
 - name: Create tunneldigger venv
-  ansible.builtin.command: "/usr/bin/python3 -m venv {{ tunneldigger_path }}/env"
+  ansible.builtin.command: /usr/bin/python3 -m venv {{ tunneldigger_path }}/env
   args:
     creates: "{{ tunneldigger_path }}/env"
   notify: Restart tunneldigger
@@ -48,13 +48,13 @@
 - name: Install tunneldigger in venv
   ansible.builtin.shell:
   args:
-    cmd: "source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && pip install --upgrade setuptools && python setup.py install"
+    cmd: source {{ tunneldigger_path }}/env/bin/activate && cd {{ tunneldigger_path }}/broker && pip install --upgrade setuptools && python setup.py install
     creates: "{{ tunneldigger_path }}/broker/dist/"
     executable: /bin/bash
 
 - name: Copy tunneldigger service file
   ansible.builtin.template:
-    src: "tunneldigger.service.j2"
+    src: tunneldigger.service.j2
     dest: /etc/systemd/system/tunneldigger.service
     mode: "0644"
     owner: root
@@ -63,14 +63,14 @@
 
 - name: Copy tunneldigger configuration file
   ansible.builtin.template:
-    src: "l2tp_broker.cfg.j2"
+    src: l2tp_broker.cfg.j2
     dest: "{{ tunneldigger_path }}/broker/l2tp_broker.cfg"
     mode: "0644"
     owner: root
     group: root
   notify: Restart tunneldigger
 
-- name: "Copy tunneldigger scripts"
+- name: Copy tunneldigger scripts
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -79,11 +79,11 @@
     group: root
   notify: Restart tunneldigger
   loop:
-    - {src: 'ff.session.mtu-changed.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh'}
-    - {src: 'ff.session.up.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh'}
-    - {src: 'dhcp-script.sh.j2', dest: '{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh'}
+    - { src: ff.session.mtu-changed.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh" }
+    - { src: ff.session.up.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh" }
+    - { src: dhcp-script.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh" }
 
-- name: "Make sure the correct Kernel modules will load on boot"
+- name: Make sure the correct Kernel modules will load on boot
   ansible.builtin.template:
     src: modules-tunneldigger.conf.j2
     dest: /etc/modules-load.d/tunneldigger.conf
@@ -92,9 +92,9 @@
     group: root
   notify: Restart tunneldigger
 
-- name: "Copy dnsmasq config"
+- name: Copy dnsmasq config
   ansible.builtin.template:
-    src: "dnsmasq.conf.j2"
+    src: dnsmasq.conf.j2
     dest: /etc/dnsmasq.conf
     mode: "0644"
     owner: root
@@ -104,12 +104,12 @@
 - name: Allow ipv4 forwarding
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
-    value: '1'
+    value: "1"
     sysctl_set: true
 
 - name: Copy prometheus node_exporter script for tunneldigger
   ansible.builtin.template:
-    src: "tunneldigger_exporter.sh.j2"
+    src: tunneldigger_exporter.sh.j2
     dest: /opt/tunneldigger_exporter.sh
     mode: "0750"
     owner: root
@@ -117,9 +117,9 @@
 
 - name: Run Prometheus Exporter every minute
   ansible.builtin.cron:
-    name: "Prometheus tunneldigger exporter"
+    name: Prometheus tunneldigger exporter
     minute: "*"
-    job: "/opt/tunneldigger_exporter.sh"
+    job: /opt/tunneldigger_exporter.sh
     user: root
 
 - name: Set conntrack size
@@ -128,5 +128,5 @@
     line: options nf_conntrack hashsize=32768
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
     create: true

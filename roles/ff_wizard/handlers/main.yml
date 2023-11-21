@@ -1,13 +1,13 @@
 ---
 - name: Restart uwsgi
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: uwsgi
     enabled: true
     state: restarted
 
 - name: Restart postfix
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: uwsgi
     enabled: true

@@ -10,7 +10,7 @@
     state: present
 
 - name: Install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - nipap-cli
       - nipap-common
@@ -24,10 +24,10 @@
     cache_valid_time: 3600
 
 - name: Copy nipap config
-  template:
+  ansible.builtin.template:
     dest: /etc/nipap/nipap.conf
     src: nipap.conf.j2
-    mode: 0640
+    mode: "0640"
     owner: root
     group: root
   notify: Restart nipapd
@@ -57,5 +57,3 @@
 #     privs: ALL
 #     type: database
 #     roles: nipap,wizard
-
-...
