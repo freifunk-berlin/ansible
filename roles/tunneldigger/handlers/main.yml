@@ -13,7 +13,6 @@
     enabled: true
     state: restarted
 
-
 - name: Restart nftables
   ansible.builtin.systemd:
     daemon_reload: true

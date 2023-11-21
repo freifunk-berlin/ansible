@@ -1,6 +1,6 @@
 ---
 - name: Restart nipapd
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: nipapd
     enabled: true

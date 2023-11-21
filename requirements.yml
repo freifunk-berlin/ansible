@@ -3,15 +3,15 @@
 # usage: ansible-galaxy install -r requirements.yml
 roles:
   - src: ryandaniels.create_users
-    version: 1.0.8
+    version: 1.0.11
   - src: geerlingguy.nginx
-    version: 3.1.0
+    version: 3.1.4
   - src: systemli.letsencrypt
-    version: 2.1.0
+    version: 2.3.0
 collections:
   - name: ansible.posix
-    version: 1.5.1
+    version: 1.5.4
   - name: community.mysql
-    version: 3.6.0
+    version: 3.8.0
   - name: community.general
-    version: 6.5.0
+    version: 7.5.1

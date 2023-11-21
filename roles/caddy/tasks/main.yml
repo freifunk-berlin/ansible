@@ -10,7 +10,7 @@
     state: present
 
 - name: Install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - caddy
     state: present
@@ -18,12 +18,10 @@
     cache_valid_time: 3600
 
 - name: Copy caddyfile
-  template:
+  ansible.builtin.template:
     dest: /etc/caddy/Caddyfile
     src: "{{ caddy_caddyfile }}"
-    mode: 0640
+    mode: "0640"
     owner: caddy
     group: caddy
   notify: Restart caddy
-
-...

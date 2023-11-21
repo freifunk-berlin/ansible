@@ -1,34 +1,34 @@
 ---
 - name: Restart rrdcached
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: rrdcached
     enabled: true
     state: restarted
 
 - name: Restart collectd
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: collectd
     enabled: true
     state: restarted
 
 - name: Restart php-fpm
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: php7.4-fpm
     enabled: true
     state: restarted
 
 - name: Restart prometheus
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: prometheus
     enabled: true
     state: restarted
 
 - name: Restart grafana
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: grafana-server
     enabled: true
