@@ -25,3 +25,7 @@ t-löffel.de
 
 [other]
 util.berlin.freifunk.net
+
+[uisp]
+uisp ansible_host=10.31.130.158 # New uisp VM
+
