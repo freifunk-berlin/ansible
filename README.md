@@ -35,7 +35,7 @@ Also, the roles are divided into 2 directories, one for external ones, and one f
 
 This separation makes using the monorepo approach easier, since we can just exclude all directories in the `.gitignore`.
 
-```
+```text
 ├── .config                      # Directory with config files e.g. for github actions
 ├── .github                      # Directory for github actions
 ├── ansible.cfg                  # Custom settings for this Repository
