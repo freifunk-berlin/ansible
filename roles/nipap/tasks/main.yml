@@ -15,10 +15,10 @@
       - nipap-cli
       - nipap-common
       - nipapd
-      - python-pynipap
       - python3-pynipap
       - python3-psycopg2
-      - postgresql-11
+      - postgresql-13
+      - postgresql-13-ip4r
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -32,28 +32,3 @@
     group: root
   notify: Restart nipapd
 
-# - name: Create nipap db
-#   remote_user: root
-#   become: yes
-#   become_user: postgres
-#   community.postgresql.postgresql_db:
-#     name: nipap
-#     owner: nipap
-
-# - name: create nipap db user
-#   remote_user: root
-#   become: yes#
-#   become_user: postgres
-#   community.postgresql.postgresql_user:
-#     name: nipap
-#     password: "{{ nipap_db_password }}"
-
-# - name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
-#   remote_user: root
-#   become: yes
-#   become_user: postgres
-#   community.postgresql.postgresql_privs:
-#     db: nipap
-#     privs: ALL
-#     type: database
-#     roles: nipap,wizard

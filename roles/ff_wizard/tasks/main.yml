@@ -4,40 +4,13 @@
     name:
       - libpq-dev
       - postfix
-      - postgresql-11
-      - postgresql-server-dev-11
-      - python-virtualenv
+      - postgresql-13
+      - python3-virtualenv
       - uwsgi
-      - uwsgi-plugin-python
+      - uwsgi-plugin-python3
     state: present
     update_cache: true
     cache_valid_time: 3600
-
-# - name: Create wizard db
-#   remote_user: root
-#   become: yes
-#   become_user: postgres
-#   community.postgresql.postgresql_db:
-#     name: wizard
-#     owner: wizard
-
-# - name: create wizard db user
-#   remote_user: root
-#   become: yes
-#   become_user: postgres
-#   community.postgresql.postgresql_user:
-#     name: wizard
-#     password: "{{ ff_wizard_db_pass }}"
-
-# - name: GRANT ALL PRIVILEGES ON nipap to nipap and wizard
-#   remote_user: root
-#   become: yes
-#   become_user: postgres
-#   community.postgresql.postgresql_privs:
-#     db: wizard
-#     privs: ALL
-#     type: database
-#     roles: wizard
 
 - name: Copy postfix config
   ansible.builtin.template:
@@ -91,8 +64,8 @@
   ansible.builtin.pip:
     requirements: /var/www/nipap-wizard/requirements.txt
     virtualenv: /var/www/nipap-wizard/env
-    virtualenv_command: virtualenv --python=python3.7
-    virtualenv_python: python3.7
+    virtualenv_command: virtualenv --python=python3.9
+    virtualenv_python: python3.9
   notify: Restart uwsgi
 
 - name: Set owner of nipap dir
