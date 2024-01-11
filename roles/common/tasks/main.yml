@@ -2,22 +2,7 @@
 # tasks to be run on all machines
 - name: Install basic tools
   ansible.builtin.apt:
-    name:
-      - atop
-      - curl
-      - fail2ban
-      - git
-      - gpg
-      - gpg-agent
-      - htop
-      - mc
-      - mosh
-      - nano
-      - prometheus-node-exporter
-      - tcpdump
-      - tmux
-      - vnstat
-      - zsh
+    name: "{{ common_packages_base + common_packages_extra }}"
     state: present
     update_cache: true
 
@@ -37,15 +22,6 @@
     mode: "0640"
     owner: root
     group: root
-
-- name: Configure prometheus-node-exporter
-  ansible.builtin.template:
-    src: prometheus-node-exporter.j2
-    dest: /etc/default/prometheus-node-exporter
-    mode: "0640"
-    owner: root
-    group: root
-  notify: Restart prometheus-node-exporter
 
 - name: Disallow password-based login for all users
   ansible.builtin.lineinfile:
@@ -68,3 +44,10 @@
     regexp: ^SystemMaxUse
     line: SystemMaxUse=1G
   notify: Restart journald
+
+- name: Include monitoring tasks
+  ansible.builtin.include_tasks: monitoring.yml
+
+
+- name: Include logrotate tasks
+  ansible.builtin.include_tasks: logrotate.yml
