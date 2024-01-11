@@ -1,0 +1,14 @@
+---
+- name: Configure logrotate
+  ansible.builtin.template:
+    src: "{{ item.template }}"
+    dest: "{{ item.dest }}"
+    mode: "0640"
+    owner: root
+    group: root
+  loop:
+    - {template: "logrotate_conf.j2", dest: "/etc/logrotate.conf"}
+    - {template: "logrotate_d_alternatives.j2", dest: "/etc/logrotate.d/alternatives"}
+    - {template: "logrotate_d_dpkg.j2", dest: "/etc/logrotate.d/dpkg"}
+    - {template: "logrotate_d_rsyslog.j2", dest: "/etc/logrotate.d/rsyslog"}
+    - {template: "logrotate_d_fail2ban.j2", dest: "/etc/logrotate.d/fail2ban"}
