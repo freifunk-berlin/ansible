@@ -7,6 +7,8 @@ Timeout 2
 ReadThreads 5
 WriteThreads 5
 
+CollectInternalStats true
+
 LoadPlugin "syslog"
 <Plugin syslog>
   LogLevel err
@@ -87,11 +89,6 @@ LoadPlugin "unixsock"
   SocketGroup "collectd"
   SocketPerms "0666"
   DeleteSocket "false"
-</Plugin>
-
-LoadPlugin "write_prometheus"
-<Plugin "write_prometheus">
-  Port "9103"
 </Plugin>
 
 <Plugin network>
