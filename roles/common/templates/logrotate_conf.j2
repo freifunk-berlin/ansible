@@ -6,7 +6,7 @@
 daily
 
 # keep 4 weeks worth of backlogs
-rotate 14
+rotate {{ common_log_retention }}
 
 # create new (empty) log files after rotating old ones
 create

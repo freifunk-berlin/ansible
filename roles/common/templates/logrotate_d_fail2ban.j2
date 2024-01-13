@@ -1,5 +1,5 @@
 /var/log/fail2ban.log {
-    rotate 14
+    rotate {{ common_log_retention }}
     daily
     dateext
     missingok

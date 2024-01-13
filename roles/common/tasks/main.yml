@@ -37,14 +37,6 @@
     insertafter: EOF
   notify: Restart sshd
 
-- name: Set Journald Max Size to 1G
-  ansible.builtin.lineinfile:
-    path: /etc/systemd/journald.conf
-    insertafter: ^#SystemMaxUse
-    regexp: ^SystemMaxUse
-    line: SystemMaxUse=1G
-  notify: Restart journald
-
 - name: Include monitoring tasks
   ansible.builtin.include_tasks: monitoring.yml
 

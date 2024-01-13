@@ -1,6 +1,6 @@
 /var/log/dpkg.log {
        daily
-       rotate 14
+       rotate {{ common_log_retention }}
        dateext
        compress
        delaycompress

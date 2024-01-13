@@ -1,6 +1,6 @@
 /var/log/alternatives.log {
         daily
-        rotate 14
+        rotate {{ common_log_retention }}
         compress
         dateext
         delaycompress

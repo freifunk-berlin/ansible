@@ -17,3 +17,5 @@ common_packages_base:
   - zsh
 
 common_packages_extra: []
+
+common_log_retention: 30

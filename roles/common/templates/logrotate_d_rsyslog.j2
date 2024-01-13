@@ -12,7 +12,7 @@
 /var/log/debug
 /var/log/messages
 {
-       rotate 14
+       rotate {{ common_log_retention }}
        daily
        dateext
        missingok
