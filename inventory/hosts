@@ -26,11 +26,11 @@ f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net
 utils
 
 [utils]
-util.berlin.freifunk.net
+util.berlin.freifunk.net # hopglass
 
 [download]
 download-master.berlin.freifunk.net
 
 [uisp]
-uisp ansible_host=10.31.130.158 # New uisp VM
+uisp.berlin.freifunk.net ansible_host=10.31.130.158 # New uisp VM
 

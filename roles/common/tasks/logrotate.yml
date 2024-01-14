@@ -1,0 +1,30 @@
+---
+- name: Configure logrotate
+  ansible.builtin.template:
+    src: "{{ item.template }}"
+    dest: "{{ item.dest }}"
+    mode: "0640"
+    owner: root
+    group: root
+  loop:
+    - {template: "logrotate_conf.j2", dest: "/etc/logrotate.conf"}
+    - {template: "logrotate_d_alternatives.j2", dest: "/etc/logrotate.d/alternatives"}
+    - {template: "logrotate_d_dpkg.j2", dest: "/etc/logrotate.d/dpkg"}
+    - {template: "logrotate_d_rsyslog.j2", dest: "/etc/logrotate.d/rsyslog"}
+    - {template: "logrotate_d_fail2ban.j2", dest: "/etc/logrotate.d/fail2ban"}
+
+- name: Set Journald Max Size to 1G
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    insertafter: ^#SystemMaxUse
+    regexp: ^SystemMaxUse
+    line: SystemMaxUse=1G
+  notify: Restart journald
+
+- name: Set Journald Max retention time
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    insertafter: ^#SystemMaxUse
+    regexp: ^MaxRetentionSec
+    line: MaxRetentionSec={{ common_log_retention }}day
+  notify: Restart journald

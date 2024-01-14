@@ -14,4 +14,4 @@ collections:
   - name: community.mysql
     version: 3.8.0
   - name: community.general
-    version: 7.5.1
+    version: 8.2.0

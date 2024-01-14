@@ -1,0 +1,10 @@
+/var/log/dpkg.log {
+       daily
+       rotate {{ common_log_retention }}
+       dateext
+       compress
+       delaycompress
+       missingok
+       notifempty
+       create 644 root root
+}

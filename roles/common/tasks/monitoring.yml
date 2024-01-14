@@ -1,0 +1,26 @@
+---
+- name: Configure prometheus-node-exporter
+  ansible.builtin.template:
+    src: prometheus-node-exporter.j2
+    dest: /etc/default/prometheus-node-exporter
+    mode: "0640"
+    owner: root
+    group: root
+  notify: Restart prometheus-node-exporter
+
+- name: Allow access to node-exporter
+  ansible.builtin.iptables:
+    chain: INPUT
+    source: 77.87.50.8,10.0.0.0/8,127.0.0.1
+    protocol: tcp
+    destination_port: 9100
+    jump: ACCEPT
+    comment: Allow prometheus exporter access
+
+- name: Limit access to node-exporter for the rest
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 9100
+    jump: REJECT
+    comment: Reject prometheus exporter access for everyone else

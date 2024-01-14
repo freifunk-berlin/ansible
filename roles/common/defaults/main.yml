@@ -1,0 +1,22 @@
+---
+common_packages_base:
+  - atop
+  - curl
+  - fail2ban
+  - git
+  - gpg
+  - gpg-agent
+  - htop
+  - iptables-persistent
+  - mc
+  - mosh
+  - nano
+  - prometheus-node-exporter
+  - tcpdump
+  - tmux
+  - vnstat
+  - zsh
+
+common_packages_extra: []
+
+common_log_retention: 30

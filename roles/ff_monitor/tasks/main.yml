@@ -130,6 +130,7 @@
     repo: https://github.com/freifunk-berlin/CGP.git
     dest: /srv/www/monitor.berlin.freifunk.net/cgp/
     version: master
+    force: true
 
 - name: Copy CGP config
   ansible.builtin.template:

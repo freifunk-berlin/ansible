@@ -1,0 +1,10 @@
+/var/log/alternatives.log {
+        daily
+        rotate {{ common_log_retention }}
+        compress
+        dateext
+        delaycompress
+        missingok
+        notifempty
+        create 644 root root
+}
