@@ -1,3 +1,4 @@
+---
 common_packages_base:
   - atop
   - curl
