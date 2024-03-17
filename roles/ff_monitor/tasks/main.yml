@@ -4,6 +4,7 @@
     url: https://apt.grafana.com/gpg.key
     state: present
 
+
 - name: Add grafana APT Repo
   ansible.builtin.apt_repository:
     repo: deb https://apt.grafana.com stable main
@@ -29,6 +30,8 @@
     owner: prometheus
     group: prometheus
   notify: Restart prometheus
+  tags:
+    - prometheus
 
 - name: Copy prometheus defaults
   ansible.builtin.template:
@@ -38,6 +41,8 @@
     owner: root
     group: root
   notify: Restart prometheus
+  tags:
+    - prometheus
 
 - name: Start prometheus collectd-exporter
   community.docker.docker_container:
@@ -51,6 +56,29 @@
       - 127.0.0.1:25827:25826/udp
   tags:
     - collectd-exporter
+
+- name: Copy owm-exporter config
+  ansible.builtin.template:
+    dest: /opt/owm-exporter.yml
+    src: owm-exporter.yml.j2
+    mode: "0640"
+    owner: root
+    group: 65532
+  tags:
+    - owm-exporter
+
+- name: Start owm-exporter
+  community.docker.docker_container:
+    name: owm-exporter
+    state: started
+    restart_policy: unless-stopped
+    image: rkosegi/owm-exporter:v1.0.4
+    volumes:
+      - /opt/owm-exporter.yml:/config.yaml
+    ports:
+      - 127.0.0.1:9111:9111
+  tags:
+    - owm-exporter
 
 - name: Copy grafana config
   ansible.builtin.template:
@@ -75,7 +103,7 @@
     name: remove old rrd files
     special_time: daily
     user: root
-    job: find /mnt/collectd/rrd/ -type f -mtime +14 -delete; find /mnt/collectd/rrd/ -type d -empty -delete
+    job: find /mnt/collectd/rrd/ -type f -mtime +30 -delete; find /mnt/collectd/rrd/ -type d -empty -delete
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
