@@ -4,7 +4,8 @@
     name:
       - libpq-dev
       - postfix
-      - postgresql-13
+      - postgresql-15
+      - postgresql-15-ip4r
       - python3-virtualenv
       - uwsgi
       - uwsgi-plugin-python3
@@ -64,8 +65,8 @@
   ansible.builtin.pip:
     requirements: /var/www/nipap-wizard/requirements.txt
     virtualenv: /var/www/nipap-wizard/env
-    virtualenv_command: virtualenv --python=python3.9
-    virtualenv_python: python3.9
+    virtualenv_command: virtualenv --python=python3.11
+    virtualenv_python: python3.11
   notify: Restart uwsgi
 
 - name: Set owner of nipap dir
