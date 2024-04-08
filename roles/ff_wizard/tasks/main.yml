@@ -47,7 +47,7 @@
   become_user: www-data
   ansible.builtin.git:
     repo: https://github.com/freifunk-berlin/config.berlin.freifunk.net.git
-    version: master
+    version: main
     dest: /var/www/nipap-wizard
     force: true
   notify: Restart uwsgi
