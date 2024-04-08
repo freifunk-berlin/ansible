@@ -24,4 +24,6 @@
     mode: "0640"
     owner: caddy
     group: caddy
+    validate: /usr/bin/caddy validate --adapter caddyfile -c %s
   notify: Restart caddy
+
