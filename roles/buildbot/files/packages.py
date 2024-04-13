@@ -236,7 +236,7 @@ def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     """\
 podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
-    apk add git bash wget xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl \
+    apk add git bash wget zstd gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl \
     && git clone %(prop:repository)s /root/falter-packages \
     && cd /root/falter-packages/ \
     && git checkout %(prop:got_revision)s \
