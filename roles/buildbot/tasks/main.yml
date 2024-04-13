@@ -2,6 +2,7 @@
 - name: Install dependencies
   apt:
     name:
+      - zstd
       - build-essential
       - pkg-config
       - git
