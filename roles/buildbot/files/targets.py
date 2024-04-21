@@ -347,7 +347,7 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     """\
 podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
-    apk add git bash wget zstd gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
+    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
