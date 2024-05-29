@@ -32,7 +32,7 @@ def packagesConfig(c, config):
                         name="branch",
                         label="git branch",
                         choices=config["packages_branches"],
-                        default="master",
+                        default=config["packages_branches"][0],
                         strict=True,
                     ),
                     revision=util.FixedParameter(name="revision", default=""),
@@ -101,7 +101,7 @@ def archTriggerStep(arch):
 @util.renderer
 def branchToFalterBranch(props):
     o2f = {
-        "master": "snapshot",
+        "main": "snapshot",
         "openwrt-23.05": "1.4.0-snapshot",
         "openwrt-22.03": "1.3.0-snapshot",
         "openwrt-21.02": "1.2.3-snapshot",
