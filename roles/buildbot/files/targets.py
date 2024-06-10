@@ -234,13 +234,13 @@ def targetsFactory(f, wwwPrefix):
                     # TODO: doesn't fail if targets-*.txt doesn't exist
                     """\
 targets=$(\
-    cat .buildconf/targets-%(prop:falterBranch)s.txt \
+    cat build/targets-%(prop:falterBranch)s.txt \
     | grep -v "#" | grep . \
     | cut -d" " -f2- \
     | xargs -n1 echo | sort \
 ) ; \
 for t in $targets; do \
-    if ! cat .buildconf/broken-%(prop:falterBranch)s.txt | grep -F "$t" >/dev/null ; \
+    if ! cat build/broken-%(prop:falterBranch)s.txt | grep -F "$t" >/dev/null ; \
     then \
         echo "$t" ; \
     fi ; \
@@ -353,9 +353,11 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && ./build_falter -p all -v %(prop:falterVersion)s -t %(prop:target)s \
+    && env FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s \
+    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s \
+    && env FALTER_VARIANT=backbone build/build.sh %(prop:falterVersion)s %(prop:target)s \
 ) >&2 \
-&& cd /root/falter-builter/firmwares \
+&& cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
 """,
                     alpineVersion=alpineVersion,
