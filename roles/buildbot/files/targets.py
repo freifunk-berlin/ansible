@@ -229,22 +229,13 @@ def targetsFactory(f, wwwPrefix):
                     # 2. Remove comments and empty lines
                     # 3. Take everything but the first line
                     # 4. Print all entries into $targets one by one
-                    # 5. Go through $targets, print only targets that aren't broken
                     #
                     # TODO: doesn't fail if targets-*.txt doesn't exist
                     """\
-targets=$(\
-    cat build/targets-%(prop:falterBranch)s.txt \
-    | grep -v "#" | grep . \
-    | cut -d" " -f2- \
-    | xargs -n1 echo | sort \
-) ; \
-for t in $targets; do \
-    if ! cat build/broken-%(prop:falterBranch)s.txt | grep -F "$t" >/dev/null ; \
-    then \
-        echo "$t" ; \
-    fi ; \
-done \
+cat build/targets-%(prop:falterBranch)s.txt \
+| grep -v "#" | grep . \
+| cut -d" " -f2- \
+| xargs -n1 echo | sort \
 """
                 ),
             ],
