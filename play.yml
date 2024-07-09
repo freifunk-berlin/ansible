@@ -55,3 +55,9 @@
     - tunneldigger
   tags:
     - tunneldigger
+
+- name: Set up website
+  hosts: website
+  become: true
+  roles:
+    - caddy

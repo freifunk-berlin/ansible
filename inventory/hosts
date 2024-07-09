@@ -34,3 +34,5 @@ download-master.berlin.freifunk.net
 [uisp]
 uisp.berlin.freifunk.net ansible_host=10.31.130.158 # New uisp VM
 
+[website]
+berlin.freifunk.net
