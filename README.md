@@ -18,6 +18,7 @@ This repository currently manages these services:
 - Several buildbot-workers
 - IP address wizard at [config.berlin.freifunk.net](https://config.berlin.freifunk.net/)
 - The vpn03 servers which route our traffic to the internet
+- The public site for the berlin community at [berlin.freifunk.net](https://berlin.freifunk.net/)
 
 ## Requirements
 
