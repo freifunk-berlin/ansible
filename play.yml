@@ -107,3 +107,11 @@
     - ff_mirror
   tags:
     - mirror
+    
+- name: Set up nameservers
+  hosts: nameservers
+  become: true
+  roles:
+    - bind
+    
+    

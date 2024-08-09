@@ -34,6 +34,10 @@ meshtastic.berlin.freifunk.net ansible_host=77.87.49.21
 [utils]
 util.berlin.freifunk.net # hopglass
 
+[nameservers]
+ns49  ansible_host=77.87.49.53
+ns50  ansible_host=77.87.50.53
+
 [download]
 download-master.berlin.freifunk.net
 

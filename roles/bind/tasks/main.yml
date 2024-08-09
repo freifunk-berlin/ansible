@@ -1,0 +1,33 @@
+---
+# tasks to be run on all machines
+- name: Install basic tools
+  ansible.builtin.apt:
+    name:
+      - bind9
+      - prometheus-bind-exporter
+      - bind9-dnsutils
+    state: present
+    update_cache: true
+  notify:
+    - Restart bind
+
+- name: Copy named.conf
+  ansible.builtin.template:
+    src: named.conf.j2
+    dest: /etc/bind/named.conf
+    owner: bind
+    group: bind
+    mode: "0640"
+  notify:
+    - Restart bind
+
+
+- name: Create directories
+  ansible.builtin.file:
+    path: /etc/bind/zones
+    owner: bind
+    group: bind
+    mode: "0750"
+    state: directory
+  notify:
+    - Restart bind
