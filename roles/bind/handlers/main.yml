@@ -1,6 +1,6 @@
 ---
 - name: Restart bind
   ansible.builtin.service:
-    name: bind
+    name: named
     enabled: true
     state: restarted

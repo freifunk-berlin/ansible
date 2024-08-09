@@ -5,6 +5,7 @@
     name:
       - bind9
       - prometheus-bind-exporter
+      - bind9-dnsutils
     state: present
     update_cache: true
   notify:
