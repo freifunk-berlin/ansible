@@ -28,6 +28,10 @@ utils
 [utils]
 util.berlin.freifunk.net # hopglass
 
+[nameservers]
+ns49  ansible_host=77.87.49.53
+ns51  ansible_host=77.87.51.53
+
 [download]
 download-master.berlin.freifunk.net
 

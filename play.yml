@@ -61,3 +61,10 @@
   become: true
   roles:
     - caddy
+
+- name: Set up nameservers
+  hosts: nameservers
+  become: true
+  roles:
+    - bind
+    
