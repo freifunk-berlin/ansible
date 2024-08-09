@@ -1,0 +1,55 @@
+// This is the primary configuration file for the BIND DNS server named.
+//
+// Please read /usr/share/doc/bind9/README.Debian for information on the
+// structure of BIND configuration files in Debian, *BEFORE* you customize
+// this configuration file.
+//
+// If you are just adding zones, please do that in /etc/bind/named.conf.local
+
+options {
+        directory "/var/cache/bind";
+        dnssec-validation auto;
+        listen-on-v6 { ::1; };
+        listen-on { 127.0.0.1; };
+};
+
+//
+// Do any local configuration here
+//
+
+
+// prime the server with knowledge of the root servers
+
+zone "." { type hint; file "/usr/share/dns/root.hints"; };
+
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+
+zone "10.in-addr.arpa"      { type master; file "/etc/bind/db.empty"; };
+zone "16.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "17.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "18.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "19.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "20.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "21.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "22.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "23.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "24.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "25.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "26.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "27.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "28.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "29.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "30.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "31.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
+zone "168.192.in-addr.arpa" { type master; file "/etc/bind/db.empty"; };
+
+
+zone "localhost" { type master; file "/etc/bind/db.local"; };
+zone "127.in-addr.arpa" { type master; file "/etc/bind/db.127"; };
+zone "0.in-addr.arpa" { type master; file "/etc/bind/db.0"; };
+zone "255.in-addr.arpa" { type master; file "/etc/bind/db.255"; };
+
+
+zone "xn--t-lffel-c1a.de"      { type master; file "/etc/bind/zones/db.xn--t-lffel-c1a.de"; };
