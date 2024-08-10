@@ -28,5 +28,6 @@
     owner: bind
     group: bind
     mode: "0750"
+    state: directory
   notify:
     - Restart bind
