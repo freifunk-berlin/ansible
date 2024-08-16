@@ -23,7 +23,6 @@ f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net
 
 
 [users_only:children]
-utils
 
 [utils]
 util.berlin.freifunk.net # hopglass
