@@ -344,8 +344,8 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s \
-    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s \
+    && env FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
