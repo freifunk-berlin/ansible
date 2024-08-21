@@ -35,3 +35,6 @@ uisp.berlin.freifunk.net ansible_host=10.31.130.158 # New uisp VM
 
 [website]
 web.berlin.freifunk.net
+
+[hypervisor]
+a36s-hyp01.berlin.freifunk.net

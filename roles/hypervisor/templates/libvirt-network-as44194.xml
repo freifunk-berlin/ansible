@@ -1,0 +1,5 @@
+<network>
+  <name>AS44194</name>
+  <forward mode='bridge'/>
+  <bridge name='br-as44194'/>
+</network>

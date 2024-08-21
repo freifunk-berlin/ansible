@@ -1,0 +1,5 @@
+---
+hypervisor_packages:
+  - libvirt-daemon-system
+  - vlan
+  - bridge-utils
