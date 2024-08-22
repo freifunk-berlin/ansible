@@ -67,3 +67,5 @@
   become: true
   roles:
     - hypervisor
+  tags:
+    - hypervisor

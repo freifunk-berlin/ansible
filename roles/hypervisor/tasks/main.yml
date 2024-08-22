@@ -22,7 +22,47 @@
     owner: root
     group: root
 
-# Todo
-# - bridges
-# custom boot options
-# add users to group
+- name: Copy libvirt-guests defaults
+  ansible.builtin.template:
+    src: libvirt-guests-default.j2
+    dest: /etc/default/libvirt-guests
+    mode: "0640"
+    owner: root
+    group: root
+
+- name: Define bridges
+  ansible.builtin.template:
+    src: "bridge.j2"
+    dest: "/etc/network/interfaces.d/{{ item.name }}"
+    mode: "0640"
+    owner: root
+    group: root
+  loop: "{{ hypervisor_networks }}"
+
+- name: Define libvirt networks
+  community.libvirt.virt_net:
+    command: define
+    name: "{{ item.name }}"
+    xml: '{{ lookup("template", "libvirt-network.xml.j2") }}'
+  loop: "{{ hypervisor_networks }}"
+
+- name: Set libvirt Networks active and autostart
+  community.libvirt.virt_net:
+    name: "{{ item.name }}"
+    autostart: true
+    state: active
+  loop: "{{ hypervisor_networks }}"
+
+# Todo:
+# - custom boot options (maybe not needed)
+# - add users to group
+# - Service restarts (or maybe just a Warning that this needs to be done manually for safety reasons?)
+# - debian backports?
+#   - qemu 7.2 => 9.0 https://wiki.qemu.org/ChangeLog
+#   - kernel 6.1 => 6.5/6.9
+#
+#
+#
+#
+#
+#
