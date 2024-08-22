@@ -34,10 +34,11 @@
   ansible.builtin.template:
     src: "bridge.j2"
     dest: "/etc/network/interfaces.d/{{ item.name }}"
-    mode: "0640"
+    mode: "0644"
     owner: root
     group: root
   loop: "{{ hypervisor_networks }}"
+  when: hypervisor_networks is defined
 
 - name: Define libvirt networks
   community.libvirt.virt_net:
@@ -45,6 +46,7 @@
     name: "{{ item.name }}"
     xml: '{{ lookup("template", "libvirt-network.xml.j2") }}'
   loop: "{{ hypervisor_networks }}"
+  when: hypervisor_networks is defined
 
 - name: Set libvirt Networks active and autostart
   community.libvirt.virt_net:
@@ -52,17 +54,4 @@
     autostart: true
     state: active
   loop: "{{ hypervisor_networks }}"
-
-# Todo:
-# - custom boot options (maybe not needed)
-# - add users to group
-# - Service restarts (or maybe just a Warning that this needs to be done manually for safety reasons?)
-# - debian backports?
-#   - qemu 7.2 => 9.0 https://wiki.qemu.org/ChangeLog
-#   - kernel 6.1 => 6.5/6.9
-#
-#
-#
-#
-#
-#
+  when: hypervisor_networks is defined
