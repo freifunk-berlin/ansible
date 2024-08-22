@@ -1,0 +1,2 @@
+---
+hypervisor_modprobe: modprobe-hpgen8.j2

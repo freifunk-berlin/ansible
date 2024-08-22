@@ -3,3 +3,6 @@ hypervisor_packages:
   - libvirt-daemon-system
   - vlan
   - bridge-utils
+  - ethtool
+hypervisor_modprobe: modprobe.j2
+hypervisor_sysctl: sysctl.j2
