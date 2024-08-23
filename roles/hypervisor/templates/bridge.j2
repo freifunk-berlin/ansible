@@ -1,0 +1,13 @@
+auto br-{{ item.name | lower }}
+iface br-{{ item.name | lower }} inet {% if item.address is defined %}static{% else %}manual{% endif %}
+
+        bridge_ports {{ item.bridge_interface }}
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+{% if item.address is defined %}
+        address {{ item.address }}
+{% endif %}
+{% if item.gateway is defined %}
+        gateway {{ item.gateway }}
+{% endif %}

@@ -61,3 +61,11 @@
   become: true
   roles:
     - caddy
+
+- name: Set up hypervisor
+  hosts: hypervisor
+  become: true
+  roles:
+    - hypervisor
+  tags:
+    - hypervisor
