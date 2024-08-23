@@ -2,14 +2,12 @@
 - name: Install dependencies
   ansible.builtin.apt:
     name:
-      - bridge-utils
       - dnsmasq
       - gcc
       - git
       - iproute2
       - iptables
       - libevent-dev
-      - libnetfilter-conntrack-dev
       - libnfnetlink-dev
       - nftables
       - python3-dev
