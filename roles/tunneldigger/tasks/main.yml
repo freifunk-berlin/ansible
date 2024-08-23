@@ -34,7 +34,7 @@
 - name: Checkout tunneldigger
   ansible.builtin.git:
     repo: https://github.com/wlanslovenija/tunneldigger.git
-    version: c50ef46d78d797750979ebf2f8ddc5aa993a02ae
+    version: v0.4.0
     dest: "{{ tunneldigger_path }}"
     force: true
   notify: Restart tunneldigger
