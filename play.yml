@@ -49,7 +49,7 @@
     - ff_monitor
 
 - name: Set up tunneldigger
-  hosts: tunneldigger,!b.tunnel.berlin.freifunk.net
+  hosts: tunneldigger
   become: true
   roles:
     - tunneldigger
