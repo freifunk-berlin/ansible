@@ -14,5 +14,13 @@ monitor.berlin.freifunk.net  {
 }
 
 
-
-
+# Pushgw 
+http://10.31.130.151:9091 {
+     bind 10.31.130.151
+#    @delete-get {   # TODO Fix
+#        return 418
+#    }
+#    @put-post {
+        reverse_proxy http://127.0.0.1:9091
+#    }
+}

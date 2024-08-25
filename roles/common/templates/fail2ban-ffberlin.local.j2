@@ -1,8 +1,13 @@
+[DEFAULT]
+backend = systemd
+
 [sshd]
 enabled = true
 port    = ssh
 filter  = sshd
-logpath = /var/log/auth.log
-maxretry = 3            # ban after 3 failed tries
-bantime = 86400         # ban for 24h
-findtime = 3600         # count tries within one hour
+# ban after 3 failed tries
+maxretry = 3  
+# ban for 24h          
+bantime = 86400   
+# count tries within one hour     
+findtime = 3600         

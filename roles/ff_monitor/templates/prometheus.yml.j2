@@ -8,6 +8,7 @@ alerting:
     - targets: ['localhost:9093']
 
 rule_files:
+  - rules.yml
 
 scrape_configs:
 
@@ -25,6 +26,13 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
+  - job_name: 'pushgateway'
+    scrape_interval: 30s
+    scrape_timeout: 30s
+    honor_labels: true
+    static_configs:
+      - targets: ['localhost:9091']
+
   - job_name: collectd
     scrape_interval: 30s
     static_configs:
@@ -38,6 +46,13 @@ scrape_configs:
   - job_name: servers
     static_configs:
       - targets:
+        - "a36s-hyp03.berlin.freifunk.net:9100"
 {% for host in groups.all %}
         - "{{ host }}:9100"
 {% endfor %}
+
+  - job_name: 'weather'
+    scrape_interval: 900s
+    scrape_timeout: 30s
+    static_configs:
+      - targets: ['127.0.0.1:9111']
