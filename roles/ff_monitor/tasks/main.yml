@@ -75,7 +75,7 @@
     name: remove old rrd files
     special_time: daily
     user: root
-    job: find /mnt/collectd/rrd/ -type f -mtime +14 -delete; find /mnt/collectd/rrd/ -type d -empty -delete
+    job: find /mnt/collectd/rrd/ -type f -mtime +30 -delete; find /mnt/collectd/rrd/ -type d -empty -delete
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
