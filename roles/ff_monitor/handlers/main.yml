@@ -16,7 +16,7 @@
 - name: Restart php-fpm
   ansible.builtin.systemd:
     daemon_reload: true
-    name: php7.4-fpm
+    name: php8.2-fpm
     enabled: true
     state: restarted
 
