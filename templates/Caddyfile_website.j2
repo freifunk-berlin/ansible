@@ -36,7 +36,8 @@ berlin.freifunk.net {
         redir /download /de/downloads/ 301
         redir /participate/ /de/participate/ 301
         redir /p /de/participate/ 301
-        redir /impressum /de/impressum/ 301
+        redir /impressum /de/imprint/ 301
+        redir /en/imprint/ /de/imprint/ 301
         redir /wiki /de/wiki/ 301
         redir /meshwiki /de/wiki/ 301
 
@@ -99,10 +100,10 @@ freifunk.dev {
         }
         redir @participate /{re.branch.1}/de/participate/ 301
 
-        @impressum {
-                path_regexp branch ^\/([[:alnum:]]+)\/impressum
+        @imprint {
+                path_regexp branch ^\/([[:alnum:]]+)\/(impressum|en\/imprint\/)
         }
-        redir @impressum /{re.branch.1}/de/impressum/ 301
+        redir @imprint /{re.branch.1}/de/imprint/ 301
 
         @wiki {
                 path_regexp branch ^\/([[:alnum:]]+)\/(meshwiki|wiki)
