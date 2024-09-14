@@ -30,16 +30,37 @@ berlin.freifunk.net {
         redir @fallback /en/ 302
 
         redir /index_en /en/ 301
+        redir /index_en/* /en/ 301
+
         redir /network /de/map/ 301
+        redir /network/* /de/map/ 301
+
         redir /contact /de/contact/ 301
+        redir /contact/* /de/contact/ 301
         redir /contact_en /en/contact/ 301
+        redir /contact_en/* /en/contact/ 301
+
         redir /download /de/downloads/ 301
+        redir /download/* /de/downloads/ 301
+        redir /downloads /de/downloads/ 301
+        redir /downloads/* /de/downloads/ 301
+
         redir /participate/ /de/participate/ 301
+        redir /participate/donate* /de/donate/ 301
+        redir /participate/howto* /de/participate/ 301
+        redir /participate/overview* /de/participate/ 301
         redir /p /de/participate/ 301
+
         redir /impressum /de/imprint/ 301
+        redir /impressum/ /de/imprint/ 301
+        redir /en/imprint /de/imprint/ 301
         redir /en/imprint/ /de/imprint/ 301
+
         redir /wiki /de/wiki/ 301
+        redir /wiki/ /de/wiki/ 301
         redir /meshwiki /de/wiki/ 301
+
+	redir /cgi-bin/mailman/* /de/contact/ 301
 
         file_server
 }
