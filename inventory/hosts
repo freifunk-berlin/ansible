@@ -36,5 +36,8 @@ uisp.olsr ansible_host=10.31.130.158 # New uisp VM
 [website]
 web.berlin.freifunk.net
 
+[voting]
+voting.freifunktion.net ansible_host=104.238.167.31
+
 [hypervisor]
 a36s-hyp01.berlin.freifunk.net
