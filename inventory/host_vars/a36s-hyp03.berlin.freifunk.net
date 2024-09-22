@@ -1,0 +1,4 @@
+---
+hypervisor_networks:
+  - name: meshstrom
+    bridge_interface: ens2f1np1.1312
