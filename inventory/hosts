@@ -15,6 +15,7 @@ buildbot-worker-04 ansible_host=85.215.162.88
 buildbot-worker-akira ansible_host=192.168.16.7                 # only from within martins home...
 buildbot-worker-scherer8 ansible_host=scherer8-buildbot.olsr    # only from within freifunk-net use a jump-host or so...
 buildbot.berlin.freifunk.net                                    # the buildbot master runs additionally the master-worker. Thus having the worker-role too.
+buildbot-worker-l105.berlin.freifunk.net ansible_host=77.87.49.13
 
 [tunneldigger]
 b.tunnel.berlin.freifunk.net # freifunk-gw01
