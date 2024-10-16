@@ -8,6 +8,7 @@
       - rsync
       - time
       - podman
+      - dbus-x11
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -15,6 +16,66 @@
 - name: Create unprivileged user for buildbot
   user:
     name: "{{ machine_user }}"
+
+- name: Create mountpoint for ramdisk
+  ansible.builtin.file:
+    path: /ramdisk/
+    state: directory
+    mode: '0755'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+  when: bbworker_ramdisk
+
+- name: Create ramdisk mount and persist
+  ansible.posix.mount:
+    path: /ramdisk/
+    src: tmpfs
+    fstype: tmpfs
+    opts: "size={{ bbworker_ramdisk_size }}"
+    state: present
+    boot: yes
+  when: bbworker_ramdisk
+  become: true
+
+- name: Create bbworker_path
+  ansible.builtin.file:
+    path: "{{ bbworker_path }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+
+- name: Create path for custom podman storage config
+  ansible.builtin.file:
+    path: "/home/{{ machine_user }}/.config/containers/"
+    state: directory
+    mode: '0755'
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+  when: bbworker_ramdisk
+
+- name: Custom podman storage config
+  ansible.builtin.copy:
+    dest: "/home/{{ machine_user }}/.config/containers/storage.conf"
+    mode: '0644'
+    content: |
+      [storage]
+      driver = "overlay"
+      runroot = "{{ bbworker_path }}/run/user/$UID/run"
+      graphroot = "{{ bbworker_path }}/.local/share/containers/storage/"
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+  when: bbworker_ramdisk
+  notify: Restart podman
+
+- name: Add buildbot-worker systemd-service-module
+  ansible.builtin.template:
+    dest: /etc/systemd/system/buildbot-worker.service
+    src: systemd-unit.j2
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart buildbot-worker
 
 - name: Install buildbot-worker
   pip:
@@ -63,12 +124,15 @@
     group: "{{ machine_user }}"
     recurse: true
   notify: Restart buildbot-worker
+  when: not bbworker_ramdisk
 
-- name: Add buildbot-worker systemd-service-module
-  template:
-    dest: /etc/systemd/system/buildbot-worker.service
-    src: systemd-unit.j2
-    mode: "0644"
-    owner: root
-    group: root
+- name: Adjust permissions on buildbot-worker description
+  ansible.builtin.file:
+    path: "{{ bbworker_path }}"
+    state: directory
+    # needs to be this high. Otherwise service will not start.
+    mode: "0755"
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
   notify: Restart buildbot-worker
+  when: bbworker_ramdisk
