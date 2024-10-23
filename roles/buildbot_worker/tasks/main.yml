@@ -30,6 +30,12 @@
 - name: Flush handlers
   meta: flush_handlers
 
+- name: Add worker info directory
+  file:
+    path: "{{ bbworker_path }}info"
+    state: directory
+    mode: "0755"
+
 - name: Add workers admin-info
   template:
     dest: "{{ bbworker_path }}info/admin"
