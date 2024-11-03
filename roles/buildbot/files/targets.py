@@ -246,6 +246,7 @@ cat build/targets-%(prop:falterBranch)s.txt \
         "%(kw:prefix)s/builds/targets/%(prop:buildnumber)s", prefix=wwwPrefix
     )
     pubdir = util.Interpolate("%(kw:pr)s/%(kw:pd)s", pr=wwwPrefix, pd=targetsPubDir)
+
     f.addStep(
         steps.MasterShellCommand(
             name="publish",
@@ -279,7 +280,9 @@ cat build/targets-%(prop:falterBranch)s.txt \
                     # since we want to be able to just delete that at any time,
                     # without worrying about symlinks pointing to deleted stuff.
                     """\
-mkdir -p %(kw:p)s %(kw:p)s.new \
+cat %(kw:w)s/tunneldigger/*/*/profiles.json | jq -s . > %(kw:w)s/tunneldigger/profiles.json \
+    && cat %(kw:w)s/notunnel/*/*/profiles.json | jq -s . > %(kw:w)s/notunnel/profiles.json \
+    && mkdir -p %(kw:p)s %(kw:p)s.new \
     && rm -rf %(kw:p)s.new/* %(kw:p)s.prev \
     && mv %(kw:w)s/* %(kw:p)s.new/ \
     && mv %(kw:p)s %(kw:p)s.prev \
