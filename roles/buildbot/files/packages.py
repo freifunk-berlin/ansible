@@ -102,6 +102,7 @@ def archTriggerStep(arch):
 def branchToFalterBranch(props):
     o2f = {
         "main": "snapshot",
+        "openwrt-24.10": "1.5.0-snapshot",
         "openwrt-23.05": "1.4.0-snapshot",
         "openwrt-22.03": "1.3.0-snapshot",
         "openwrt-21.02": "1.2.3-snapshot",

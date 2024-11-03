@@ -167,6 +167,8 @@ def targetsFalterBranch(props):
         return "1.3.0-snapshot"
     elif fv.startswith("1.4.0"):
         return "1.4.0-snapshot"
+    elif fv.startswith("1.5.0"):
+        return "1.5.0-snapshot"
     else:
         return "snapshot"
 
