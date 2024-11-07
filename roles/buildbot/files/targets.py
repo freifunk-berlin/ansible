@@ -308,9 +308,16 @@ def targetsTarFile(props):
 
 
 def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
+    tarfile = targetsTarFile
+    wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
+    wwwdir = util.Interpolate(
+        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
+    )
+    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
+
     f.addStep(
         steps.ShellCommand(
-            name="build",
+            name="build tunneldigger",
             haltOnFailure=True,
             interruptSignal="TERM",  # podman can't proxy the default KILL signal
             command=[
@@ -341,7 +348,7 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
-podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
@@ -350,7 +357,6 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
     && git submodule init \
     && git submodule update \
     && env FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s all \
-    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
@@ -361,15 +367,9 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
         )
     )
 
-    tarfile = targetsTarFile
-    wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
-    wwwdir = util.Interpolate(
-        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
-    )
-    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
-            name="upload",
+            name="upload tunneldigger",
             haltOnFailure=True,
             workersrc="out.tar",
             masterdest=tarfile,
@@ -377,9 +377,10 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
             urlText=wwwurl,
         )
     )
+
     f.addStep(
         steps.MasterShellCommand(
-            name="extract",
+            name="extract tunneldigger",
             haltOnFailure=True,
             command=[
                 "sh",
@@ -392,6 +393,83 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
             ],
         )
     )
+
+    f.addStep(
+        steps.ShellCommand(
+            name="cleanup tunneldigger",
+            alwaysRun=True,
+            warnOnFailure=False,
+            command=["sh", "-c", "rm -vf out.tar"],
+        )
+    )
+
+    # same thing again, but for the "notunnel" falter image variant.
+    # we do both variants in separate steps to save ramdisk space (= RAM).
+    f.addStep(
+        steps.ShellCommand(
+            name="build notunnel",
+            haltOnFailure=True,
+            interruptSignal="TERM",  # podman can't proxy the default KILL signal
+            command=[
+                "sh",
+                "-c",
+                util.Interpolate(
+                    """\
+podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+( \
+    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
+    && git clone %(prop:repository)s /root/falter-builter \
+    && cd /root/falter-builter/ \
+    && git checkout %(prop:got_revision)s \
+    && git submodule init \
+    && git submodule update \
+    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+) >&2 \
+&& cd /root/falter-builter/out/%(prop:falterVersion)s \
+&& tar -c *' > out.tar \
+""",
+                    alpineVersion=alpineVersion,
+                ),
+            ],
+        )
+    )
+
+    f.addStep(
+        steps.FileUpload(
+            name="upload notunnel",
+            haltOnFailure=True,
+            workersrc="out.tar",
+            masterdest=tarfile,
+            url=wwwurl,
+            urlText=wwwurl,
+        )
+    )
+
+    f.addStep(
+        steps.MasterShellCommand(
+            name="extract notunnel",
+            haltOnFailure=True,
+            command=[
+                "sh",
+                "-c",
+                util.Interpolate(
+                    "mkdir -vp %(kw:wwwdir)s && tar -v -C %(kw:wwwdir)s -xf %(kw:tarfile)s",
+                    tarfile=tarfile,
+                    wwwdir=wwwdir,
+                ),
+            ],
+        )
+    )
+
+    f.addStep(
+        steps.ShellCommand(
+            name="cleanup notunnel",
+            alwaysRun=True,
+            warnOnFailure=False,
+            command=["sh", "-c", "rm -vf out.tar"],
+        )
+    )
+
     f.addStep(
         steps.MasterShellCommand(
             name="cleanup master",
