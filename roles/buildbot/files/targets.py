@@ -234,10 +234,14 @@ def targetsFactory(f, wwwPrefix):
                     #
                     # TODO: doesn't fail if targets-*.txt doesn't exist
                     """\
-cat build/targets-%(prop:falterBranch)s.txt \
+targets=$(cat build/targets-%(prop:falterBranch)s.txt \
 | grep -v "#" | grep . \
 | cut -d" " -f2- \
 | xargs -n1 echo | sort \
+) \
+; echo "$targets" | grep -F "ath79/generic" \
+; echo "$targets" | grep -F "ramips/mt7621" \
+; echo "$targets" | grep -v -F "ath79/generic" | grep -v -F "ramips/mt7621" \
 """
                 ),
             ],
