@@ -111,6 +111,15 @@ def branchToFalterBranch(props):
     return o2f.get(props["branch"])
 
 
+@util.renderer
+def signCommand(props, wwwdir):
+    match props["branch"]:
+        case "openwrt-24.10" | "openwrt-23.05" | "openwrt-22.03" | "openwrt-21.02":
+            return f"signify-openbsd -S -m {wwwdir}/falter/Packages -s packagefeed_master.sec"
+        case _:
+            return f"apk adbsign --allow-untrusted --sign-key apk.snapshot.PRIVATE.pem {wwwdir}/falter/packages.adb"
+
+
 # Fans out to one builder per arch and blocks for the results.
 def packagesFactory(f, wwwPrefix):
     f.buildClass = AsyncBuild
@@ -289,14 +298,7 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
         steps.MasterShellCommand(
             name="sign",
             haltOnFailure=True,
-            command=[
-                "sh",
-                "-c",
-                util.Interpolate(
-                    "signify-openbsd -S -m %(kw:wwwdir)s/falter/Packages -s packagefeed_master.sec",
-                    wwwdir=wwwdir,
-                ),
-            ],
+            command=["sh", "-c", signCommand.withArgs(wwwdir)],
         )
     )
     f.addStep(
