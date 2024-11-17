@@ -62,6 +62,12 @@
   roles:
     - caddy
 
+- name: Set up voting platform
+  hosts: voting
+  become: true
+  roles:
+    - liquid_feedback
+
 - name: Set up hypervisor
   hosts: hypervisor
   become: true
