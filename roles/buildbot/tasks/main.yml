@@ -185,6 +185,6 @@
     day: '*'
     hour: 1
     minute: 0
-    job: "curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > /usr/local/src/www/htdocs/buildbot/openwrt-table-of-hardware.csv.tmp && mv /usr/local/src/www/htdocs/buildbot/openwrt-table-of-hardware.csv{.tmp,}'"
+    job: "cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp openwrt-table-of-hardware.csv"
     user: buildbot
     cron_file: sync_table_of_hardware
