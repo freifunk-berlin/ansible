@@ -1,6 +1,6 @@
 ---
 
-- name: Install dependencies for falter build system and openwrt
+- name: Install dependencies
   apt:
     name:
       - git
@@ -26,6 +26,15 @@
   notify:
     - Initialise buildbot-worker
     - Restart buildbot-worker
+
+- name: Add buildbot-worker systemd unit
+  template:
+    dest: /etc/systemd/system/{{ bbworker_name }}.service
+    src: systemd-unit.j2
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart buildbot-worker
 
 - name: Flush handlers
   meta: flush_handlers
@@ -64,11 +73,8 @@
     recurse: true
   notify: Restart buildbot-worker
 
-- name: Add buildbot-worker systemd-service-module
-  template:
+- name: Remove old buildbot-worker systemd unit
+  file:
     dest: /etc/systemd/system/buildbot-worker.service
-    src: systemd-unit.j2
-    mode: "0644"
-    owner: root
-    group: root
-  notify: Restart buildbot-worker
+    state: absent
+  notify: Stop old buildbot-worker

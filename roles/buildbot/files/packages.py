@@ -246,12 +246,14 @@ def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     """\
 podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
-    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl \
+    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl py3-distutils-extra \
+    && export GIT_TRACE_PACKET=1 GIT_TRACE=1 GIT_CURL_VERBOSE=1 \
     && git clone %(prop:repository)s /root/falter-packages \
     && cd /root/falter-packages/ \
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
+    && git config --global url.https://git.cdn.openwrt.org/.insteadOf https://git.openwrt.org/ \
     && build/build.sh %(prop:branch)s %(prop:arch)s out/ \
 ) >&2 \
 && cd /root/falter-packages/out/ \

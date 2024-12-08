@@ -2,9 +2,16 @@
 - name: Restart buildbot-worker
   systemd:
     daemon_reload: true
-    name: buildbot-worker
+    name: "{{ bbworker_name }}"
     enabled: true
     state: restarted
+
+- name: Stop old buildbot-worker
+  systemd:
+    daemon_reload: true
+    name: "{{ bbworker_name }}"
+    enabled: false
+    state: stopped
 
 - name: Initialise buildbot-worker
   command: "{{ bbworker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}"
