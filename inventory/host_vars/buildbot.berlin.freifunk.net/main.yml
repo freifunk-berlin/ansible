@@ -12,3 +12,5 @@ bbworker_pwd: !vault |
 
 bbworker_contact: pktpls
 bbworker_info: virtual worker, syncing builds etc.
+
+caddy_caddyfile: Caddyfile_buildbot.j2

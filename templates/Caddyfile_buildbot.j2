@@ -1,0 +1,22 @@
+
+buildbot.berlin.freifunk.net {
+    encode gzip zstd
+    file_server
+    root /buildbot /usr/local/src/www/htdocs
+    reverse_proxy * http://localhost:8010
+}
+
+
+selector.berlin.freifunk.net {
+    root * /usr/local/src/www/htdocs/firmware-selector/www
+    encode gzip zstd
+    file_server
+}
+
+
+firmware.berlin.freifunk.net {
+    root * /usr/local/src/www/htdocs/buildbot
+    file_server browse
+    encode gzip zstd
+}
+

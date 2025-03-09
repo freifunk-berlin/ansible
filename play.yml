@@ -22,8 +22,7 @@
   become: true
   roles:
     - buildbot
-    - geerlingguy.nginx
-    - systemli.letsencrypt
+    - caddy
 
 - name: Set up buildbot workers
   hosts: buildbotworker
