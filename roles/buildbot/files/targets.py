@@ -294,6 +294,7 @@ cat %(kw:w)s/tunneldigger/*/*/profiles.json | jq -s . > %(kw:w)s/tunneldigger/pr
     && mv %(kw:p)s %(kw:p)s.prev \
     && mv %(kw:p)s.new %(kw:p)s \
     && rm -rf %(kw:p)s.prev \
+    && %(prop:builddir)s/build/build/generate-autoupdate.sh %(prop:falterVersion)s %(kw:p)s/.. > %(kw:p)s/autoupdate.json \
 """,
                     w=wwwdir,
                     p=pubdir,
