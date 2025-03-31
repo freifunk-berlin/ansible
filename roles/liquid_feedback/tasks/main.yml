@@ -1,0 +1,149 @@
+---
+# The following is a transfer of the installation instructions to Ansible
+# https://www.public-software-group.org/mercurial/liquid_feedback_frontend/raw-file/3be240de942b/INSTALL.html
+
+# 1. Install necessary dependencies
+- name: Install apt dependencies
+  apt:
+    pkg:
+    - build-essential
+    - postgresql
+    - postgresql-server-dev-all
+    - libbsd-dev
+    - lua5.3
+    - liblua5.3-dev
+    - python3-mercurial
+    - bmake
+    - lsb-release
+    - imagemagick
+    - sassc
+    - libpq-dev
+    - python3-psycopg2
+# 2. Ensure that the user account of your webserver has access to the database
+- name: Create db user
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: www-data
+    role_attr_flags: CREATEDB,NOSUPERUSER,NOCREATEROLE
+# 3. Install and configure LiquidFeedback-Core
+- name: Download liquid_feedback_core
+  get_url:
+    url: https://www.public-software-group.org/pub/projects/liquid_feedback/backend/v4.2.2/liquid_feedback_core-v4.2.2.tar.gz
+    dest: /tmp/
+- name: Extract liquid_feedback_core
+  unarchive:
+    src: /tmp/liquid_feedback_core-v4.2.2.tar.gz
+    dest: /tmp/
+    remote_src: yes
+- name: Make liquid_feedback_core
+  community.general.make:
+    chdir: /tmp/liquid_feedback_core-v4.2.2
+- name: Copy core.sql file
+  copy:
+    src: /tmp/liquid_feedback_core-v4.2.2/core.sql
+    dest: /opt/liquid_feedback_core/
+    remote_src: true
+- name: Copy lf_update file
+  copy:
+    src: /tmp/liquid_feedback_core-v4.2.2/lf_update
+    dest: /opt/liquid_feedback_core/
+    remote_src: true
+- name: Copy lf_update_issue_order file
+  copy:
+    src: /tmp/liquid_feedback_core-v4.2.2/lf_update_issue_order
+    dest: /opt/liquid_feedback_core/
+    remote_src: true
+- name: Copy lf_update_suggestion_order file
+  copy:
+    src: /tmp/liquid_feedback_core-v4.2.2/lf_update_suggestion_order
+    dest: /opt/liquid_feedback_core/
+    remote_src: true
+- name: Create database
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: liquid_feedback
+- name: Grant privileges for webserver user on db
+  become_user: postgres
+  community.postgresql.postgresql_privs:
+    db: liquid_feedback
+    privs: ALL
+    type: schema
+    objs: public
+    role: www-data
+- name: Setup the database
+  become_user: www-data
+  community.postgresql.postgresql_script:
+    db: liquid_feedback
+    path: /opt/liquid_feedback_core/core.sql
+    login_user: www-data
+# 4. Install Moonbridge
+- name: Download moonbridge
+  get_url:
+    url: https://www.public-software-group.org/pub/projects/moonbridge/v1.1.3/moonbridge-v1.1.3.tar.gz
+    dest: /tmp/
+- name: Extract moonbridge
+  unarchive:
+    src: /tmp/moonbridge-v1.1.3.tar.gz
+    dest: /tmp/
+    remote_src: yes
+- name: Make moonbridge
+  command:
+    chdir: /tmp/moonbridge-v1.1.3
+    cmd: pmake MOONBR_LUA_PATH=/opt/moonbridge/?.lua
+- name: Copy moonbridge file
+  copy:
+    src: /tmp/moonbridge-v1.1.3/moonbridge
+    dest: /opt/moonbridge/
+    remote_src: yes
+- name: Copy moonbridge_http.lua file
+  copy:
+    src: /tmp/moonbridge-v1.1.3/moonbridge_http.lua
+    dest: /opt/moonbridge/
+    remote_src: yes
+# 5. Install WebMCP
+- name: Download webmcp
+  get_url:
+    url: https://www.public-software-group.org/pub/projects/webmcp/v2.2.1/webmcp-v2.2.1.tar.gz
+    dest: /tmp/
+- name: Extract webmcp
+  unarchive:
+    src: /tmp/webmcp-v2.2.1.tar.gz
+    dest: /tmp/
+    remote_src: yes
+- name: Make webmcp
+  community.general.make:
+    chdir: /tmp/webmcp-v2.2.1
+- name: Copy webmcp framework directory
+  copy:
+    src: /tmp/webmcp-v2.2.1/framework/
+    dest: /opt/webmcp/
+    local_follow: true
+    remote_src: yes
+# 6. Install the LiquidFeedback-Frontend
+- name: Download liquid_feedback_frontend
+  get_url:
+    url: https://www.public-software-group.org/pub/projects/liquid_feedback/frontend/v4.0.0/liquid_feedback_frontend-v4.0.0.tar.gz
+    dest: /tmp/
+- name: Extract liquid_feedback_frontend
+  unarchive:
+    src: /tmp/liquid_feedback_frontend-v4.0.0.tar.gz
+    dest: /tmp/
+    remote_src: yes
+- name: Copy liquid_feedback_frontend directory
+  copy:
+    src: /tmp/liquid_feedback_frontend-v4.0.0/
+    dest: /opt/liquid_feedback_frontend/
+    remote_src: yes
+- name: Make tmp/ directory of LiquidFeedback-Frontend writable for webserve
+  file:
+    path: /opt/liquid_feedback_frontend/tmp/
+    owner: www-data
+    group: www-data
+# 8. Configure the LiquidFeedback-Frontend
+- name: Create config file for liquid_feedback_frontend #TODO
+  copy:
+    src: /opt/liquid_feedback_frontend/config/example.lua
+    dest: /opt/liquid_feedback_frontend/config/myconfig.lua
+    remote_src: yes
+# TODO: 9. Setup regular execution of lf_update and related commands 
+# TODO: 10. Start the frontend
