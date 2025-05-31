@@ -1,0 +1,12 @@
+---
+proxmox_additional_packages:
+  - sudo
+  - htop
+  - libguestfs-tools
+  - prometheus-node-exporter
+  - vim
+
+# 64 GB
+proxmox_zfs_arc_size: 68719476736
+
+proxmox_pveproxy_listen: "127.0.0.1"

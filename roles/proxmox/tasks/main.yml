@@ -1,0 +1,45 @@
+---
+# tasks to be run on all machines
+- name: Install additional packages
+  ansible.builtin.apt:
+    name: "{{ proxmox_additional_packages }}"
+    state: present
+    update_cache: true
+
+- name: Disallow password-based login for all users
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: PasswordAuthentication no
+    insertafter: EOF
+  notify: Restart sshd
+
+- name: Disallow login for root user
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: PermitRootLogin no
+    insertafter: EOF
+  notify: Restart sshd
+
+- name: Copy custom sysctl
+  ansible.builtin.template:
+    src: "sysctl.j2"
+    dest: /etc/sysctl.d/freifunk.conf
+    mode: "0640"
+    owner: root
+    group: root
+
+- name: Copy custom modprobe
+  ansible.builtin.template:
+    src: "modprobe.j2"
+    dest: /etc/modprobe.d/freifunk.conf
+    mode: "0640"
+    owner: root
+    group: root
+
+- name: Set pveproxy listen ip
+  ansible.builtin.lineinfile:
+      path: /etc/default/pveproxy
+      state: present
+      create: true
+      regexp: '^LISTEN_IP='
+      line: 'LISTEN_IP="{{ proxmox_pveproxy_listen }}"'
