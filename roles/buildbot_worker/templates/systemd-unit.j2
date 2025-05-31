@@ -2,20 +2,17 @@
 
 [Unit]
 Description=Buildbot-worker for Freifunk-Berlin
+{% if bbworker_ramdisk %}
+After=buildbot-worker-setup.service network.target
+Requires=buildbot-worker-setup.service
+{% else %}
 After=network.target
+{% endif %}
 
 [Service]
 User=bbworker
 Group=bbworker
 WorkingDirectory={{ bbworker_path }}
-{% if bbworker_ramdisk %}
-# recreates the worker after a reboot
-ExecStartPre=mkdir -p "{{ bbworker_path }}"
-virtualenv "{{ bbworker_path }}env"
-pip install buildbot-worker=={{ buildbot_version }}
-source "{{ bbworker_path }}env/bin/activate"
-{{ bbworker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}
-{% endif %}
 ExecStart={{ bbworker_path }}/env/bin/buildbot-worker start --nodaemon
 
 [Install]

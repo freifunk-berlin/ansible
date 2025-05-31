@@ -5,6 +5,8 @@
     name:
       - git
       - virtualenv
+      - python3-venv
+      - python3-pip
       - rsync
       - time
       - podman
@@ -77,6 +79,16 @@
     group: root
   notify: Restart buildbot-worker
 
+- name: Add buildbot-worker systemd-pre-service-module
+  ansible.builtin.template:
+    dest: /etc/systemd/system/buildbot-worker-setup.service
+    src: systemd-pre-unit.j2
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart buildbot-worker
+  when: bbworker_ramdisk is true
+
 - name: Install buildbot-worker
   pip:
     name: buildbot-worker
@@ -88,41 +100,29 @@
     - Initialise buildbot-worker
     - Restart buildbot-worker
 
-#- name: Reinstall ramdisk-Worker script (reinstall on boot)
-#  ansible.builtin.copy:
-#    dest: "/home/{{ machine_user }}/reinstall_bbworker.sh"
-#    mode: '0644'
-#    content: |
-#      #!/bin/bash
-#      # (re-)creates the buildbot work er on the ramdisk, everytime the system reboots.
-#      mkdir -p "{{ bbworker_path }}"
-#      virtualenv "{{ bbworker_path }}env"
-#      pip install buildbot-worker=={{ buildbot_version }}
-#      source "{{ bbworker_path }}env/bin/activate"
-#      "{{ bbworker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}"
-#    owner: "{{ machine_user }}"
-#    group: "{{ machine_user }}"
-#  when: bbworker_ramdisk
-#
-#- name: Persist ramdisk-Worker
-#  ansible.builtin.copy:
-#    dest: "/home/{{ machine_user }}/reinstall_bbworker.sh"
-#    mode: '0644'
-#    content: |
-#      #!/bin/bash
-#      # (re-)creates the buildbot work er on the ramdisk, everytime the system reboots.
-#
-#      mkdir -p "{{ bbworker_path }}"
-#      virtualenv "{{ bbworker_path }}env"
-#      pip install buildbot-worker=={{ buildbot_version }}
-#
-#      source "{{ bbworker_path }}env/bin/activate"
-#      "{{ bbworker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}"
-#
-#      exit 0
-#    owner: "{{ machine_user }}"
-#    group: "{{ machine_user }}"
-#  when: bbworker_ramdisk
+- name: Persist ramdisk-Worker
+  ansible.builtin.copy:
+    dest: "/usr/local/bin/reinstall_bbworker.sh"
+    mode: '0755'
+    content: |
+      #!/bin/bash
+      # (re-)creates the buildbot work er on the ramdisk, everytime the system reboots.
+
+      mkdir -p "{{ bbworker_path }}"
+      python3 -m venv "{{ bbworker_path }}env"
+
+      source "{{ bbworker_path }}env/bin/activate"
+      pip install buildbot-worker=={{ buildbot_version }}
+      {{ bbworker_path }}/env/bin/buildbot-worker create-worker \
+          --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}
+
+      echo "{{ bbworker_contact }}" > {{ bbworker_path }}/info/admin
+      echo "{{ bbworker_info }}" > {{ bbworker_path }}/info/host
+
+      exit 0
+    owner: "{{ machine_user }}"
+    group: "{{ machine_user }}"
+  when: bbworker_ramdisk
 
 - name: Flush handlers
   meta: flush_handlers
