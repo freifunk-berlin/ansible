@@ -2,7 +2,12 @@
 
 [Unit]
 Description=Buildbot-worker for Freifunk-Berlin
+{% if bbworker_ramdisk %}
+After=buildbot-worker-setup.service network.target
+Requires=buildbot-worker-setup.service
+{% else %}
 After=network.target
+{% endif %}
 
 [Service]
 User=bbworker

@@ -9,4 +9,8 @@ bbworker_pwd: !vault |
           35343333393832623935653763633237353263363462383765363862353034613161
 
 bbworker_contact: Nicolas Berens <kontakt@nicolas-berens.de>
-bbworker_info: 8 Cores, 20GB RAM
+bbworker_info: 8 Cores, 20GB RAM, Ramdisk
+
+bbworker_path: /ramdisk/bb_worker/
+bbworker_ramdisk: yes
+bbworker_ramdisk_size: 18G
