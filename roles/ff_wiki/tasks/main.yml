@@ -1,0 +1,88 @@
+---
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - imagemagick
+    state: present
+
+- name: Create wiki directories
+  ansible.builtin.file:
+    dest:  "{{ item }}"
+    state: directory
+    mode: "0750"
+    owner: caddy
+    group: caddy
+  loop:
+      - "{{ ffwiki_basedir }}/static/"
+      - "{{ ffwiki_basedir }}/wwwroot/"
+      - "{{ ffwiki_basedir }}/scripts/"
+      - "{{ ffwiki_basedir }}/caches/"
+
+
+# wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.1.tar.gz
+# tar xf /tmp/mediawiki.tar.gz -C {{ ffwiki_basedir }}/wwwroot2 --strip-components=1
+
+
+- name: Check out RSS extension
+  become_user: caddy
+  ansible.builtin.git:
+    repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/RSS.git
+    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/RSS"
+    version: REL1_43
+    force: true
+    accept_hostkey: true
+
+- name: Check out MsUpload extension
+  become_user: caddy
+  ansible.builtin.git:
+    repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload
+    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/MsUpload"
+    version: REL1_43
+    force: true
+    accept_hostkey: true
+
+- name: Check out ffwikihelpers extension
+  become_user: caddy
+  ansible.builtin.git:
+    repo: https://github.com/freifunk/ffwikihelpers.git
+    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/ffwikihelpers"
+    version: dev
+    force: true
+    accept_hostkey: true
+
+- name: Copy wiki configuration
+  ansible.builtin.template:
+    dest: "{{ ffwiki_basedir }}/wwwroot/LocalSettings.php"
+    src: LocalSettings.php.j2
+    mode: "0640"
+    owner: caddy
+    group: caddy
+
+- name: Copy composer dependencies
+  ansible.builtin.template:
+    dest: "{{ ffwiki_basedir }}/wwwroot/composer.local.json"
+    src: composer.local.json.j2
+    mode: "0640"
+    owner: caddy
+    group: caddy
+  notify: Install composer dependencies
+
+- name: Add cronjobs
+  ansible.builtin.template:
+    dest: /etc/cron.d/wiki.freifunk.net
+    src: wiki.freifunk.net.cron.j2
+    mode: "0640"
+    owner: root
+    group: root
+
+- name: Copy Static Files
+  ansible.builtin.copy:
+    src: "{{ item.file }}"
+    dest: "{{ item.dest }}"
+    mode: "0640"
+    owner: caddy
+    group: caddy
+  loop:
+    - { file: favicon.ico, dest: "{{ ffwiki_basedir }}/static/favicon.ico" }
+    - { file: robots.txt, dest: "{{ ffwiki_basedir }}/static/robots.txt" }
+    - { file: wiki.svg, dest: "{{ ffwiki_basedir }}/static/wiki.svg" }

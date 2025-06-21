@@ -1,0 +1,22 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+*/10 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php runJobs.php --quiet --maxtime=300
+5 0  *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php updateSpecialPages.php --quiet
+5 0  *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php
+5 0  *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php
+15 1 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:rebuildData.php --quiet --shallow-update
+15 2 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:disposeOutdatedEntities.php --quiet
+15 3 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:rebuildPropertyStatistics.php --quiet
+15 4 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:rebuildConceptCache.php --quiet --update --create
+15 5 *  *  *  0 caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:rebuildData.php --quiet -d 100
+15 6 *  *  *  0 caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:setupStore.php --quiet --skip-import
+15 7 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php  SemanticMediaWiki:removeDuplicateEntities.php --quiet
