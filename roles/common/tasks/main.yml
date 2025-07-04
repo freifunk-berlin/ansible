@@ -50,3 +50,8 @@
     state: present
     update_cache: true
   when: ansible_chassis_vendor == "QEMU"
+
+- name: Enable fstrim timer
+  ansible.builtin.systemd:
+    name: "fstrim.timer"
+    enabled: true
