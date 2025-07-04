@@ -43,3 +43,7 @@
       create: true
       regexp: '^LISTEN_IP='
       line: 'LISTEN_IP="{{ proxmox_pveproxy_listen }}"'
+
+- name: Single node configuration
+  ansible.builtin.include_tasks: single_node.yml
+  when: not proxmox_cluster
