@@ -2,6 +2,6 @@
 - name: Install composer dependencies
   ansible.builtin.command:
     cmd: composer install --no-dev --optimize-autoloader
-    chdir: "{{ ffwiki_basedir }}/wwwroot/""
+    chdir: "{{ ffwiki_basedir }}/wwwroot/"
   become: true
   become_user: caddy
