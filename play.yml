@@ -61,14 +61,6 @@
   roles:
     - caddy
 
-- name: Set up hypervisor
-  hosts: hypervisor
-  become: true
-  roles:
-    - hypervisor
-  tags:
-    - hypervisor
-
 - name: Set up proxmox hosts
   hosts: proxmox
   become: true
