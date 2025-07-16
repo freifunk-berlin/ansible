@@ -1,5 +1,5 @@
 ---
-buildbot_version: "3.9.2"
+buildbot_version: "4.3.0"
 
 bbmaster_fqdn: buildbot.berlin.freifunk.net
 bbmaster_port: 9989
