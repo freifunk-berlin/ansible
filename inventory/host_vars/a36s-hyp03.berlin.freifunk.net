@@ -1,4 +1,3 @@
 ---
-hypervisor_networks:
-  - name: meshstrom
-    bridge_interface: ens2f1np1.1312
+# 6G
+proxmox_zfs_arc_size: 6442450944

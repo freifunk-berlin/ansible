@@ -13,10 +13,16 @@ selector.berlin.freifunk.net {
     file_server
 }
 
-
 firmware.berlin.freifunk.net {
     root * /usr/local/src/www/htdocs/buildbot
     file_server browse
     encode gzip zstd
+    header {
+        Access-Control-Allow-Origin "https://selector.berlin.freifunk.net"
+        Access-Control-Allow-Methods GET
+    }
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
 }
-
