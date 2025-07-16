@@ -19,8 +19,8 @@
       - "{{ ffwiki_basedir }}/caches/"
 
 
-# wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.1.tar.gz
-# tar xf /tmp/mediawiki.tar.gz -C {{ ffwiki_basedir }}/wwwroot2 --strip-components=1
+# wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.3.tar.gz
+# tar xf /tmp/mediawiki.tar.gz -C {{ ffwiki_basedir }}/wwwroot --strip-components=1
 
 
 - name: Check out RSS extension
