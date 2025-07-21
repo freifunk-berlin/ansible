@@ -1,13 +1,29 @@
 ---
-- name: Add caddy apt key
-  ansible.builtin.apt_key:
-    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
-    state: present
+- name: Add Repos for Debian <=12
+  when: ansible_distribution_major_version != "13"
+  block:
+    - name: Add caddy apt key
+      ansible.builtin.apt_key:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        state: present
 
-- name: Add caddy repo
-  ansible.builtin.apt_repository:
-    repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
-    state: present
+    - name: Add caddy repo
+      ansible.builtin.apt_repository:
+        repo: deb https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+        state: present
+
+- name: Add Repos for Debian 13
+  when: ansible_distribution_major_version == "13"
+  block:
+    - name: Add caddy deb822 repo
+      ansible.builtin.deb822_repository:
+        name: caddy
+        types:
+          - deb
+        uris: https://dl.cloudsmith.io/public/caddy/stable/deb/debian
+        suites: any-version
+        components: main
+        signed_by: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
 
 - name: Install dependencies
   ansible.builtin.apt:

@@ -24,3 +24,19 @@ http://10.31.130.151:9091 {
         reverse_proxy http://127.0.0.1:9091
 #    }
 }
+
+monitor.berlin.freifunk.net:9042 {
+    @denied1 not method GET POST
+    @denied2 not path /api/*
+    
+    
+    reverse_proxy http://127.0.0.1:9090
+    
+    respond @denied1 "nope" 418 {
+               close
+    }
+
+    respond @denied2 "nope" 418 {
+               close
+    }
+}

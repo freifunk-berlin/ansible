@@ -15,14 +15,14 @@ buildbot-worker-04 ansible_host=85.215.162.88
 buildbot-worker-akira ansible_host=192.168.16.7                  # only from within martins home...
 buildbot-worker-scherer8-1 ansible_host=martin@scherer8-buildbot1.ff  # only from within freifunk-net use a jump-host or so...
 buildbot-worker-scherer8-2 ansible_host=martin@scherer8-buildbot2.ff  # only from within freifunk-net use a jump-host or so...
-buildbot-worker-l105 ansible_host=77.87.49.13                   # worker VM on l105-hyp
+buildbot-worker-l105.berlin.freifunk.net # worker VM on l105-hyp
 buildbot.berlin.freifunk.net                                     # the buildbot master runs additionally the master-worker. Thus having the worker-role too.
 
 
 [tunneldigger]
 b.tunnel.berlin.freifunk.net # freifunk-gw01
 d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
-f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net
+# f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net currently shut down
 
 
 [users_only:children]
@@ -40,6 +40,6 @@ uisp.olsr ansible_host=10.31.130.158 # New uisp VM
 web.berlin.freifunk.net
 
 [proxmox]
-a36s-hyp01.berlin.freifunk.net
+# a36s-hyp01.berlin.freifunk.net # shut down
 a36s-hyp03.berlin.freifunk.net
 l105-hyp1.berlin.freifunk.net
