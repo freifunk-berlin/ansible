@@ -46,7 +46,9 @@ scrape_configs:
   - job_name: servers
     static_configs:
       - targets:
-        - "a36s-hyp03.berlin.freifunk.net:9100"
+        - "a36s-cr1.berlin.freifunk.net:9100"
+        - "a36s-cr2.berlin.freifunk.net:9100"
+        - "l105-cr1.berlin.freifunk.net:9100"
 {% for host in groups.all %}
         - "{{ host }}:9100"
 {% endfor %}

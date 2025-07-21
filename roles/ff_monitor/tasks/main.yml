@@ -1,14 +1,13 @@
 ---
-- name: Add grafana signing key
-  ansible.builtin.apt_key:
-    url: https://apt.grafana.com/gpg.key
-    state: present
-
-- name: Add grafana APT Repo
-  ansible.builtin.apt_repository:
-    repo: deb https://apt.grafana.com stable main
-    state: present
-    update_cache: false
+- name: Add grafana repo
+  ansible.builtin.deb822_repository:
+    name: grafana
+    types:
+      - deb
+    uris: https://apt.grafana.com
+    suites: stable
+    components: main
+    signed_by: https://apt.grafana.com/gpg.key
 
 - name: Install dependencies
   ansible.builtin.apt:
