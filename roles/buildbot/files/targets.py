@@ -353,7 +353,7 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
-podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
@@ -420,7 +420,7 @@ podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 d
                 "-c",
                 util.Interpolate(
                     """\
-podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
     && git clone %(prop:repository)s /root/falter-builter \
