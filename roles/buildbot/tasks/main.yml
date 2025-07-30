@@ -71,7 +71,7 @@
     version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
   notify:
-    - Initialise buildbot
+    - Initialize buildbot
     - Upgrade buildbot database
     - Restart buildbot
 
