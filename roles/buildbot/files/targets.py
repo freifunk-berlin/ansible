@@ -355,7 +355,7 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     """\
 sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
-    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
+    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
@@ -422,7 +422,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
                     """\
 sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
-    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt \
+    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
     && git clone %(prop:repository)s /root/falter-builter \
     && cd /root/falter-builter/ \
     && git checkout %(prop:got_revision)s \
