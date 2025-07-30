@@ -161,13 +161,13 @@ def targetsFalterBranch(props):
     fv = props.getProperty("falterVersion", "")
     if fb != "":
         return fb
-    elif fv.startswith("1.2.3"):
+    elif fv.startswith("1.2."):
         return "1.2.3-snapshot"
-    elif fv.startswith("1.3.0"):
+    elif fv.startswith("1.3."):
         return "1.3.0-snapshot"
-    elif fv.startswith("1.4.0"):
+    elif fv.startswith("1.4."):
         return "1.4.0-snapshot"
-    elif fv.startswith("1.5.0"):
+    elif fv.startswith("1.5."):
         return "1.5.0-snapshot"
     else:
         return "snapshot"
