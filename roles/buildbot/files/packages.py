@@ -252,7 +252,7 @@ podman run -i --rm --log-driver=none docker.io/library/alpine:%(kw:alpineVersion
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && build/build.sh %(prop:branch)s %(prop:arch)s out/ \
+    && env FALTER_MIRROR=https://mirror.freifunk.dev build/build.sh %(prop:branch)s %(prop:arch)s out/ \
     && rm -vf out/%(prop:branch)s/%(prop:arch)s/public-key.pem \
 ) >&2 \
 && cd /root/falter-packages/out/ \

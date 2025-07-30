@@ -361,7 +361,7 @@ podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 d
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
@@ -428,7 +428,7 @@ podman run -i --rm --log-driver=none --tmpfs /root:rw,size=10485760k,mode=1777 d
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
