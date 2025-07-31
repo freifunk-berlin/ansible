@@ -121,12 +121,15 @@ def targetsConfig(c, config):
 
 
 # Passed by targetsFactory to AsyncBuildGenerator to be called for each arch.
-def targetTriggerStep(target):
+def targetTriggerStep(targetvariant):
+    target, variant = targetvariant.split(" ")
     return AsyncTrigger(
         # Step name limit is 50 chars, longest is currently 26 chars:
         # "trigger lantiq/xway_legacy"
         # See https://github.com/buildbot/buildbot/issues/3413
-        name=util.Interpolate("trigger %(kw:target)s", target=target),
+        name=util.Interpolate(
+            "%(kw:target)s %(kw:variant)s", target=target, variant=variant
+        ),
         waitForFinish=True,
         warnOnFailure=True,
         schedulerNames=["dummy/targets"],
@@ -140,6 +143,7 @@ def targetTriggerStep(target):
         ],
         set_properties={
             "target": target,
+            "variant": variant,
             "origbuildnumber": util.Interpolate("%(prop:buildnumber)s"),
             # Builder name limit is 70 characters, longest is currently 40 chars:
             # targets/openwrt-22.03/lantiq/xway_legacy
@@ -234,14 +238,12 @@ def targetsFactory(f, wwwPrefix):
                     #
                     # TODO: doesn't fail if targets-*.txt doesn't exist
                     """\
-targets=$(cat build/targets-%(prop:falterBranch)s.txt \
+targets=$(for t in $(cat build/targets-%(prop:falterBranch)s.txt \
 | grep -v "#" | grep . \
-| cut -d" " -f2- \
-| xargs -n1 echo | sort \
-) \
-; echo "$targets" | grep -F "ath79/generic" \
-; echo "$targets" | grep -F "ramips/mt7621" \
-; echo "$targets" | grep -v -F "ath79/generic" | grep -v -F "ramips/mt7621" \
+| cut -d" " -f2- | xargs -n1 echo | sort) ; do echo "$t tunneldigger" ; echo "$t notunnel" ; done) \
+; echo "$targets" | grep "ath79/generic" \
+; echo "$targets" | grep "ramips/mt7621" \
+; echo "$targets" | grep -v "ath79/generic" | grep -v "ramips/mt7621" \
 """
                 ),
             ],
@@ -322,7 +324,7 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
 
     f.addStep(
         steps.ShellCommand(
-            name="build tunneldigger",
+            name="build",
             haltOnFailure=True,
             interruptSignal="TERM",  # podman can't proxy the default KILL signal
             command=[
@@ -361,7 +363,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=tunneldigger build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=%(prop:variant)s build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
@@ -374,7 +376,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
 
     f.addStep(
         steps.FileUpload(
-            name="upload tunneldigger",
+            name="upload",
             haltOnFailure=True,
             workersrc="out.tar",
             masterdest=tarfile,
@@ -385,7 +387,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
 
     f.addStep(
         steps.MasterShellCommand(
-            name="extract tunneldigger",
+            name="extract",
             haltOnFailure=True,
             command=[
                 "sh",
@@ -401,74 +403,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
 
     f.addStep(
         steps.ShellCommand(
-            name="cleanup tunneldigger",
-            alwaysRun=True,
-            warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar"],
-        )
-    )
-
-    # same thing again, but for the "notunnel" falter image variant.
-    # we do both variants in separate steps to save ramdisk space (= RAM).
-    f.addStep(
-        steps.ShellCommand(
-            name="build notunnel",
-            haltOnFailure=True,
-            interruptSignal="TERM",  # podman can't proxy the default KILL signal
-            command=[
-                "sh",
-                "-c",
-                util.Interpolate(
-                    """\
-sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
-( \
-    apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
-    && git clone %(prop:repository)s /root/falter-builter \
-    && cd /root/falter-builter/ \
-    && git checkout %(prop:got_revision)s \
-    && git submodule init \
-    && git submodule update \
-    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=notunnel build/build.sh %(prop:falterVersion)s %(prop:target)s all \
-) >&2 \
-&& cd /root/falter-builter/out/%(prop:falterVersion)s \
-&& tar -c *' > out.tar \
-""",
-                    alpineVersion=alpineVersion,
-                ),
-            ],
-        )
-    )
-
-    f.addStep(
-        steps.FileUpload(
-            name="upload notunnel",
-            haltOnFailure=True,
-            workersrc="out.tar",
-            masterdest=tarfile,
-            url=wwwurl,
-            urlText=wwwurl,
-        )
-    )
-
-    f.addStep(
-        steps.MasterShellCommand(
-            name="extract notunnel",
-            haltOnFailure=True,
-            command=[
-                "sh",
-                "-c",
-                util.Interpolate(
-                    "mkdir -vp %(kw:wwwdir)s && tar -v -C %(kw:wwwdir)s -xf %(kw:tarfile)s",
-                    tarfile=tarfile,
-                    wwwdir=wwwdir,
-                ),
-            ],
-        )
-    )
-
-    f.addStep(
-        steps.ShellCommand(
-            name="cleanup notunnel",
+            name="cleanup",
             alwaysRun=True,
             warnOnFailure=False,
             command=["sh", "-c", "rm -vf out.tar"],
