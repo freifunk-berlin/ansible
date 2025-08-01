@@ -43,6 +43,9 @@ config = {
     'packages_branches': ['main','openwrt-24.10','openwrt-23.05','openwrt-22.03','openwrt-21.02','testbuildbot'],
 
     # Version of the Alpine Linux container: edge, 3.17, 3.16, ...
+    # TODO: we're currently stuck at 3.18 because 3.19+ have a segfault:
+    #   /build/scripts/ipkg-build: line 150: 19268 Segmentation fault      mkdir "$tmp_dir"
+    #   make[2]: *** [Makefile:792: /build/bin/targets/bcm27xx/bcm2710/packages/libgcc1_13.3.0-r4_aarch64_cortex-a53.ipk] Error 139
     'alpineVersion': '3.18',
 
     # workernames get used in the build-factories, all workers get assigned to
