@@ -310,8 +310,10 @@ cat %(kw:w)s/tunneldigger/*/*/profiles.json | jq -s . > %(kw:w)s/tunneldigger/pr
 
 @util.renderer
 def targetsTarFile(props):
+    n = props["origbuildnumber"]
     t, st = props["target"].split("/")
-    return "targets-{0}-{1}_{2}.tar".format(props["origbuildnumber"], t, st)
+    v = props["variant"]
+    return "targets-{0}-{1}-{2}-{3}.tar".format(n, t, st, v)
 
 
 def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
