@@ -20,3 +20,10 @@
     name: mariadb
     enabled: true
     state: restarted
+
+- name: Restart rsyncd
+  systemd:
+    daemon_reload: true
+    name: rsync
+    enabled: true
+    state: restarted

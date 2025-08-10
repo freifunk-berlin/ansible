@@ -11,6 +11,7 @@
       - python3-mysqldb
       - python3-dev
       - virtualenv
+      - rsync
     state: present
     update_cache: true
     cache_valid_time: 3600
@@ -188,3 +189,28 @@
     job: "cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp openwrt-table-of-hardware.csv"
     user: buildbot
     cron_file: sync_table_of_hardware
+
+- name: Add rsync daemon config
+  copy:
+    dest: /etc/rsyncd.conf
+    mode: 0644
+    content: |
+      pid file = /var/run/rsyncd.pid
+      log file = /var/log/rsyncd.log
+      use chroot = yes
+      uid = nobody
+      gid = nogroup
+      read only = yes
+      auth users = ffmirror
+      secrets file = /etc/rsyncd.secrets
+      [firmware]
+      path = /usr/local/src/www/htdocs/buildbot
+  notify: Restart rsyncd
+
+- name: Add rsync daemon logins
+  copy:
+    dest: /etc/rsyncd.secrets
+    mode: 0600
+    content: |
+      ffmirror:{{ buildbot_rsync_mirror_password }}
+  notify: Restart rsyncd
