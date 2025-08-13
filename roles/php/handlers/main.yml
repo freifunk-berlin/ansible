@@ -1,0 +1,7 @@
+---
+- name: Restart php-fpm
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: php8.2-fpm.service
+    enabled: true
+    state: restarted

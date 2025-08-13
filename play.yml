@@ -68,3 +68,14 @@
     - proxmox
   tags:
     - proxmox
+
+- name: Set up wiki
+  hosts: wiki
+  become: true
+  roles:
+    - caddy
+    - php
+#    - mysql
+    - ff_wiki
+  tags:
+    - wiki
