@@ -1454,7 +1454,7 @@ session.serialize_handler = php
 ; This is disabled in the Debian packages due to the strict permissions
 ; on /var/lib/php. Instead, GC is performed through /etc/cron.d/php,
 ; which uses the session.gc_maxlifetime setting. Please, check
-; /usr/share/doc/php8.2-common/README.Debian.gz for further reference.
+; /usr/share/doc/php{{ php_version }}-common/README.Debian.gz for further reference.
 session.gc_probability = 0
 
 ; Defines the probability that the 'garbage collection' process is started on every
@@ -1721,7 +1721,7 @@ zend.assertions = -1
 ; With mbstring support this will automatically be converted into the encoding
 ; given by corresponding encode setting. When empty mbstring.internal_encoding
 ; is used. For the decode settings you can distinguish between motorola and
-; intel byte order. A decode setting cannot be empty.
+; intel byte order. A decode setting must not be empty.
 ; https://php.net/exif.encode-unicode
 ;exif.encode_unicode = ISO-8859-15
 

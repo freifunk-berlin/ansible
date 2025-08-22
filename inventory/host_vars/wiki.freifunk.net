@@ -1,2 +1,3 @@
 ---
 caddy_caddyfile: Caddyfile_wiki.j2
+php_version: 8.4

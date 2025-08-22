@@ -16,7 +16,7 @@
 ; Default Value: none
 ; Warning: if you change the value here, you need to modify systemd
 ; service PIDFile= setting to match the value here.
-pid = /run/php/php8.2-fpm.pid
+pid = /run/php/php{{ php_version }}-fpm.pid
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
@@ -142,4 +142,4 @@ error_log = /var/log/php/fpm.log
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
 ;  - /usr otherwise
-include=/etc/php/8.2/fpm/pool.d/*.conf
+include=/etc/php/{{ php_version }}/fpm/pool.d/*.conf

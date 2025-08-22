@@ -1,7 +1,7 @@
 [www]
 user = caddy
 group = caddy
-listen = /run/php/php8.2-fpm.sock
+listen = /run/php/php{{ php_version }}-fpm.sock
 
 listen.owner = caddy
 listen.group = caddy

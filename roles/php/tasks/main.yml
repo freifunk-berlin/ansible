@@ -22,7 +22,7 @@
 
 - name: Copy FPM config
   ansible.builtin.template:
-    dest: /etc/php/8.2/fpm/php-fpm.conf
+    dest: /etc/php/{{ php_version }}/fpm/php-fpm.conf
     src: php-fpm.conf.j2
     mode: "0644"
     owner: root
@@ -31,7 +31,7 @@
 
 - name: Copy FPM pool config
   ansible.builtin.template:
-    dest: /etc/php/8.2/fpm/pool.d/www.conf
+    dest: /etc/php/{{ php_version }}/fpm/pool.d/www.conf
     src: www.conf.j2
     mode: "0640"
     owner: root
@@ -40,7 +40,7 @@
 
 - name: Copy php.ini
   ansible.builtin.template:
-    dest: /etc/php/8.2/fpm/php.ini
+    dest: /etc/php/{{ php_version }}/fpm/php.ini
     src: php.ini.j2
     mode: "0640"
     owner: root
