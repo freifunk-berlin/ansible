@@ -19,17 +19,17 @@ dev.wiki.freifunk.net {
 
     respond @blocked 403
 
-    root /images/* /opt/dev.wiki.freifunk.net/static/
-    root /robots.txt /opt/dev.wiki.freifunk.net/static/
-    root /favicon.ico /opt/dev.wiki.freifunk.net/static/
-    root /wiki.svg /opt/dev.wiki.freifunk.net/static/
+    root /images/* {{ ffwiki_basedir }}/static/
+    root /robots.txt {{ ffwiki_basedir }}/static/
+    root /favicon.ico {{ ffwiki_basedir }}/static/
+    root /wiki.svg {{ ffwiki_basedir }}/static/
 
-    root * /opt/dev.wiki.freifunk.net/wwwroot/
+    root * {{ ffwiki_basedir }}/wwwroot/
 
     php_fastcgi unix//var/run/php/php8.2-fpm.sock
 
     log {
-        output file /var/log/caddy/dev.wiki.freifunk.net-error.log
+        output file /var/log/caddy/wiki.freifunk.net-error.log
         level ERROR
     }
 

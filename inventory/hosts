@@ -45,4 +45,4 @@ a36s-hyp03.berlin.freifunk.net
 l105-hyp1.berlin.freifunk.net
 
 [wiki]
-dev.wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
+wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
