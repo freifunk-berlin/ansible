@@ -137,10 +137,6 @@ $wgLanguageCode = "de";
 
 $wgSecretKey = "{{ ffwiki_secret_key }}";
 
-# Site upgrade key. Must be set to a string (default provided) to turn on the
-# web installer while LocalSettings.php is in place
-#$wgUpgradeKey = "a38ea489f0d79538";
-
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook', 'vector':
 #wfLoadSkin( 'CologneBlue' );
@@ -182,7 +178,6 @@ $wgFileExtensions[] = 'odp';
 $wgFileExtensions[] = 'eps';
 $wgFileExtensions[] = 'json';
 
-# von Fenhl am 2015-04-12 per Mail gewuenscht
 $wgAllowUserCss = true;
 
 # Extensions
@@ -287,7 +282,7 @@ $wgFileCacheDirectory = "/var/tmp/wiki.freifunk.net/caches/pagecache";
 $wgShowIPinHeader = false;
 $wgPageLanguageUseDB = true;
 $wgGroupPermissions['sysop']['pagelang'] = true;
-
+$wgLocaltimezone = "Europe/Berlin";
 
 # $wgDebugLogFile="./debuglog.txt";
 
