@@ -1,0 +1,6 @@
+---
+- name: Install automysqlbackup
+  ansible.builtin.apt:
+    name: automysqlbackup
+    state: present
+    update_cache: true

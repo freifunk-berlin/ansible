@@ -1,0 +1,25 @@
+---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - mariadb-server
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Copy mariadb config
+  ansible.builtin.template:
+    dest: /etc/mysql/mariadb.cnf
+    src: mariadb.cnf.j2
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart mariadb
+
+- name: automysqlbackup
+  ansible.builtin.include_tasks: automysqlbackup.yml
+  when: mariadb_autmysqlbackup_enabled | bool
+
+# TODO:
+# - create user and DB
+# - automysqlbackup

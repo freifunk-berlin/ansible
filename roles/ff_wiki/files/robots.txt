@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /index.php?
+Disallow: /Help
+Disallow: /MediaWiki
+Disallow: /Special:
+Disallow: /Spezial:
+Disallow: /Template
+Disallow: /skins/
+Disallow: /*&
+Disallow: /*veaction
+
+User-agent: SemrushBot
+Disallow: /

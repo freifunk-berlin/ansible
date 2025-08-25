@@ -1,0 +1,37 @@
+
+dev.wiki.freifunk.net {
+    basic_auth {
+        #  password "ComputerSaysYes"
+        freifunk $2a$12$LylvJI3RTwO6cgKt1Z2ut.tEBTQY.LiePnXSaqBEMNI0Wl3QDmwdu
+    }
+
+    encode gzip zstd
+#    @title {
+#        not file {
+#            try_files {path} {path}/
+#            split_path .php
+#        }
+#        path_regexp title ^/(.*)$
+#    }
+#    rewrite @title /index.php?title={re.title.1}&{query}
+
+    @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
+
+    respond @blocked 403
+
+    root /images/* {{ ffwiki_basedir }}/static/
+    root /robots.txt {{ ffwiki_basedir }}/static/
+    root /favicon.ico {{ ffwiki_basedir }}/static/
+    root /wiki.svg {{ ffwiki_basedir }}/static/
+
+    root * {{ ffwiki_basedir }}/wwwroot/
+
+    php_fastcgi unix//var/run/php/php8.4-fpm.sock
+
+    log {
+        output file /var/log/caddy/wiki.freifunk.net-error.log
+        level ERROR
+    }
+
+    file_server
+}

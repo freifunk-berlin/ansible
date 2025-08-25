@@ -1,0 +1,69 @@
+[client-server]
+socket = /run/mysqld/mysqld.sock
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet      = 16M
+
+[mysqld]
+
+#
+# * Basic Settings
+#
+
+#user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+basedir                 = /usr
+#datadir                 = /var/lib/mysql
+#tmpdir                  = /tmp
+
+# Broken reverse DNS slows down connections considerably and name resolve is
+# safe to skip if there are no "host by domain name" access grants
+skip-name-resolve
+
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+bind-address            = 127.0.0.1
+
+#
+# * Fine Tuning
+#
+
+#key_buffer_size        = 128M
+#max_allowed_packet     = 1G
+#thread_stack           = 192K
+#thread_cache_size      = 8
+# This replaces the startup script and checks MyISAM tables if needed
+# the first time they are touched
+#myisam_recover_options = BACKUP
+#max_connections        = 100
+#table_cache            = 64
+
+
+server-id              = 1
+log_bin                = /var/log/mysql/mysql-bin.log
+expire_logs_days       = 3
+max_binlog_size        = 100M
+
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
+
+innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+
+
+[server]
+plugin_load_add=provider_bzip2
+provider_bzip2=force_plus_permanent
+[server]
+plugin_load_add=provider_lz4
+provider_lz4=force_plus_permanent
+[server]
+plugin_load_add=provider_lzma
+provider_lzma=force_plus_permanent
+[server]
+plugin_load_add=provider_lzo
+provider_lzo=force_plus_permanent
+[server]
+plugin_load_add=provider_snappy
+provider_snappy=force_plus_permanent

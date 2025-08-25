@@ -1,0 +1,7 @@
+---
+- name: Restart mariadb
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: mariadb.service
+    enabled: true
+    state: restarted
