@@ -20,6 +20,6 @@
   ansible.builtin.include_tasks: automysqlbackup.yml
   when: mariadb_autmysqlbackup_enabled | bool
 
-#TODO:
+# TODO:
 # - create user and DB
 # - automysqlbackup
