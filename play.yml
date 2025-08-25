@@ -75,7 +75,7 @@
   roles:
     - caddy
     - php
-#    - mysql
+    - mysql
     - ff_wiki
   tags:
     - wiki
