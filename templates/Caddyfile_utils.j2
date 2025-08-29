@@ -1,0 +1,52 @@
+hopglass.berlin.freifunk.net {
+    root * /var/www/hopglass.berlin.freifunk.net/www/
+    file_server browse
+    encode gzip zstd
+}
+
+http://api.openwifimap.net {
+    log {
+		output file /var/log/caddy/api.openwifimap.net.log
+	}
+    encode gzip zstd
+    file_server
+    reverse_proxy http://localhost:8000
+}
+
+api.openwifimap.net {
+    log {
+		output file /var/log/caddy/api.openwifimap.net.log
+	}
+    encode gzip zstd
+    file_server
+    reverse_proxy http://localhost:8000
+}
+
+openwifimap.net {
+    log {
+		output file /var/log/caddy/openwifimap.net.log
+	}
+    encode gzip zstd
+    file_server
+    root * /var/www/openwifimap.net/www/
+    reverse_proxy / http://localhost:8000
+}
+
+util.berlin.freifunk.net {
+    root * /var/www/util.berlin.freifunk.net/www/
+    try_files {path} {path}.php
+    file_server browse
+    encode gzip zstd
+    php_fastcgi unix//run/php/php8.2-fpm.sock
+}
+
+ff.berlin {
+    root * /var/www/util.berlin.freifunk.net/www/
+    file_server browse
+    encode gzip zstd
+    php_fastcgi unix//run/php/php8.2-fpm.sock
+
+    @rewrite not path /knoteninfo.php/*
+    rewrite @rewrite /knoteninfo.php?path={url}
+
+}

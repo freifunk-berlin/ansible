@@ -75,7 +75,16 @@
   roles:
     - caddy
     - php
-    - mysql
+#    - mysql
     - ff_wiki
   tags:
     - wiki
+
+- name: Set up hopglass
+  hosts: utils
+  become: true
+  roles:
+    #- caddy
+    - php
+  tags:
+    - utils
