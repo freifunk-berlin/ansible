@@ -1,0 +1,3 @@
+---
+caddy_caddyfile: Caddyfile_utils.j2
+#php_version: 8.4
