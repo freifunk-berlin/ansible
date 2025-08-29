@@ -84,7 +84,7 @@
   hosts: utils
   become: true
   roles:
-    #- caddy
+    - caddy
     - php
   tags:
     - utils
