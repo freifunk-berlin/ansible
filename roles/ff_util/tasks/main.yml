@@ -1,0 +1,58 @@
+---
+- name: Create directories
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: caddy
+    group: caddy
+  loop:
+    - "/opt/meshviewer"
+    - "/var/www/hopglass.berlin.freifunk.net/www/"
+
+# Download latest meshviewer release from https://github.com/freifunk/meshviewer/releases
+# and unpack to /var/www/hopglass.berlin.freifunk.net/www/
+
+- name: Copy owm2meshviewer script
+  ansible.builtin.copy:
+    src: owm2meshviewer.py
+    dest: /opt/meshviewer/owm2meshviewer.py
+    mode: "0750"
+    owner: caddy
+    group: caddy
+
+- name: Copy meshviewer config
+  ansible.builtin.copy:
+    src: meshviewer_config.json
+    dest: /var/www/hopglass.berlin.freifunk.net/www/config.json
+    mode: "0644"
+    owner: caddy
+    group: caddy
+
+- name: Create python venv for meshviewer
+  become: true
+  become_user: caddy
+  ansible.builtin.pip:
+    name:
+      - diskcache
+      - python-dateutil
+      - requests
+      - tornado
+    virtualenv: /opt/meshviewer/venv
+    virtualenv_command: /usr/bin/python3 -m venv
+
+- name: Copy owm2meshviewer cronjob
+  ansible.builtin.copy:
+    src: cron_d_meshviewer
+    dest: /etc/cron.d/meshviewer
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Checkout Device pictures repo
+  become: true
+  become_user: caddy
+  ansible.builtin.git:
+    repo: https://github.com/freifunk/device-pictures.git
+    dest: /var/www/hopglass.berlin.freifunk.net/device-pictures
+    version: main

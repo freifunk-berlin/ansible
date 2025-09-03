@@ -1,35 +1,69 @@
+{
+    log {
+        output file /var/log/caddy/caddy.log
+    }
+    # use with "log combined"
+    log combinedaccess {
+        include http.log.access.combined
+        output file /var/log/caddy/combined.log
+        format json {
+            time_format iso8601
+        }
+        level INFO
+    }
+}
+
 hopglass.berlin.freifunk.net {
+    handle_path /device-pictures/* {
+        root /var/www/hopglass.berlin.freifunk.net/device-pictures/pictures-svg/
+    }
     root * /var/www/hopglass.berlin.freifunk.net/www/
     file_server browse
     encode gzip zstd
+    header {
+        Cache-Control no-cache
+    }
+}
+
+https:// {
+    encode gzip zstd
+    uri path_regexp /{2,} /
+    reverse_proxy http://localhost:8000
+}
+
+http:// {
+    encode gzip zstd
+    uri path_regexp /{2,} /
+    reverse_proxy http://localhost:8000
 }
 
 http://api.openwifimap.net {
-    log {
-		output file /var/log/caddy/api.openwifimap.net.log
-	}
     encode gzip zstd
-    file_server
+    uri path_regexp /{2,} /
     reverse_proxy http://localhost:8000
 }
 
 api.openwifimap.net {
-    log {
-		output file /var/log/caddy/api.openwifimap.net.log
-	}
     encode gzip zstd
     file_server
     reverse_proxy http://localhost:8000
 }
 
 openwifimap.net {
-    log {
-		output file /var/log/caddy/openwifimap.net.log
-	}
     encode gzip zstd
     file_server
     root * /var/www/openwifimap.net/www/
-    reverse_proxy / http://localhost:8000
+}
+
+http://util.berlin.freifunk.net {
+    root * /var/www/util.berlin.freifunk.net/www/
+    try_files {path} {path}.php
+    file_server browse
+    encode gzip zstd
+    php_fastcgi unix//run/php/php8.4-fpm.sock
+    handle /update_node/* {
+        reverse_proxy  http://localhost:8000
+    }
 }
 
 util.berlin.freifunk.net {
@@ -37,16 +71,17 @@ util.berlin.freifunk.net {
     try_files {path} {path}.php
     file_server browse
     encode gzip zstd
-    php_fastcgi unix//run/php/php8.2-fpm.sock
+    php_fastcgi unix//run/php/php8.4-fpm.sock
+    handle /update_node/* {
+        reverse_proxy  http://localhost:8000
+    }
 }
 
 ff.berlin {
     root * /var/www/util.berlin.freifunk.net/www/
     file_server browse
     encode gzip zstd
-    php_fastcgi unix//run/php/php8.2-fpm.sock
-
+    php_fastcgi unix//run/php/php8.4-fpm.sock
     @rewrite not path /knoteninfo.php/*
     rewrite @rewrite /knoteninfo.php?path={url}
-
 }
