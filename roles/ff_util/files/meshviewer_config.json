@@ -1,0 +1,361 @@
+{
+  "cacheBreaker": "2f967a527",
+  "clientZoom": 15,
+  "dataPath": [
+    "https://hopglass.berlin.freifunk.net/"
+  ],
+  "deprecated": [
+    "TP-Link Archer C2 v3",
+    "TP-Link Archer C6 v2 (EU/RU/JP)",
+    "TP-Link Archer C6 v2",
+    "TP-Link Archer C6 v3",
+    "TP-Link Archer C20 v4",
+    "TP-Link Archer C20i",
+    "TP-Link Archer C25 v1",
+    "TP-Link Archer C50 v1",
+    "TP-Link Archer C50 v3",
+    "TP-Link Archer C50 v4",
+    "TP-Link Archer C50 v6",
+    "TP-Link Archer C60 v1",
+    "TP-Link Archer C60 v2",
+    "TP-Link CPE210 v1.0",
+    "TP-Link CPE210 v1.1",
+    "TP-Link CPE210 v1",
+    "TP-Link CPE210 v2.0",
+    "TP-Link CPE210 v2",
+    "TP-Link CPE210 v3.0",
+    "TP-Link CPE210 v3.20",
+    "TP-Link CPE210 v3",
+    "TP-Link CPE510 v1.0",
+    "TP-Link CPE510 v1.1",
+    "TP-Link CPE510 v1",
+    "TP-Link CPE510 v2",
+    "TP-Link CPE510 v3",
+    "TP-Link TL-WR902AC v1",
+    "TP-Link TL-WR902AC v3",
+    "TP-Link WBS210 v1.20",
+    "TP-Link WBS210 v2",
+    "TP-Link WBS510 v1"
+  ],
+  "deprecation_enabled": true,
+  "deprecation_text": "Dieses Gerät ist relativ alt und sollte bei Gelegenheit getauscht werden - <a href='https://berlin.freifunk.net/de/contact/'>Melde dich jetzt bei uns</a>",
+  "devicePictures": "https://hopglass.berlin.freifunk.net/device-pictures/{MODEL_NORMALIZED}.svg",
+  "devicePicturesLicense": "CC-BY-NC-SA 4.0",
+  "devicePicturesSource": "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
+  "domainNames": [
+    {
+      "domain": "",
+      "name": "Unknown Domain"
+    },
+    {
+      "domain": "freifunk",
+      "name": "Freifunk"
+    },
+    {
+      "domain": "berlin",
+      "name": "Berlin"
+    },
+    {
+      "domain": "fuerstenwalde",
+      "name": "Fürstenwalde"
+    },
+    {
+      "domain": "petershagen_eggersdorf",
+      "name": "Petershagen-Eggersdorf"
+    },
+    {
+      "domain": "potsdam",
+      "name": "Potsdam"
+    }
+  ],
+  "eol": [
+    "A5-V11",
+    "AP121",
+    "AP121U",
+    "D-Link DIR-615",
+    "D-Link DIR-615 D",
+    "D-Link DIR-825",
+    "AVM FRITZ!Box 7320",
+    "AVM FRITZ!Box 7330",
+    "AVM FRITZ!Box 7330 SL",
+    "TP-Link RE200 v1",
+    "TP-Link RE200 v2",
+    "TP-Link RE200 v3",
+    "TP-Link RE200 v4",
+    "TP-Link RE305 v1",
+    "TP-Link RE305 v2",
+    "TP-Link RE305 v3",
+    "TP-Link RE355 v1",
+    "TP-Link RE450 v1",
+    "TP-Link RE450 v2",
+    "TP-Link RE450 v3",
+    "TP-Link TL-MR13U v1",
+    "TP-Link TL-MR3020 v1",
+    "TP-Link TL-MR3040 v1",
+    "TP-Link TL-MR3040 v2",
+    "TP-Link TL-MR3220 v1",
+    "TP-Link TL-MR3220 v2",
+    "TP-Link TL-MR3420 v1",
+    "TP-Link TL-MR3420 v2",
+    "TP-Link TL-WA701N/ND v1",
+    "TP-Link TL-WA701N/ND v2",
+    "TP-Link TL-WA730RE v1",
+    "TP-Link TL-WA750RE v1",
+    "TP-Link TL-WA801N/ND v1",
+    "TP-Link TL-WA801N/ND v2",
+    "TP-Link TL-WA801N/ND v3",
+    "TP-Link TL-WA830RE v1",
+    "TP-Link TL-WA830RE v2",
+    "TP-Link TL-WA850RE v1",
+    "TP-Link TL-WA860RE v1",
+    "TP-Link TL-WA901N/ND v1",
+    "TP-Link TL-WA901N/ND v2",
+    "TP-Link TL-WA901N/ND v3",
+    "TP-Link TL-WA901N/ND v4",
+    "TP-Link TL-WA901N/ND v5",
+    "TP-Link TL-WA7210N v2",
+    "TP-Link TL-WA7510N v1",
+    "TP-Link TL-WR703N v1",
+    "TP-Link TL-WR710N v1",
+    "TP-Link TL-WR710N v2",
+    "TP-Link TL-WR710N v2.1",
+    "TP-Link TL-WR740N/ND v1",
+    "TP-Link TL-WR740N/ND v3",
+    "TP-Link TL-WR740N/ND v4",
+    "TP-Link TL-WR740N/ND v5",
+    "TP-Link TL-WR741N/ND v1",
+    "TP-Link TL-WR741N/ND v3",
+    "TP-Link TL-WR741N/ND v4",
+    "TP-Link TL-WR741N/ND v5",
+    "TP-Link TL-WR743N/ND v1",
+    "TP-Link TL-WR743N/ND v2",
+    "TP-Link TL-WR840N v2",
+    "TP-Link TL-WR841N/ND v3",
+    "TP-Link TL-WR841N/ND v5",
+    "TP-Link TL-WR841N/ND v7",
+    "TP-Link TL-WR841N/ND v8",
+    "TP-Link TL-WR841N/ND v9",
+    "TP-Link TL-WR841N/ND v10",
+    "TP-Link TL-WR841N/ND v11",
+    "TP-Link TL-WR841N/ND v12",
+    "TP-Link TL-WR841N/ND Mod (16M) v11",
+    "TP-Link TL-WR841N/ND Mod (16M) v10",
+    "TP-Link TL-WR841N/ND Mod (16M) v8",
+    "TP-Link TL-WR841N/ND Mod (16M) v9",
+    "TP-Link TL-WR841N/ND Mod (8M) v10",
+    "TP-Link TL-WR842N/ND v1",
+    "TP-Link TL-WR842N/ND v2",
+    "TP-Link TL-WR843N/ND v1",
+    "TP-Link TL-WR940N v1",
+    "TP-Link TL-WR940N v2",
+    "TP-Link TL-WR940N v3",
+    "TP-Link TL-WR940N v4",
+    "TP-Link TL-WR940N v5",
+    "TP-Link TL-WR940N v6",
+    "TP-Link TL-WR941N/ND v2",
+    "TP-Link TL-WR941N/ND v3",
+    "TP-Link TL-WR941N/ND v4",
+    "TP-Link TL-WR941N/ND v5",
+    "TP-Link TL-WR941N/ND v6",
+    "TP-Link TL-WR1043N/ND v1",
+    "D-Link DIR-615 D1",
+    "D-Link DIR-615 D2",
+    "D-Link DIR-615 D3",
+    "D-Link DIR-615 D4",
+    "D-Link DIR-615 H1",
+    "Ubiquiti NanoStation loco M2",
+    "Ubiquiti NanoStation M2",
+    "Ubiquiti PicoStation M2",
+    "Ubiquiti Bullet M",
+    "Ubiquiti Bullet M2",
+    "Ubiquiti AirRouter",
+    "VoCore 8M",
+    "VoCore 16M"
+  ],
+  "eol_text": "Dieses Gerät ist leider veraltet und wird nicht mehr durch Software-Updates unterstützt - <a href='https://berlin.freifunk.net/de/contact/'>Melde dich jetzt bei uns für Ersatz</a>",
+  "fixedCenter": [
+    [
+      52.571607474369166,
+      13.26691069979662
+    ],
+    [
+      52.44725884170168,
+      13.537677074565522
+    ]
+  ],
+  "forceGraph": {
+    "highlightColor": "rgba(255, 255, 255, 0.2)",
+    "labelColor": "#fff",
+    "nodeColor": "#fff",
+    "nodeOfflineColor": "#D43E2A",
+    "tqFrom": "#770038",
+    "tqTo": "#dc0067",
+    "zoomModifier": 1
+  },
+  "fullscreen": true,
+  "fullscreenFrame": true,
+  "globalInfos": [],
+  "icon": {
+    "alert": {
+      "color": "#D43E2A",
+      "fillColor": "#D43E2A",
+      "radius": 5
+    },
+    "base": {
+      "className": "stroke-first",
+      "fillOpacity": 0.6,
+      "opacity": 0.6,
+      "radius": 6,
+      "weight": 2
+    },
+    "lost": {
+      "color": "#D43E2A",
+      "fillColor": "#D43E2A",
+      "radius": 4
+    },
+    "new": {
+      "color": "#1566A9",
+      "fillColor": "#93E929"
+    },
+    "offline": {
+      "color": "#D43E2A",
+      "fillColor": "#D43E2A",
+      "radius": 3
+    },
+    "online": {
+      "color": "#1566A9",
+      "fillColor": "#1566A9"
+    }
+  },
+  "labelZoom": 13,
+  "linkList": [
+    {
+      "href": "https://berlin.freifunk.net/contact/",
+      "title": "Kontakt"
+    },
+    {
+      "href": "https://monitor.berlin.freifunk.net",
+      "title": "Statistiken"
+    },
+    {
+      "href": "https://berlin.freifunk.net/de/imprint/",
+      "title": "Impressum"
+    }
+  ],
+  "locate": {
+    "accuracyCircle": {
+      "clickable": false,
+      "color": "#4285F4",
+      "fillOpacity": 0.2,
+      "opacity": 0.7,
+      "stroke": true,
+      "weight": 1
+    },
+    "innerCircle": {
+      "clickable": false,
+      "color": "#ffffff",
+      "fillColor": "#4285F4",
+      "fillOpacity": 1,
+      "opacity": 1,
+      "radius": 7,
+      "stroke:": true,
+      "weight": 1.5
+    },
+    "outerCircle": {
+      "clickable": false,
+      "color": "#4285F4",
+      "fillOpacity": 0.3,
+      "opacity": 1,
+      "radius": 16,
+      "stroke": false
+    }
+  },
+  "map": {
+    "highlightLink": {
+      "dashArray": "5, 10",
+      "opacity": 1,
+      "weight": 4
+    },
+    "highlightNode": {
+      "className": "stroke-first",
+      "color": "#ad2358",
+      "fillOpacity": 1,
+      "opacity": 0.4,
+      "weight": 8
+    },
+    "labelNewColor": "#459c18",
+    "tqFrom": "#F02311",
+    "tqTo": "#04C714"
+  },
+  "mapLayers": [
+    {
+      "config": {
+        "#subdomains": "1234",
+        "attribution": "Tiles &copy; 2016 <a href=\"http://bbbike.org/\">BBBike.org</a> &amp; <a href=\"https://www.geofabrik.de/\">Geofabrik GmbH</a> - map data (&copy;) <a href=\"https://www.openstreetmap.org/\">OpenStreetMap.org</a>",
+        "maxZoom": 18,
+        "type": "osm"
+      },
+      "name": "OSM Mapnik (DE)",
+      "url": "https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
+    }
+  ],
+  "maxAge": 21,
+  "maxAgeAlert": 5,
+  "nodeAttr": [
+    {
+      "name": "node.status",
+      "value": "Status"
+    },
+    {
+      "name": "node.coordinates",
+      "value": "GeoURI"
+    },
+    {
+      "name": "node.contact",
+      "value": "owner"
+    },
+    {
+      "name": "node.hardware",
+      "value": "model"
+    },
+    {
+      "name": "node.firmware",
+      "value": "Firmware"
+    },
+    {
+      "name": "node.uptime",
+      "value": "Uptime"
+    },
+    {
+      "name": "node.firstSeen",
+      "value": "FirstSeen"
+    },
+    {
+      "name": "node.systemLoad",
+      "value": "Load"
+    },
+    {
+      "name": "node.ipAddresses",
+      "value": "IPs"
+    },
+    {
+      "name": "node.domain",
+      "value": "Domain"
+    },
+    {
+      "name": "node.clients",
+      "value": "Clients"
+    }
+  ],
+  "nodeZoom": 19,
+  "reverseGeocodingApi": "https://nominatim.openstreetmap.org/reverse",
+  "siteName": "Freifunk Berlin",
+  "supportedLocale": [
+    "en",
+    "de",
+    "cz",
+    "fr",
+    "tr",
+    "ru"
+  ]
+}
