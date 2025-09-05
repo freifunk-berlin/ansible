@@ -26,6 +26,10 @@ d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
 
 
 [users_only:children]
+meshtastic
+
+[meshtastic]
+meshtastic.berlin.freifunk.net ansible_host=77.87.49.21
 
 [utils]
 util.berlin.freifunk.net # hopglass
