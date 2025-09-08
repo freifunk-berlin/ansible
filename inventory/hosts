@@ -50,3 +50,9 @@ l105-hyp1.berlin.freifunk.net
 
 [wiki]
 wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
+
+[backup_hosts]
+backup.berlin.freifunk.net ansible_host=77.87.50.15
+
+[backup_hosts:children]
+wiki

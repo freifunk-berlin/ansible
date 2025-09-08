@@ -1,0 +1,45 @@
+---
+- name: Install restic and dependencies
+  ansible.builtin.apt:
+    name:
+      - restic
+      - restic-rest-server
+      - apache2-utils
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Copy rest-server  service 
+  ansible.builtin.template:
+    src: restic-rest-server.service.j2
+    dest: /etc/systemd/system/restic-rest-server.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart rest-server
+  become: true
+
+- name: Create .htpasswd file
+  ansible.builtin.file:
+    path: "{{ restic_server_backup_path }}/.htpasswd"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+    owner: "{{ restic_server_user }}"
+    group: "{{ restic_server_group }}"
+    mode: '0600'
+  become: true
+
+#- name: Generate rest-server htpasswd file
+#  community.general.htpasswd:
+#    path: "{{ backup_server_data }}/htpasswd"
+#    name: "{{ item.user }}"
+#    password: "{{ item.password }}"
+#    crypt_scheme: bcrypt
+#    owner: root
+#    group: root
+#    mode: '0600'
+#  notify: Restart rest-server  
+#  with_items: "user: {{ hostvars['backup']['backup_user'] }}"
