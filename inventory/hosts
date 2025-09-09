@@ -38,7 +38,7 @@ util.berlin.freifunk.net # hopglass
 download-master.berlin.freifunk.net
 
 [uisp]
-uisp.olsr ansible_host=10.31.130.158 # New uisp VM
+uisp.berlin.freifunk.net
 
 [website]
 web.berlin.freifunk.net
@@ -56,3 +56,5 @@ backup.berlin.freifunk.net ansible_host=77.87.50.15
 
 [backup_hosts:children]
 wiki
+uisp
+download

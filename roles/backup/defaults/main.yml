@@ -2,5 +2,4 @@
 ansible_become: true
 backup_host: 77.87.50.15
 backup_user: restic
-backup_role: client
 backup_server_data: /opt/restic
