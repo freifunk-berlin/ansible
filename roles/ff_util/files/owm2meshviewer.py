@@ -64,9 +64,6 @@ def get_dhcp_clients():
                 dhcp_clients[node] = clients
 
 
-def get_node_id(hostname) -> str:
-    return hashlib.sha1(hostname.encode("utf-8")).hexdigest()[:12]
-
 
 def fw_version_equal_or_more_recent(
     ver_a,
@@ -380,10 +377,6 @@ def process_node_json(comment, body, ignore_if_offline=True):
 
         clients = dhcp_clients[hostname] if hostname in dhcp_clients else 0
 
-        # nodeID
-        # in gluon this is a mac address, we currently do not have this information
-        node_id = get_node_id(hostname)
-
         node = dict(
             firstseen=firstseen.strftime(date_format),
             lastseen=lastseen.strftime(date_format),
@@ -403,7 +396,7 @@ def process_node_json(comment, body, ignore_if_offline=True):
             gateway_nexthop="N/A",  # TODO
             gateway="N/A",  # TODO
             # gateway6="",  # TODO
-            node_id=node_id,
+            node_id=hostid,
             # mac="84:16:f9:9b:bc:0a",
             addresses=node_addresses,
             domain=owmnode["freifunk"]["community"]["name"],
@@ -535,7 +528,7 @@ if __name__ == "__main__":
             source_node = [
                 node
                 for node in nodes
-                if node["hostname"] + ".olsr" == link["source_hostname"]
+                if node["node_id"] == link["source_hostname"]
             ]
 
             link["source"] = (
@@ -545,7 +538,7 @@ if __name__ == "__main__":
             target_node = [
                 node
                 for node in nodes
-                if node["hostname"] + ".olsr" == link["target_hostname"]
+                if node["node_id"] == link["target_hostname"]
             ]
             link["target"] = (
                 target_node[0]["node_id"] if target_node else brokenlinks.append(link)
