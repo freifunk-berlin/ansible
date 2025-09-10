@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=REST server for restic backup
+Documentation=https://github.com/restic/rest-server/blob/master/README.md
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=restic-rest-server
+Group=restic-rest-server
+ExecStart=/usr/bin/restic-rest-server \
+		  --path {{ backup_server_data }}/repos \
+		  --private-repos \
+		  --prometheus \
+		  --prometheus-no-auth \
+          --append-only \
+          --htpasswd-file {{ backup_server_data }}/htpasswd
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+StartLimitIntervalSec=3
+StartLimitBurst=2
+
+# Optional security enhancements
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths={{ backup_server_data }}
+
+[Install]
+WantedBy=multi-user.target

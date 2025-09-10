@@ -1,0 +1,10 @@
+---
+- name: Install restic client
+  ansible.builtin.include_tasks:
+    file: client.yml
+  when: backup_role == "client"
+
+- name: Install restic rest server
+  ansible.builtin.include_tasks:
+    file: server.yml
+  when: backup_role == "server"
