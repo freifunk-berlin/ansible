@@ -1,5 +1,4 @@
-Aktuelle MediaWiki-Installation
-===============================
+# wiki.freifunk.net
 
 /opt/wiki.freifunk.net# ls
 wwwroot/                       - MediaWiki-Installation
@@ -11,15 +10,12 @@ doch mit rein. Bilder und weitere Extensions werden per Apache-Config bzw. Symli
 eingebunden.
 
 
-Installation
-============
+## Installation & Update
+
 
 Siehe tasks/main.yml
 
-
-Update
-======
-
+```
 systemctl stop cron
 systemctl stop caddy
 
@@ -29,17 +25,17 @@ tar xf /tmp/mediawiki.tar.gz -C /opt/wiki.freifunk.net/wwwroot --strip-component
 chown -R caddy:caddy /opt/wiki.freifunk.net/wwwroot
 
 
-> ansible laufen lassen (extensions etc)
+# ansible laufen lassen (extensions etc)
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php update.php
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php SemanticMediaWiki:rebuildData.php -v --with-maintenance-log
 
-> Rendert jede seite
+# Rendert jede seite
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php rebuildFileCache.php --all
 
+```
 
+## Checkliste
 
-Checkliste
-==========
 
 * Logo fehlt? skins/common aus alter Installation kopieren.
 * SMW-Attribute sagen "Verarbeitungsfehler"? rebuildData nochmal laufenlassen (s.o.).
