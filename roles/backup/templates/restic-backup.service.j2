@@ -1,0 +1,15 @@
+[Unit]
+Description=Restic backup
+
+[Service]
+Type=oneshot
+User=root
+
+Environment="RESTIC_REPOSITORY=rest:http://{{ backup_user }}:{{ backup_password }}@{{ backup_host }}:8000/{{ backup_user }}/"
+Environment="RESTIC_PASSWORD={{ backup_password }}"
+
+ExecStartPre=/bin/sh -c '/usr/bin/restic snapshots || /usr/bin/restic init'
+
+{% for directory in backup_directories %}
+ExecStart=/usr/bin/restic backup --verbose {{ directory }}
+{% endfor -%}

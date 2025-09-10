@@ -1,0 +1,41 @@
+---
+- name: Install restic and dependencies
+  ansible.builtin.apt:
+    name:
+      - apache2-utils
+      - python3-passlib
+      - restic
+      - restic-rest-server
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Copy rest-server service
+  ansible.builtin.template:
+    src: restic-rest-server.service.j2
+    dest: /etc/systemd/system/restic-rest-server.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart rest-server
+  become: true
+
+- name: Build list of backup client hostnames
+  ansible.builtin.set_fact:
+    backup_client_hosts: "{{ (backup_client_hosts | default([])) + [item] }}"
+  loop: "{{ groups['backup_hosts'] | default([]) }}"
+  when: hostvars[item].backup_role | default('') == 'client'
+
+- name: Generate rest-server htpasswd file
+  community.general.htpasswd:
+    path: "{{ backup_server_data }}/htpasswd"
+    name: "{{ hostvars[item]['backup_user'] }}"
+    password: "{{ hostvars[item]['backup_password'] }}"
+    crypt_scheme: bcrypt
+    owner: restic-rest-server
+    group: restic-rest-server
+    mode: '0600'
+  notify: Restart rest-server
+  with_items: "{{ backup_client_hosts }}"

@@ -89,3 +89,11 @@
     - ff_util
   tags:
     - utils
+
+- name: Set up backups
+  hosts: backup_hosts
+  become: true
+  roles:
+    - backup
+  tags:
+    - backup

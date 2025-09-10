@@ -26,6 +26,10 @@ d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
 
 
 [users_only:children]
+meshtastic
+
+[meshtastic]
+meshtastic.berlin.freifunk.net ansible_host=77.87.49.21
 
 [utils]
 util.berlin.freifunk.net # hopglass
@@ -34,7 +38,7 @@ util.berlin.freifunk.net # hopglass
 download-master.berlin.freifunk.net
 
 [uisp]
-uisp.olsr ansible_host=10.31.130.158 # New uisp VM
+uisp.berlin.freifunk.net
 
 [website]
 web.berlin.freifunk.net
@@ -46,3 +50,11 @@ l105-hyp1.berlin.freifunk.net
 
 [wiki]
 wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
+
+[backup_hosts]
+backup.berlin.freifunk.net ansible_host=77.87.50.15
+
+[backup_hosts:children]
+wiki
+uisp
+download
