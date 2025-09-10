@@ -11,8 +11,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # *  *  *  *  * user-name command to be executed
 #
 # Mediawiki Cronjobs
-*/10 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php runJobs.php --quiet --maxtime=300
-5    0  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php updateSpecialPages.php --quiet
+*/10 *  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php runJobs --quiet --maxtime=300
+5    0  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php updateSpecialPages --quiet
 # SMW Cronjobs
 15   1  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php SemanticMediaWiki:rebuildData.php --quiet --shallow-update
 15   2  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php SemanticMediaWiki:disposeOutdatedEntities.php --quiet
