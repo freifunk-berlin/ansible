@@ -364,7 +364,8 @@ def process_node_json(comment, body, ignore_if_offline=True):
                 for link in owmnode["links"]
                 if "sourceAddr4" in link
             ]
-            node_addresses.append(owmnode["olsr"]["ipv4Config"]["config"]["mainIp"])
+            if "config" in owmnode["olsr"]["ipv4Config"]:
+                node_addresses.append(owmnode["olsr"]["ipv4Config"]["config"]["mainIp"])
         except KeyError:
             pass
         # Deduplicate list
