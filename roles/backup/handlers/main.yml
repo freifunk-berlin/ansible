@@ -8,4 +8,3 @@
     name: restic-rest-server
     enabled: true
     state: restarted
-  
