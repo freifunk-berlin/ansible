@@ -15,7 +15,7 @@ eingebunden.
 
 Siehe tasks/main.yml
 
-```
+```sh
 systemctl stop cron
 systemctl stop caddy
 
@@ -39,5 +39,5 @@ sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php rebuildFile
 
 * Logo fehlt? skins/common aus alter Installation kopieren.
 * SMW-Attribute sagen "Verarbeitungsfehler"? rebuildData nochmal laufenlassen (s.o.).
-* https://wiki.freifunk.net/extensions/OWM/osmcenter.php?latlon=52.514169,13.433311
-* https://wiki.freifunk.net/Medienspiegel (RSS)
+* [https://wiki.freifunk.net/extensions/OWM/osmcenter.php?latlon=52.514169,13.433311]()
+* [https://wiki.freifunk.net/Medienspiegel]() (RSS)
