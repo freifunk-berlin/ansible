@@ -382,8 +382,10 @@ def process_node_json(comment, body, ignore_if_offline=True):
         clients = dhcp_clients[hostname] if hostname in dhcp_clients else 0
 
         # nodeID
+        # meshviewer expects a mac address(12 chars, a-f or digit) as the node id
         # in gluon this is a mac address, we currently do not have this information
-        node_id = get_node_id(hostname)
+        # use the uniq _id from owmnode
+        node_id = get_node_id(hostid)
 
         node = dict(
             firstseen=firstseen.strftime(date_format),
@@ -405,6 +407,7 @@ def process_node_json(comment, body, ignore_if_offline=True):
             gateway="N/A",  # TODO
             # gateway6="",  # TODO
             node_id=node_id,
+            host_id=hostid,
             # mac="84:16:f9:9b:bc:0a",
             addresses=node_addresses,
             domain=owmnode["freifunk"]["community"]["name"],
@@ -536,7 +539,7 @@ if __name__ == "__main__":
             source_node = [
                 node
                 for node in nodes
-                if node["hostname"] + ".olsr" == link["source_hostname"]
+                if node["host_id"] == link["source_hostname"]
             ]
 
             link["source"] = (
@@ -546,7 +549,7 @@ if __name__ == "__main__":
             target_node = [
                 node
                 for node in nodes
-                if node["hostname"] + ".olsr" == link["target_hostname"]
+                if node["host_id"] == link["target_hostname"]
             ]
             link["target"] = (
                 target_node[0]["node_id"] if target_node else brokenlinks.append(link)
