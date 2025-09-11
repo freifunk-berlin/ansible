@@ -29,6 +29,10 @@ chown -R caddy:caddy /opt/wiki.freifunk.net/wwwroot
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php update.php
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php SemanticMediaWiki:rebuildData.php -v --with-maintenance-log
 
+# 2FA / OATH extension
+cd /opt/wiki.freifunk.net/wwwroot/extensions/OATHAuth
+sudo -u caddy composer install --no-dev
+
 # Rendert jede seite
 sudo -u caddy php /opt/wiki.freifunk.net/wwwroot/maintenance/run.php rebuildFileCache.php --all
 

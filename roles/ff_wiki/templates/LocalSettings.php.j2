@@ -223,9 +223,9 @@ $wgAccountCreationThrottle = 5;
 $wgGroupPermissions['*']['edit'] = false;
 
 # 2FA settings
-# currently broken since it can't find the base32/base32 library
-# wfLoadExtension( 'OATHAuth' );
-# $wgGroupPermissions['user']['oathauth-enable'] = true;
+wfLoadExtension( 'OATHAuth' );
+$wgGroupPermissions['user']['oathauth-enable'] = true;
+$wgOATHSecretKey = "{{ ffwiki_OATHSecretKey }}";
 
 wfLoadExtensions(['ffwikihelpers', 'Interwiki', 'ParserFunctions', 'Cite', 'SpamBlacklist', 'Nuke', 'WikiEditor', 'PageForms', 'RSS' ]);
 $wgRSSUrlWhitelist = array("https://rss.freifunk.net/*");
