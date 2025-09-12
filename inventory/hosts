@@ -46,7 +46,7 @@ web.berlin.freifunk.net
 [proxmox]
 # a36s-hyp01.berlin.freifunk.net # shut down
 a36s-hyp03.berlin.freifunk.net
-l105-hyp1.berlin.freifunk.net
+l105-hyp01.berlin.freifunk.net
 
 [wiki]
 wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
