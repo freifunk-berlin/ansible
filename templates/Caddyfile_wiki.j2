@@ -1,19 +1,6 @@
 
-dev.wiki.freifunk.net {
-    basic_auth {
-        #  password "ComputerSaysYes"
-        freifunk $2a$12$LylvJI3RTwO6cgKt1Z2ut.tEBTQY.LiePnXSaqBEMNI0Wl3QDmwdu
-    }
-
+wiki.freifunk.net {
     encode gzip zstd
-#    @title {
-#        not file {
-#            try_files {path} {path}/
-#            split_path .php
-#        }
-#        path_regexp title ^/(.*)$
-#    }
-#    rewrite @title /index.php?title={re.title.1}&{query}
 
     @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
 

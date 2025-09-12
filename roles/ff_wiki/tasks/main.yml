@@ -15,12 +15,10 @@
   loop:
     - "{{ ffwiki_basedir }}/static/"
     - "{{ ffwiki_basedir }}/wwwroot/"
-    - "{{ ffwiki_basedir }}/scripts/"
-    - "{{ ffwiki_basedir }}/caches/"
-
 
 # wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.3.tar.gz
 # tar xf /tmp/mediawiki.tar.gz -C {{ ffwiki_basedir }}/wwwroot --strip-components=1
+# chown -R caddy:caddy {{ ffwiki_basedir }}/wwwroot
 
 - name: Check out RSS extension
   become_user: caddy

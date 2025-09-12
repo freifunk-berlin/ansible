@@ -1,6 +1,7 @@
 ---
 caddy_caddyfile: Caddyfile_wiki.j2
 php_version: 8.4
+mariadb_autmysqlbackup_enabled: true
 
 backup_user: wiki
 backup_password: !vault |
@@ -14,3 +15,5 @@ backup_role: client
 backup_directories:
   - /opt/wiki.freifunk.net/
   - /var/lib/automysqlbackup/
+
+# vim:filetype=yaml:

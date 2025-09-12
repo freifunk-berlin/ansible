@@ -1,3 +1,5 @@
+# {{ ansible_managed}}
+
 [client-server]
 socket = /run/mysqld/mysqld.sock
 
@@ -6,7 +8,10 @@ quick
 quote-names
 max_allowed_packet      = 16M
 
-[mysqld]
+
+
+# this is only for the mariadbd daemon
+[mariadbd]
 
 #
 # * Basic Settings
@@ -20,7 +25,7 @@ basedir                 = /usr
 
 # Broken reverse DNS slows down connections considerably and name resolve is
 # safe to skip if there are no "host by domain name" access grants
-skip-name-resolve
+# skip-name-resolve
 
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
@@ -40,16 +45,28 @@ bind-address            = 127.0.0.1
 #max_connections        = 100
 #table_cache            = 64
 
-
-server-id              = 1
-log_bin                = /var/log/mysql/mysql-bin.log
-expire_logs_days       = 3
-max_binlog_size        = 100M
-
 character-set-server  = utf8mb4
 collation-server      = utf8mb4_general_ci
 
 innodb_buffer_pool_size = {{ mariadb_innodb_buffer_pool_size }}
+
+# Both location gets rotated by the cronjob.
+# Be aware that this log type is a performance killer.
+# Recommend only changing this at runtime for short testing periods if needed!
+#general_log_file       = /var/log/mysql/mysql.log
+#general_log            = 1
+
+# When running under systemd, error logging goes via stdout/stderr to journald
+# and when running legacy init error logging goes to syslog due to
+# /etc/mysql/conf.d/mariadb.conf.d/50-mysqld_safe.cnf
+# Enable this if you want to have error logging into a separate file
+#log_error = /var/log/mysql/error.log
+# Enable the slow query log to see queries with especially long duration
+#log_slow_query_file    = /var/log/mysql/mariadb-slow.log
+#log_slow_query_time    = 10
+#log_slow_verbosity     = query_plan,explain
+#log-queries-not-using-indexes
+#log_slow_min_examined_row_limit = 1000
 
 
 [server]
