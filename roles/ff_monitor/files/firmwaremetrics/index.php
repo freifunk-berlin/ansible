@@ -6,7 +6,7 @@
 require_once('classify-firmware.php');
 header("Content-Type: text/plain");
 
-$url="https://hopglass.berlin.freifunk.net/nodes.json";
+$url="https://hopglass.berlin.freifunk.net/meshviewer.json";
 //  Initiate curl
 $ch = curl_init();
 // Will return the response, if false it print the response
@@ -26,9 +26,9 @@ $firmwares = array ('Other' => array(), 'OpenWrt' => array(), 'Freifunk Berlin' 
 
 foreach($json->nodes as $node) {
     // Only use online nodes
-    if($node->flags->online === true) {
-        $firmware = classify_firmware($node->nodeinfo->software->firmware->release);
-        $firmwares[$firmware['name']][$firmware['version']]++; 
+    if($node->is_online === true) {
+        $firmware = classify_firmware($node->firmware->release);
+        $firmwares[$firmware['name']][$firmware['version']]++;
     }
     // echo $node->nodeinfo->software->firmware->release.': '.$firmware['name']." - " .$firmware['version']."\n";
 }
