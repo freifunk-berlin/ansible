@@ -17,7 +17,7 @@ scrape_configs:
     scrape_timeout: 30s
     static_configs:
       - targets: ['monitor.berlin.freifunk.net']
-    metrics_path: /metrics/firmware
+    metrics_path: /metrics/firmware/
     scheme: https
 
   - job_name: 'prometheus'
