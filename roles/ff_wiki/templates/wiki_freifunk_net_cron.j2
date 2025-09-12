@@ -23,3 +23,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 15   7  *  *  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php SemanticMediaWiki:removeDuplicateEntities.php --quiet
 # Remove users that have no edits and did not log in in the past 3 years
 0    1  1 12  * caddy     /usr/bin/php {{ ffwiki_basedir }}/wwwroot/maintenance/run.php removeUnusedAccounts.php --ignore-touched 1095 --delete
+
