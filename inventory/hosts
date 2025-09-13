@@ -37,6 +37,9 @@ util.berlin.freifunk.net # hopglass
 [download]
 download-master.berlin.freifunk.net
 
+[unifi]
+unifi.ff ansible_host=10.31.130.157
+
 [uisp]
 uisp.berlin.freifunk.net
 
