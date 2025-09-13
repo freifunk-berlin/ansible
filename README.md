@@ -20,13 +20,16 @@ This repository currently manages these services:
 - The vpn03 servers which route our traffic to the internet
 - The public site for the berlin community at [berlin.freifunk.net](https://berlin.freifunk.net/)
 
-## Requirements
+## Requirements // How to use
 
-- Ansible 8.x
-- The secret encryption password for ansible-vault under `./.vaultpass`
+- check out this repo and `cd` into it
+- create a venv and activate it: `python -m venv venv && source venv/bin/activate`
+- install the python dependencies: `pip install -r requirements.txt`
+- install the external roles: `ansible-galaxy install -f requirements.yml`
+- install the external collections: `ansible-galaxy collection install -f requirements.yml`
+- Save the secret encryption password for ansible-vault under `./.vaultpass`
   - For alternative methods look here: <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
-- Have the necessary requirements installed: `ansible-galaxy install -r requirements.yml`
-- Access to the hosts
+
 
 ## Structure
 
