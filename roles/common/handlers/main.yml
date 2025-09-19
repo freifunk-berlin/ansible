@@ -4,12 +4,14 @@
     name: fail2ban
     enabled: true
     state: restarted
+  when: not ansible_check_mode
 
 - name: Restart prometheus-node-exporter
   ansible.builtin.service:
     name: prometheus-node-exporter
     enabled: true
     state: restarted
+  when: not ansible_check_mode
 
 - name: Restart sshd
   ansible.builtin.service:
