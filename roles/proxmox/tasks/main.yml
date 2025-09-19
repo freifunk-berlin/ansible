@@ -36,14 +36,6 @@
     owner: root
     group: root
 
-- name: Set pveproxy listen ip
-  ansible.builtin.lineinfile:
-    path: /etc/default/pveproxy
-    state: present
-    create: true
-    regexp: '^LISTEN_IP='
-    line: 'LISTEN_IP="{{ proxmox_pveproxy_listen }}"'
-
 - name: Single node configuration
   ansible.builtin.include_tasks: single_node.yml
   when: not proxmox_cluster
