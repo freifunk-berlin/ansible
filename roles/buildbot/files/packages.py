@@ -51,6 +51,7 @@ def packagesConfig(c, config):
             workernames=["masterworker"],
             factory=packagesFactory(util.BuildFactory(), config["publishDir"]),
             collapseRequests=False,
+            tags=["toplevel"],
         )
     )
 
@@ -91,7 +92,7 @@ def archTriggerStep(arch):
             "virtual_builder_name": util.Interpolate(
                 "packages/%(prop:branch)s/%(kw:arch)s", arch=arch
             ),
-            "virtual_builder_tags": ["packages", util.Interpolate("%(prop:branch)s")],
+            "virtual_builder_tags": [],
         },
     )
 

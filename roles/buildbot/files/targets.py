@@ -97,6 +97,7 @@ def targetsConfig(c, config):
             workernames=["masterworker"],
             factory=targetsFactory(util.BuildFactory(), config["publishDir"]),
             collapseRequests=False,
+            tags=["toplevel"],
         )
     )
 
@@ -151,10 +152,7 @@ def targetTriggerStep(targetvariant):
             "virtual_builder_name": util.Interpolate(
                 "targets/%(prop:falterBranch)s/%(kw:target)s", target=target
             ),
-            "virtual_builder_tags": [
-                "targets",
-                util.Interpolate("%(prop:falterBranch)s"),
-            ],
+            "virtual_builder_tags": [],
         },
     )
 
