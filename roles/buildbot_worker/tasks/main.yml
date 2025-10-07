@@ -134,17 +134,18 @@
     mode: "0755"
 
 - name: Add workers admin-info
-  template:
+  copy:
+    content: "{{ bbworker_contact }}"
     dest: "{{ bbworker_path }}info/admin"
-    src: admin.j2
     mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
+  notify: Restart buildbot-worker
 
 - name: Add worker description
-  template:
+  copy:
+    content: "{{ bbworker_info }}"
     dest: "{{ bbworker_path }}/info/host"
-    src: host.j2
     mode: "0644"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
