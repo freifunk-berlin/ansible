@@ -220,6 +220,70 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
         )
     )
 
+#     f.addStep(
+#         steps.MasterShellCommand(
+#             name="test async 1",
+#             haltOnFailure=True,
+#             command=[
+#                 "sh",
+#                 "-c",
+#                 util.Interpolate(
+#                     """\
+# false && echo "hello, world!"
+# """,
+#                 ),
+#             ],
+#         )
+#     )
+
+#     f.addStep(
+#         steps.MasterShellCommand(
+#             name="test async 2",
+#             haltOnFailure=True,
+#             command=[
+#                 "sh",
+#                 "-c",
+#                 util.Interpolate(
+#                     """\
+# echo "hello, world!"
+# """,
+#                 ),
+#             ],
+#         )
+#     )
+
+#     f.addStep(
+#         steps.MasterShellCommand(
+#             name="test async 3",
+#             haltOnFailure=True,
+#             command=[
+#                 "sh",
+#                 "-c",
+#                 util.Interpolate(
+#                     """\
+# echo "hello, world!"
+# """,
+#                 ),
+#             ],
+#         )
+#     )
+
+#     f.addStep(
+#         steps.MasterShellCommand(
+#             name="test async 4",
+#             haltOnFailure=True,
+#             command=[
+#                 "sh",
+#                 "-c",
+#                 util.Interpolate(
+#                     """\
+# echo "hello, world!"
+# """,
+#                 ),
+#             ],
+#         )
+#     )
+
     return f
 
 
@@ -244,6 +308,10 @@ def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     #   * it'd also trigger a segfault in ~15% of concurrent runs:
                     #     https://github.com/containers/podman/issues/13779
                     #
+#                     """\
+# echo "hello, world!" > test.txt \
+# && tar -c test.txt > out.tar \
+# """,
                     """\
 sudo podman run -i --rm --log-driver=none --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \

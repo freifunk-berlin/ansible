@@ -286,17 +286,55 @@ targets=$(for t in $(cat build/targets-%(prop:falterBranch)s.txt \
                     # since we want to be able to just delete that at any time,
                     # without worrying about symlinks pointing to deleted stuff.
                     """\
-cat %(kw:w)s/tunneldigger/*/*/profiles.json | jq -s . > %(kw:w)s/tunneldigger/profiles.json \
-    && cat %(kw:w)s/notunnel/*/*/profiles.json | jq -s . > %(kw:w)s/notunnel/profiles.json \
-    && mkdir -p %(kw:p)s %(kw:p)s.new \
+mkdir -p %(kw:p)s %(kw:p)s.new \
     && rm -rf %(kw:p)s.new/* %(kw:p)s.prev \
     && mv %(kw:w)s/* %(kw:p)s.new/ \
     && mv %(kw:p)s %(kw:p)s.prev \
     && mv %(kw:p)s.new %(kw:p)s \
     && rm -rf %(kw:w)s %(kw:p)s.prev \
-    && %(prop:builddir)s/build/build/generate-autoupdate.sh %(prop:falterVersion)s %(kw:p)s/.. > %(kw:p)s/autoupdate.json \
 """,
                     w=wwwdir,
+                    p=pubdir,
+                ),
+            ],
+        )
+    )
+
+    f.addStep(
+        steps.MasterShellCommand(
+            name="generate broken-devices.txt",
+            haltOnFailure=True,
+            command=[
+                "sh",
+                "-c",
+                util.Interpolate(
+                    """\
+find %(kw:p)s/tunneldigger/ -mindepth 2 -maxdepth 2 -type d -printf '%%P\n' | sort \
+| while read target \
+; do
+    echo -n "$target" \
+    ; find "%(kw:p)s/notunnel/$target/faillogs" "%(kw:p)s/tunneldigger/$target/faillogs" -type f \
+    | xargs -r -n 1 basename | cut -d'.' -f1 | sort | uniq \
+    | xargs -r -n1 echo -n '' ; echo \
+; done > %(kw:p)s/broken-devices.txt
+""",
+                    p=pubdir,
+                ),
+            ],
+        )
+    )
+
+    f.addStep(
+        steps.MasterShellCommand(
+            name="generate autoupdate.json",
+            haltOnFailure=True,
+            command=[
+                "sh",
+                "-c",
+                util.Interpolate(
+                    """\
+%(prop:builddir)s/build/build/generate-autoupdate.sh %(prop:falterVersion)s %(kw:p)s/.. > %(kw:p)s/autoupdate.json
+""",
                     p=pubdir,
                 ),
             ],
@@ -353,6 +391,10 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
                     # --tmpfs /root:rw,size=6291456k,mode=1777
                     # Also larger targets seemed to need more than 6 GiB.
                     #
+#                     """\
+# echo "hello, world!" > test.txt \
+# && tar -c test.txt > out.tar \
+# """,
                     """\
 sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
