@@ -293,7 +293,7 @@ cat %(kw:w)s/tunneldigger/*/*/profiles.json | jq -s . > %(kw:w)s/tunneldigger/pr
     && mv %(kw:w)s/* %(kw:p)s.new/ \
     && mv %(kw:p)s %(kw:p)s.prev \
     && mv %(kw:p)s.new %(kw:p)s \
-    && rm -rf %(kw:p)s.prev \
+    && rm -rf %(kw:w)s %(kw:p)s.prev \
     && %(prop:builddir)s/build/build/generate-autoupdate.sh %(prop:falterVersion)s %(kw:p)s/.. > %(kw:p)s/autoupdate.json \
 """,
                     w=wwwdir,
@@ -320,7 +320,6 @@ def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
     wwwdir = util.Interpolate(
         "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
     )
-    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
 
     f.addStep(
         steps.ShellCommand(
@@ -380,8 +379,6 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
             haltOnFailure=True,
             workersrc="out.tar",
             masterdest=tarfile,
-            url=wwwurl,
-            urlText=wwwurl,
         )
     )
 
