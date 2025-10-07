@@ -211,7 +211,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
     && cp -a %(kw:w)s/* %(kw:p)s.new/ \
     && mv %(kw:p)s %(kw:p)s.prev \
     && mv %(kw:p)s.new %(kw:p)s \
-    && rm -rf %(kw:p)s.prev \
+    && rm -rf %(kw:w)s %(kw:p)s.prev \
 """,
                     w=wwwdir,
                     p=pubdir,
@@ -270,15 +270,12 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns --tmpfs /root:rw
     wwwdir = util.Interpolate(
         "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
     )
-    wwwurl = util.Interpolate("%(kw:url)s/%(kw:wwwpath)s", url=wwwURL, wwwpath=wwwpath)
     f.addStep(
         steps.FileUpload(
             name="upload",
             haltOnFailure=True,
             workersrc="out.tar",
             masterdest=tarfile,
-            url=wwwurl,
-            urlText=wwwurl,
         )
     )
     f.addStep(
