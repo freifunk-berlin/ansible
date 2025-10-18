@@ -22,6 +22,15 @@
     group: root
   notify: Restart postfix
 
+- name: Copy postgres config
+  ansible.builtin.template:
+    dest: /etc/postgresql/15/main/postgresql.conf
+    src: postgresql.conf.j2
+    mode: "0644"
+    owner: postgres
+    group: postgres
+  notify: Restart postgres
+
 - name: Copy uwsgi app config
   ansible.builtin.template:
     dest: /etc/uwsgi/apps-enabled/ff-wizard.ini
@@ -61,7 +70,7 @@
     group: www-data
   notify: Restart uwsgi
 
-- name: Install nipap in venv
+- name: Install ff-wizard dependencies in venv
   ansible.builtin.pip:
     requirements: /var/www/nipap-wizard/requirements.txt
     virtualenv: /var/www/nipap-wizard/env

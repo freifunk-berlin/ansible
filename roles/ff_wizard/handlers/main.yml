@@ -12,3 +12,10 @@
     name: uwsgi
     enabled: true
     state: restarted
+
+- name: Restart postgres
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: postgresql
+    enabled: true
+    state: restarted
