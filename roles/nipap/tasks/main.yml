@@ -1,13 +1,15 @@
 ---
-- name: Add nipap apt key
-  ansible.builtin.apt_key:
-    url: https://spritelink.github.io/NIPAP/nipap.gpg.key
-    state: present
-
 - name: Add nipap repo
-  ansible.builtin.apt_repository:
-    repo: deb http://spritelink.github.io/NIPAP/repos/apt stable main extra
-    state: present
+  ansible.builtin.deb822_repository:
+    name: nipap
+    types:
+      - deb
+    uris: http://spritelink.github.io/NIPAP/repos/apt
+    suites: stable
+    components:
+      - main
+      - extra
+    signed_by: https://spritelink.github.io/NIPAP/nipap.gpg.key
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -17,6 +19,7 @@
       - nipapd
       - python3-pynipap
       - python3-psycopg2
+      - python3-standard-pipes
       - postgresql-15
       - postgresql-15-ip4r
     state: present
