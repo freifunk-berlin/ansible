@@ -65,8 +65,8 @@
   ansible.builtin.pip:
     requirements: /var/www/nipap-wizard/requirements.txt
     virtualenv: /var/www/nipap-wizard/env
-    virtualenv_command: virtualenv --python=python3.11
-    virtualenv_python: python3.11
+    virtualenv_command: virtualenv --python=python3.13
+    virtualenv_python: python3.13
   notify: Restart uwsgi
 
 - name: Set owner of nipap dir
