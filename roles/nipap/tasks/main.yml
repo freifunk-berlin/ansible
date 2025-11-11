@@ -20,8 +20,8 @@
       - python3-pynipap
       - python3-psycopg2
       - python3-standard-pipes
-      - postgresql-15
-      - postgresql-15-ip4r
+      - postgresql-17
+      - postgresql-17-ip4r
     state: present
     update_cache: true
     cache_valid_time: 3600
