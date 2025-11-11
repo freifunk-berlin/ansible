@@ -1,28 +1,28 @@
 ---
 - name: Restart buildbot
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: buildbot
     enabled: true
     state: restarted
 
 - name: Initialize buildbot
-  command: /usr/local/src/buildbot/env/bin/buildbot create-master -f /usr/local/src/buildbot/masters/master
+  ansible.builtin.command: /usr/local/src/buildbot/env/bin/buildbot create-master -f /usr/local/src/buildbot/masters/master
   become_user: buildbot
 
 - name: Upgrade buildbot database
-  command: /usr/local/src/buildbot/env/bin/buildbot upgrade-master /usr/local/src/buildbot/masters/master
+  ansible.builtin.command: /usr/local/src/buildbot/env/bin/buildbot upgrade-master /usr/local/src/buildbot/masters/master
   become_user: buildbot
 
 - name: Restart mariadb
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: mariadb
     enabled: true
     state: restarted
 
 - name: Restart rsyncd
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: rsync
     enabled: true

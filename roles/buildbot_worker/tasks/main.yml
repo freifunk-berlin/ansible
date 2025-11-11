@@ -1,7 +1,6 @@
 ---
-
 - name: Install dependencies for falter build system and openwrt
-  apt:
+  ansible.builtin.apt:
     name:
       - git
       - virtualenv
@@ -16,14 +15,14 @@
     cache_valid_time: 3600
 
 - name: Create unprivileged user for buildbot
-  user:
+  ansible.builtin.user:
     name: "{{ machine_user }}"
 
 - name: Create mountpoint for ramdisk
   ansible.builtin.file:
     path: /ramdisk/
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
   when: bbworker_ramdisk
@@ -33,9 +32,9 @@
     path: /ramdisk/
     src: tmpfs
     fstype: tmpfs
-    opts: "size={{ bbworker_ramdisk_size }}"
+    opts: size={{ bbworker_ramdisk_size }}
     state: present
-    boot: yes
+    boot: true
   when: bbworker_ramdisk
   become: true
 
@@ -43,23 +42,23 @@
   ansible.builtin.file:
     path: "{{ bbworker_path }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
 
 - name: Create path for custom podman storage config
   ansible.builtin.file:
-    path: "/home/{{ machine_user }}/.config/containers/"
+    path: /home/{{ machine_user }}/.config/containers/
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ machine_user }}"
     group: "{{ machine_user }}"
   when: bbworker_ramdisk
 
 - name: Custom podman storage config
   ansible.builtin.copy:
-    dest: "/home/{{ machine_user }}/.config/containers/storage.conf"
-    mode: '0644'
+    dest: /home/{{ machine_user }}/.config/containers/storage.conf
+    mode: "0644"
     content: |
       [storage]
       driver = "overlay"
@@ -90,7 +89,7 @@
   when: bbworker_ramdisk is true
 
 - name: Install buildbot-worker
-  pip:
+  ansible.builtin.pip:
     name: buildbot-worker
     version: "{{ buildbot_version }}"
     state: present
@@ -102,8 +101,8 @@
 
 - name: Persist ramdisk-Worker
   ansible.builtin.copy:
-    dest: "/usr/local/bin/reinstall_bbworker.sh"
-    mode: '0755'
+    dest: /usr/local/bin/reinstall_bbworker.sh
+    mode: "0755"
     content: |
       #!/bin/bash
       # (re-)creates the buildbot work er on the ramdisk, everytime the system reboots.
@@ -125,16 +124,15 @@
   when: bbworker_ramdisk
 
 - name: Flush handlers
-  meta: flush_handlers
-
+  ansible.builtin.meta: flush_handlers
 - name: Add worker info directory
-  file:
+  ansible.builtin.file:
     path: "{{ bbworker_path }}info"
     state: directory
     mode: "0755"
 
 - name: Add workers admin-info
-  copy:
+  ansible.builtin.copy:
     content: "{{ bbworker_contact }}"
     dest: "{{ bbworker_path }}info/admin"
     mode: "0644"
@@ -143,7 +141,7 @@
   notify: Restart buildbot-worker
 
 - name: Add worker description
-  copy:
+  ansible.builtin.copy:
     content: "{{ bbworker_info }}"
     dest: "{{ bbworker_path }}/info/host"
     mode: "0644"
