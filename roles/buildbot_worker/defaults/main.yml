@@ -1,5 +1,5 @@
 ---
-buildbot_version: "4.3.0"
+buildbot_version: 4.3.0
 
 bbmaster_fqdn: buildbot.berlin.freifunk.net
 bbmaster_port: 9989
@@ -11,5 +11,5 @@ bbworker_info: Worker administered by ffb-ansible-repo
 machine_user: bbworker
 
 # gets overridden on hosts, that use a ramdisk
-bbworker_ramdisk: no
+bbworker_ramdisk: false
 bbworker_path: /home/{{ machine_user }}/{{ bbworker_dir }}

@@ -1,6 +1,6 @@
 ---
 - name: Install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - zstd
       - build-essential
@@ -17,10 +17,10 @@
     cache_valid_time: 3600
 
 - name: Copy mariadb server config
-  template:
-    src: "mariadb-server.cnf.j2"
+  ansible.builtin.template:
+    src: mariadb-server.cnf.j2
     dest: /etc/mysql/mariadb.conf.d/50-server.cnf
-    mode: 0640
+    mode: "0640"
     owner: buildbot
     group: root
   notify: Restart mariadb
@@ -34,7 +34,7 @@
   community.mysql.mysql_user:
     name: buildbot
     password: "{{ buildbot_mariadb_user_password }}"
-    priv: 'buildbot.*:ALL'
+    priv: buildbot.*:ALL
     state: present
 
 - name: Create buildbot user
@@ -45,12 +45,12 @@
     home: /usr/local/src/buildbot
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ item }}"
     owner: buildbot
     group: www-data
-    mode: 0755
+    mode: "0755"
     recurse: false
   with_items:
     - /usr/local/src/www/htdocs/buildbot/
@@ -58,16 +58,17 @@
     - /usr/local/src/www/htdocs/.well-known/
 
 # it looks like there is a dependency not included into buildbot[bundle]
-- name: Install dependencies for GitHub-OAuth in venv
-  pip:
+- name: Install dependencies in venv
+  ansible.builtin.pip:
     name:
       - requests
       # - txrequests # the software stated, that treq would be faster by 2.8 times or so...
       - treq
+      - mysqlclient
     virtualenv: /usr/local/src/buildbot/env
 
 - name: Install buildbot in venv
-  pip:
+  ansible.builtin.pip:
     name: buildbot[bundle]
     version: "{{ buildbot_version }}"
     virtualenv: /usr/local/src/buildbot/env
@@ -76,19 +77,14 @@
     - Upgrade buildbot database
     - Restart buildbot
 
-- name: Install mysql dependencies in venv
-  pip:
-    name: mysqlclient
-    virtualenv: /usr/local/src/buildbot/env
-
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: "Buildbot-config: copy static files"
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /usr/local/src/buildbot/masters/master/
-    mode: 0640
+    mode: "0640"
     owner: buildbot
     group: root
   notify: Restart buildbot
@@ -100,18 +96,18 @@
     - targets.py
 
 - name: "Buildbot-config: render config.py"
-  template:
-    src: "config.py.j2"
-    dest: "/usr/local/src/buildbot/masters/master/config.py"
-    mode: 0640
+  ansible.builtin.template:
+    src: config.py.j2
+    dest: /usr/local/src/buildbot/masters/master/config.py
+    mode: "0640"
     owner: buildbot
     group: root
   notify: Restart buildbot
 
 - name: Add buildbot systemd-service-module
-  copy:
+  ansible.builtin.copy:
     dest: /etc/systemd/system/buildbot.service
-    mode: 0644
+    mode: "0644"
     content: |
       [Unit]
       Description=Buildbot-master for Freifunk-Berlin
@@ -129,19 +125,19 @@
   notify: Restart buildbot
 
 - name: Is firmware-selector initialised already?
-  stat:
+  ansible.builtin.stat:
     path: /usr/local/src/www/htdocs/firmware-selector
   register: fw_selector
 
 - name: Checkout firmware-selector
-  git:
-    repo: 'https://github.com/freifunk-berlin/falter-firmware-selector.git'
+  ansible.builtin.git:
+    repo: https://github.com/freifunk-berlin/falter-firmware-selector.git
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
   when: not fw_selector.stat.exists
 
 - name: Insert cronjob for firmware-selector
-  cron:
+  ansible.builtin.cron:
     name: update snapshots in firmware-selector regularily.
     minute: "*/10"
     job: /usr/local/src/www/htdocs/firmware-selector/get_profiles_local.sh
@@ -149,10 +145,10 @@
     cron_file: ansible_fwselector_update
 
 - name: Copy signing keys
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /usr/local/src/buildbot/masters/master/
-    mode: 0700
+    mode: "0700"
     owner: buildbot
     group: root
   with_items:
@@ -160,7 +156,7 @@
     - packagefeed_master.sec
 
 - name: Copy keys
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /usr/local/src
     mode: "0600"
@@ -171,7 +167,7 @@
     - packagefeed_master.sec
 
 - name: Copy helper scripts (fw-selector)
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: /usr/local/src
     mode: "0755"
@@ -181,19 +177,20 @@
     - generate_autoupdate_json.py
 
 - name: Insert cronjob for table-of-hardware synchronization
-  cron:
+  ansible.builtin.cron:
     name: sync table-of-hardware
-    day: '*'
+    day: "*"
     hour: 1
     minute: 0
-    job: "cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp openwrt-table-of-hardware.csv"
+    job: cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp 
+      openwrt-table-of-hardware.csv
     user: buildbot
     cron_file: sync_table_of_hardware
 
 - name: Add rsync daemon config
-  copy:
+  ansible.builtin.copy:
     dest: /etc/rsyncd.conf
-    mode: 0644
+    mode: "0644"
     content: |
       pid file = /var/run/rsyncd.pid
       log file = /var/log/rsyncd.log
@@ -208,9 +205,9 @@
   notify: Restart rsyncd
 
 - name: Add rsync daemon logins
-  copy:
+  ansible.builtin.copy:
     dest: /etc/rsyncd.secrets
-    mode: 0600
+    mode: "0600"
     content: |
       ffmirror:{{ buildbot_rsync_mirror_password }}
   notify: Restart rsyncd
