@@ -22,7 +22,7 @@ buildbot.berlin.freifunk.net                                     # the buildbot 
 [tunneldigger]
 b.tunnel.berlin.freifunk.net # freifunk-gw01
 d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
-# f.tunnel.berlin.freifunk.net # vpn03h.berlin.freifunk.net currently shut down
+f.tunnel.berlin.freifunk.net # former vpn03h.berlin.freifunk.net 
 
 
 [users_only:children]
