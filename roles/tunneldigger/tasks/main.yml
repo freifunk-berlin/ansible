@@ -103,6 +103,7 @@
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: "1"
+    sysctl_file: /etc/sysctl.d/freifunk-tunneldigger.conf
     sysctl_set: true
 
 - name: Copy prometheus node_exporter script for tunneldigger
