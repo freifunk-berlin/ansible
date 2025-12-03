@@ -38,19 +38,6 @@
     group: root
   notify: Restart prometheus
 
-- name: Start prometheus collectd-exporter
-  community.docker.docker_container:
-    name: collectd-exporter
-    state: started
-    restart_policy: unless-stopped
-    image: prom/collectd-exporter
-    command: --collectd.listen-address=":25826"
-    ports:
-      - 9104:9103
-      - 127.0.0.1:25827:25826/udp
-  tags:
-    - collectd-exporter
-
 - name: Copy grafana config
   ansible.builtin.template:
     dest: /etc/grafana/grafana.ini

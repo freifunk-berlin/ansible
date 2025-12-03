@@ -55,3 +55,12 @@
   ansible.builtin.systemd:
     name: "fstrim.timer"
     enabled: true
+
+
+- name: Create freifunk directory
+  ansible.builtin.file:
+    path: /etc/freifunk
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"

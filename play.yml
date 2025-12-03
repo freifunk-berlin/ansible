@@ -46,6 +46,7 @@
   roles:
     - caddy
     - ff_monitor
+    - docker
 
 - name: Set up tunneldigger
   hosts: tunneldigger
