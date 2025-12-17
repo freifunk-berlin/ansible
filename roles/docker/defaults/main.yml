@@ -1,0 +1,7 @@
+---
+ansible_become: true # noqa: var-naming[no-role-prefix]
+docker_packages:
+  - docker.io
+  - docker-compose
+
+# vim: set filetype=yaml:

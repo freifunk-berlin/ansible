@@ -1,0 +1,38 @@
+---
+- name: Install apt packages
+  ansible.builtin.apt:
+    cache_valid_time: "{{ 10 * 60 }}"  # 10 minutes, in seconds
+    pkg: "{{ docker_packages }}"
+  when: docker_packages is defined
+
+- name: Enable Services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: true
+  loop: "{{ docker_enable_service }}"
+  when: docker_enable_service is defined
+
+- name: Restart Services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: restarted
+  loop: "{{ docker_restart_service }}"
+  when: docker_restart_service is defined
+
+- name: Create freifunk directory
+  ansible.builtin.file:
+    path: /etc/freifunk
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add docker-compose file
+  ansible.builtin.template:
+    src: "{{ docker_compose_file }}"
+    dest: /etc/freifunk/docker-compose.yml
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Run docker-compose
+  when: docker_compose_file is defined
