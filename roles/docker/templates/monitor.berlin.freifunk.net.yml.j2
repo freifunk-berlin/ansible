@@ -1,0 +1,11 @@
+---
+services:
+  collectd-prometheus-exporter:
+    restart: unless-stopped
+    image: prom/collectd-exporter:latest
+    ports:
+      - 9104:9103
+      - 127.0.0.1:25827:25826/udp
+    command: --collectd.listen-address=":25826"
+
+# vim: set filetype=yaml:
