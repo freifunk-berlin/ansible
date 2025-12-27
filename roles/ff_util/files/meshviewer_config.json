@@ -363,6 +363,11 @@
       "name": "Monitoring",
       "title": "Grafana",
       "href": "https://monitor.berlin.freifunk.net/grafana/d/KDjDQX24z/node-stats?var-node={NODE_NAME}"
+    },
+      {
+      "name": "Wiki",
+      "title": "Wiki",
+      "href": "https://util.berlin.freifunk.net/knoteninfo?knoten={NODE_NAME}&typ=wiki"
     }
   ]
 }
