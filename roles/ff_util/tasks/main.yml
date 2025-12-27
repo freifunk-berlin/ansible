@@ -7,8 +7,8 @@
     owner: caddy
     group: caddy
   loop:
-    - "/opt/meshviewer"
-    - "/var/www/hopglass.berlin.freifunk.net/www/"
+    - /opt/meshviewer
+    - /var/www/hopglass.berlin.freifunk.net/www/
 
 # Download latest meshviewer release from https://github.com/freifunk/meshviewer/releases
 # and unpack to /var/www/hopglass.berlin.freifunk.net/www/
@@ -38,6 +38,7 @@
       - python-dateutil
       - requests
       - tornado
+      - pytz
     virtualenv: /opt/meshviewer/venv
     virtualenv_command: /usr/bin/python3 -m venv
 

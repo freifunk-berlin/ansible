@@ -357,5 +357,12 @@
     "fr",
     "tr",
     "ru"
+  ],
+  "nodeInfos" :[
+      {
+      "name": "Monitoring",
+      "title": "Grafana",
+      "href": "https://monitor.berlin.freifunk.net/grafana/d/KDjDQX24z/node-stats?var-node={NODE_NAME}"
+    }
   ]
 }
