@@ -364,7 +364,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=%(prop:variant)s build/build.sh %(prop:falterVersion)s %(prop:target)s all \
+    && env OPENWRT_MIRROR=https://mirror.freifunk.dev FALTER_VARIANT=%(prop:variant)s build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
