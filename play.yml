@@ -98,3 +98,11 @@
     - backup
   tags:
     - backup
+
+- name: Set up mirror
+  hosts: mirror
+  become: true
+  roles:
+    - caddy
+  tags:
+    - mirror
