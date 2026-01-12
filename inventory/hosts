@@ -64,4 +64,4 @@ unifi
 download
 
 [mirror]
-mirror.berlin.freifunk.net ansible_host=192.168.178.144
+mirror.berlin.freifunk.net
