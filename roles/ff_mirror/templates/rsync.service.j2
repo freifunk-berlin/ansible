@@ -1,0 +1,19 @@
+[Unit]
+Description=Freifunk mirror rsync daemon
+ConditionPathExists=/etc/rsyncd.conf
+After=network.target
+Documentation=man:rsync(1) man:rsyncd.conf(5)
+
+[Service]
+ExecStart=/usr/bin/rsync --daemon --no-detach
+RestartSec=1
+Restart=on-failure
+Nice=10
+ProtectSystem=full
+ProtectHome=on
+PrivateDevices=on
+NoNewPrivileges=on
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

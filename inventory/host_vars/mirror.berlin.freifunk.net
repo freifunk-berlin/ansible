@@ -1,0 +1,4 @@
+---
+caddy_caddyfile: Caddyfile_mirror.j2
+
+# vim: set filetype=yaml:

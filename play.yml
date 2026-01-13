@@ -98,3 +98,12 @@
     - backup
   tags:
     - backup
+
+- name: Set up mirror
+  hosts: mirror
+  become: true
+  roles:
+    - caddy
+    - ff_mirror
+  tags:
+    - mirror

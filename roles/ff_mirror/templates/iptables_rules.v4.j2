@@ -1,0 +1,12 @@
+*filter
+:INPUT ACCEPT [629:513244]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p tcp -m tcp --dport 873 -m comment --comment "Allow rsyncd" -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -m comment --comment "Allow http" -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 443 -m comment --comment "Allow https" -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -m comment --comment "Allow ssh" -j ACCEPT
+-A INPUT -s 77.87.50.8/32 -p tcp -m tcp --dport 9100 -m comment --comment "Allow Monitor v4" -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -m comment --comment "Allow Established" -j ACCEPT
+-A INPUT -m comment --comment "disallow everything else" -j DROP
+COMMIT
