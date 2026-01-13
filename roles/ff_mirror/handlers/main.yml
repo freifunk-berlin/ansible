@@ -5,7 +5,7 @@
     state: restarted
     enabled: true
 
-- name: Reload iptables # noqa
+- name: Reload iptables # noqa: no-changed-when
   ansible.builtin.command:
     cmd: "{{ item }}"
   with_items:
