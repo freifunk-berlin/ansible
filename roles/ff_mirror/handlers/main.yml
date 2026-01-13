@@ -1,0 +1,13 @@
+---
+- name: Restart rsyncd
+  ansible.builtin.systemd:
+    name: rsync
+    state: restarted
+    enabled: true
+
+- name: Reload iptables # noqa
+  ansible.builtin.command:
+    cmd: "{{ item }}"
+  with_items:
+    - iptables-restore /etc/iptables/rules.v4
+    - ip6tables-restore /etc/iptables/rules.v6

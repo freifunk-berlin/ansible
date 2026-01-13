@@ -104,5 +104,6 @@
   become: true
   roles:
     - caddy
+    - ff_mirror
   tags:
     - mirror

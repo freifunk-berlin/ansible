@@ -1,0 +1,12 @@
+uid = nobody
+gid = nogroup
+use chroot = yes
+read only = yes
+open noatime = yes
+refuse options = delete
+syslog facility = local5
+pid file = /var/run/rsyncd.pid
+
+[openwrt]
+    path = /data/mirror/downloads.openwrt.org/
+    comment = Mirror of OpenWrt firmware and packages
