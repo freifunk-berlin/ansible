@@ -1,19 +1,20 @@
 ---
-# - name: Install required packages
-#  ansible.builtin.package:
-#    name:
-#      - rsync
-#    state: present
+ - name: Install required packages
+  ansible.builtin.package:
+    name:
+      - rsync
+    state: present
 
-# - name: Create directories
-#   ansible.builtin.file:
-#     dest: "{{ item }}"
-#     state: directory
-#     mode: "0750"
-#     owner: caddy
-#     group: caddy
-#   loop:
-#     - "/data/mirror"
+ - name: Create directories
+   ansible.builtin.file:
+     dest: "{{ item }}"
+     state: directory
+     mode: "0750"
+     owner: root
+     group: root
+   loop:
+     - "/data/mirror"
+
 - name: Copy rsyncd config
   ansible.builtin.template:
     dest: "{{ item.dest }}"
