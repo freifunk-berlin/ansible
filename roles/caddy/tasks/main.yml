@@ -41,3 +41,11 @@
     owner: caddy
     group: caddy
   notify: Restart caddy
+
+- name: Copy Dirlist template
+  ansible.builtin.copy:
+    dest: /etc/caddy/ff_dirlisting_template.html
+    src: "ff_dirlisting_template.html"
+    mode: "0640"
+    owner: caddy
+    group: caddy

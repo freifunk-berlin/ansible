@@ -1,19 +1,30 @@
 ---
- - name: Install required packages
+- name: Install required packages
   ansible.builtin.package:
     name:
       - rsync
     state: present
 
- - name: Create directories
-   ansible.builtin.file:
-     dest: "{{ item }}"
-     state: directory
-     mode: "0750"
-     owner: root
-     group: root
-   loop:
-     - "/data/mirror"
+- name: Create directories
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: caddy
+    group: caddy
+  loop:
+    - "/data/mirror"
+
+- name: Copy Readme
+  ansible.builtin.template:
+    dest: "{{ item.dest }}"
+    src: "{{ item.template }}"
+    mode: "0644"
+    owner: caddy
+    group: caddy
+  notify: Restart rsyncd
+  with_items:
+    - { "template": "mirror.README.md.j2", "dest": "/data/mirror/README.md" }
 
 - name: Copy rsyncd config
   ansible.builtin.template:
@@ -25,7 +36,8 @@
   notify: Restart rsyncd
   with_items:
     - { "template": "rsync.service.j2", "dest": "/lib/systemd/system/rsync.service" }
-    - { "template": "rsync.conf.j2", "dest": "/etc/rsyncd.conf" }
+    - { "template": "rsyncd.motd.j2", "dest": "/etc/rsyncd.motd" }
+    - { "template": "rsyncd.conf.j2", "dest": "/etc/rsyncd.conf" }
 
 - name: Copy firewall config
   ansible.builtin.template:
