@@ -56,7 +56,6 @@
     name: "fstrim.timer"
     enabled: true
 
-
 - name: Create freifunk directory
   ansible.builtin.file:
     path: /etc/freifunk
