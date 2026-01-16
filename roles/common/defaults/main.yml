@@ -12,11 +12,17 @@ common_packages_base:
   - mosh
   - nano
   - prometheus-node-exporter
+  - postfix
   - tcpdump
   - tmux
   - vnstat
   - zsh
 
 common_packages_extra: []
-
 common_log_retention: 30
+
+common_domain: "berlin.freifunk.net"
+common_nameservers:
+  - 9.9.9.9 # quad9
+  - 149.112.112.112
+  - 194.150.168.168 # as250

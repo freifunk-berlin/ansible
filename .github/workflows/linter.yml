@@ -42,7 +42,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
@@ -52,9 +52,37 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v5
+        uses: super-linter/super-linter@v8.3.2
         env:
           VALIDATE_ALL_CODEBASE: false
           # Change to 'master' if your main branch differs
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Disable eslint because we use biome
+          VALIDATE_VUE: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TSX: false
+          VALIDATE_JSX: false
+          VALIDATE_JAVASCRIPT_ES: false
+          # disable prettier since we use biome
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_VUE_PRETTIER: false
+          VALIDATE_TYPESCRIPT_PRETTIER: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_JSX_PRETTIER: false
+          VALIDATE_JSONC_PRETTIER: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_HTML_PRETTIER: false
+          VALIDATE_GRAPHQL_PRETTIER: false
+          VALIDATE_CSS_PRETTIER: false
+          # disable black for ruff
+          VALIDATE_PYTHON_BLACK: false
+
+
+
+
+
+
+
+
