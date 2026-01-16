@@ -42,7 +42,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
@@ -52,9 +52,15 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v5
+        uses: super-linter/super-linter/slim@v8
         env:
           VALIDATE_ALL_CODEBASE: false
           # Change to 'master' if your main branch differs
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Disable Noisy linters
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          VALIDATE_JSCPD: false
+          VALIDATE_YAML_PRETTIER: false
