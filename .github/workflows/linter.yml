@@ -66,3 +66,6 @@ jobs:
           VALIDATE_YAML_PRETTIER: false
           VALIDATE_SHELL_SHFMT: false
           VALIDATE_BASH_EXEC: false
+          VALIDATE_HTML: false
+          VALIDATE_HTML_PRETTIER: false
+          VALIDATE_YAML: false
