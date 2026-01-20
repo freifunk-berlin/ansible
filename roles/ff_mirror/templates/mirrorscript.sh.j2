@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+OPENWRT_MIRROR="rsync://ftp.halifax.rwth-aachen.de/openwrt/"
+OPENWRT_MIRROR_DIR="/data/mirror/downloads.openwrt.org"
+
+RSYNC_OPTIONS="--recursive --no-motd --links --times --stats --progress --no-motd --itemize-changes"
+
+
+rsync $RSYNC_OPTIONS "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
