@@ -10,3 +10,9 @@ motd file = /etc/rsyncd.motd
 
 [openwrt]
     path = /data/mirror/downloads.openwrt.org/
+    exclude = snapshots
+
+[openwrt-snapshots]
+    path = /data/mirror/downloads.openwrt.org/
+    exclude = *
+    include = snapshots index.html .versions.json
