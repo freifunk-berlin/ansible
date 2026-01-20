@@ -9,20 +9,20 @@ OPENWRT_MIRROR_DIR="/data/mirror/downloads.openwrt.org"
 LOCKFILE="/tmp/ff-mirror-rsync.lock"
 
 # Add --delete-delay when we are sure the upstream is completely mirrored
-RSYNC_OPTIONS="--recursive --no-motd --links --times  --perms --hard-links --sparse --delay-updates --stats --progress --no-motd --itemize-changes --exclude='/lastsync' --exclude='/upstream-mirror' --exclude="
+RSYNC_OPTIONS='--recursive --no-motd --links --times  --perms --hard-links --sparse --delay-updates --stats --progress --no-motd --itemize-changes --exclude="/lastsync" --exclude="/upstream-mirror" --exclude='
 
 
 echo "$OPENWRT_MIRROR" > "$OPENWRT_MIRROR_DIR"/upstream-mirror
 
 # Run to sync everything
-flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
+flock -n "$LOCKFILE" rsync "$RSYNC_OPTIONS" --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
 date +%s > "$OPENWRT_MIRROR_DIR"/lastsync
 # Second run where we also delete files (but not *SNAPSHOTS)
 
-flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS --exclude="releases/*-SNAPSHOT" --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
+flock -n "$LOCKFILE" rsync "$RSYNC_OPTIONS" --exclude="releases/*-SNAPSHOT" --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
 
 # Sync snapshots separately
-flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS --exclude="packages/.scheduled_for_delete/" "$OPENWRT_SNAPSHOT_MIRROR" "$OPENWRT_MIRROR_DIR"/snapshots/
+flock -n "$LOCKFILE" rsync "$RSYNC_OPTIONS" --exclude="packages/.scheduled_for_delete/" "$OPENWRT_SNAPSHOT_MIRROR" "$OPENWRT_MIRROR_DIR"/snapshots/
 
 date +%s > "$OPENWRT_MIRROR_DIR"/snapshots/lastsync
 
