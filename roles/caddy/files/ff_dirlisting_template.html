@@ -832,8 +832,11 @@ footer {
 			</div>
 		</header>
 
-{{if (fileExists "README.md")}}
-{{$md := (include "README.md")}}
+{{$pathParts := splitList "/" .OriginalReq.URL.Path}}
+{{$ReadmePath := (slice $pathParts 1 | join "/")}}
+{{$ReadmeFilename := printf "%sREADME.md" $ReadmePath}}
+{{if (fileExists $ReadmeFilename)}}
+{{$md := (include $ReadmeFilename)}}
 		<div class="wrapper">
             <main>
 				<div class="readme">
