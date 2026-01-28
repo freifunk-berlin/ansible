@@ -30,7 +30,6 @@ This repository currently manages these services:
 - Save the secret encryption password for ansible-vault under `./.vaultpass`
   - For alternative methods look here: <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
 
-
 ## Structure
 
 We follow an adapted version of the [Ansible alternative layout](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_best_practices.html#alternative-directory-layout).
