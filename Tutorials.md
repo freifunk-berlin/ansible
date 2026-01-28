@@ -44,7 +44,7 @@ After that, just run the rest of the playbooks for the given machine, accessing 
 
 ## Provision a machine to buildbotworker
 
-For adding your buildbotworker machine to this repo, we need to follow three steps. The machine does not need to be reachable from the internet. It will connect itself to the buildbot, so it only needs basic access to the internet.
+For adding your buildbotworker machine to this repository, we need to follow three steps. The machine does not need to be reachable from the internet. It will connect itself to the buildbot, so it only needs basic access to the internet.
 
 ### Get your machine known to Ansible
 
