@@ -28,7 +28,7 @@ Provisioning a new machine happens in two stages:
 
 For this stage, you need to access the machine as root user. Add the machine to the `hosts`-file at `inventory/hosts` and write it into the right section to tag its purpose. For defining a machine to serve as a buildbot worker, it should look like something similar to this:
 
-```
+```ini
 [...]
 
 [configserver]
@@ -50,7 +50,7 @@ For adding your buildbotworker machine to this repo, we need to follow three ste
 
 To get your machine known to ansible, add it to the `hosts`-file at `inventory/hosts`.
 
-```
+```ini
 [buildbotworker]
 buildbot-worker-01 ansible_host=85.215.202.123                  # reachable using a public IP
 buildbot-worker-02 ansible_host=worker2.example.com             # reachable using a public hostname
