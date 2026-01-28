@@ -1,6 +1,6 @@
 # Tutorials
 
-In this file, you will find some tutorials describing common workflows for using this repo. We generally assume, that all Hosts, that will be managed by this ansible repository run a recent minimal stable Debian version (at time of writing: Debian 11). Our custom roles do mostly rely on this.
+In this file, you will find some tutorials describing common workflows for using this repository. We generally assume, that all Hosts, that will be managed by this Ansible repository run a recent minimal stable Debian version (at time of writing: Debian 11). Our custom roles do mostly rely on this.
 
 ## Prerequisites on to-be-provisioned machine
 
@@ -13,7 +13,7 @@ In this file, you will find some tutorials describing common workflows for using
 
 - this repository cloned
 - python3 installation
-- ansible installation (`pip install -r requirements.txt`)
+- Ansible installation (`pip install -r requirements.txt`)
 
 We use ansible-vaultpass for storing secrets encrypted in this repository. For provisioning machines with this repository, you need a password in the `.vaultpass` files for decrypting the variables.
 
@@ -28,7 +28,7 @@ Provisioning a new machine happens in two stages:
 
 For this stage, you need to access the machine as root user. Add the machine to the `hosts`-file at `inventory/hosts` and write it into the right section to tag its purpose. For defining a machine to serve as a buildbot worker, it should look like something similar to this:
 
-```
+```ini
 [...]
 
 [configserver]
@@ -40,17 +40,17 @@ After that, you can start the first provision stage with `ansible-playbook play.
 
 ### 2. Provision machine for its actual purpose
 
-After that, just run the rest of the playbooks for the given machine, accessing it with your own ssh login: `ansible-playbook play.yml --limit=testmachine`.
+After that, just run the rest of the playbooks for the given machine, accessing it with your own SSH login: `ansible-playbook play.yml --limit=testmachine`. Don't forget to add `--user testuser` if the name of your local user differs from the remote user.
 
 ## Provision a machine to buildbotworker
 
-For adding your buildbotworker machine to this repo, we need to follow three steps. The machine does not need to be reachable from the internet. It will connect itself to the buildbot, so it only needs basic access to the internet.
+For adding your buildbotworker machine to this repository, we need to follow three steps. The machine does not need to be reachable from the internet. It will connect itself to the buildbot, so it only needs basic access to the internet.
 
-### Get your machine known to ansible
+### Get your machine known to Ansible
 
-To get your machine known to ansible, add it to the `hosts`-file at `inventory/hosts`.
+To get your machine known to Ansible, add it to the `hosts`-file at `inventory/hosts`.
 
-```
+```ini
 [buildbotworker]
 buildbot-worker-01 ansible_host=85.215.202.123                  # reachable using a public IP
 buildbot-worker-02 ansible_host=worker2.example.com             # reachable using a public hostname
