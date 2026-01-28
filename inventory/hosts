@@ -22,7 +22,7 @@ buildbot.berlin.freifunk.net                                     # the buildbot 
 [tunneldigger]
 b.tunnel.berlin.freifunk.net # freifunk-gw01
 d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
-f.tunnel.berlin.freifunk.net # former vpn03h.berlin.freifunk.net 
+f.tunnel.berlin.freifunk.net # former vpn03h.berlin.freifunk.net
 
 
 [users_only:children]
@@ -69,3 +69,4 @@ mirror.berlin.freifunk.net
 
 [inventory]
 inventory.berlin.freifunk.net ansible_host=77.87.49.22
+
