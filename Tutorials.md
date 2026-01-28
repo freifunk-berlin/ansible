@@ -40,7 +40,7 @@ After that, you can start the first provision stage with `ansible-playbook play.
 
 ### 2. Provision machine for its actual purpose
 
-After that, just run the rest of the playbooks for the given machine, accessing it with your own ssh login: `ansible-playbook play.yml --limit=testmachine`.
+After that, just run the rest of the playbooks for the given machine, accessing it with your own ssh login: `ansible-playbook play.yml --limit=testmachine`. Don't forget to add `--user testuser` if the name of your local user differs from the remote user.
 
 ## Provision a machine to buildbotworker
 
