@@ -28,6 +28,19 @@ berlin.freifunk.net {
                 path /
         }
 
+        handle_errors 404 {
+                handle /de/* {
+                        rewrite /de/404.html
+                }
+                handle /en/* {
+                        rewrite /en/404.html
+                }
+                handle /* {
+                        rewrite /en/404.html
+                }
+                file_server
+        }
+
         redir @de_before_en /de/ 302
         redir @en_before_de /en/ 302
         redir @de_only /de/ 302
