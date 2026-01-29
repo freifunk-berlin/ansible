@@ -1,0 +1,9 @@
+# This file is managed by Ansible. Do not edit manually.
+# It is generated in the common role
+
+domain {{ common_domain }}
+search {{ common_domain}}
+
+{% for nameserver in common_nameservers %}
+nameserver {{ nameserver }}
+{% endfor %}

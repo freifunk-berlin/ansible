@@ -24,3 +24,10 @@
     name: systemd-journald
     enabled: true
     state: restarted
+
+- name: Restart postfix
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: postfix
+    enabled: true
+    state: restarted

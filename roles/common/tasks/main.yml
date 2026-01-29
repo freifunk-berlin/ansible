@@ -40,7 +40,6 @@
 - name: Include monitoring tasks
   ansible.builtin.include_tasks: monitoring.yml
 
-
 - name: Include logrotate tasks
   ansible.builtin.include_tasks: logrotate.yml
 
@@ -49,7 +48,15 @@
     name: qemu-guest-agent
     state: present
     update_cache: true
-  when: ansible_chassis_vendor == "QEMU"
+  when: ansible_virtualization_role == "guest"
+
+- name: Disable openipmi service on VMs
+  ansible.builtin.service:
+    name: openipmi
+    enabled: false
+    state: stopped
+  ignore_errors: True # noqa 
+  when: ansible_virtualization_role == "guest"
 
 - name: Enable fstrim timer
   ansible.builtin.systemd:
@@ -63,3 +70,21 @@
     owner: root
     group: root
     mode: "0755"
+
+- name: Set Nameserver
+  ansible.builtin.template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: "0644"
+    owner: root
+    group: root
+
+
+- name: Copy postfix config
+  ansible.builtin.template:
+    dest: /etc/postfix/main.cf
+    src: postfix_main.cf.j2
+    mode: "0640"
+    owner: root
+    group: root
+  notify: Restart postfix
