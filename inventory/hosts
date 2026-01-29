@@ -29,7 +29,7 @@ f.tunnel.berlin.freifunk.net # former vpn03h.berlin.freifunk.net
 meshtastic
 
 [meshtastic]
-meshtastic.berlin.freifunk.net ansible_host=77.87.49.21
+meshtastic.berlin.freifunk.net
 
 [utils]
 util.berlin.freifunk.net # hopglass
@@ -52,10 +52,10 @@ a36s-hyp03.berlin.freifunk.net
 l105-hyp01.berlin.freifunk.net
 
 [wiki]
-wiki.freifunk.net ansible_host=dev.wiki.freifunk.net
+wiki.freifunk.net
 
 [backup_hosts]
-backup.berlin.freifunk.net ansible_host=77.87.50.15
+backup.berlin.freifunk.net
 
 [backup_hosts:children]
 wiki
