@@ -15,12 +15,12 @@ from buildbot.plugins import *
 
 
 # jscpd:ignore-start
-def targetsConfig(c, config):
-    c["schedulers"].append(
+def targetsConfig(bmc, config):
+    bmc["schedulers"].append(
         schedulers.Triggerable(name="dummy/targets", builderNames=["dummy/targets"])
     )
 
-    c["schedulers"].append(
+    bmc["schedulers"].append(
         schedulers.ForceScheduler(
             name="force-targets",
             label="Snapshot",
@@ -57,7 +57,7 @@ def targetsConfig(c, config):
         )
     )
 
-    c["schedulers"].append(
+    bmc["schedulers"].append(
         schedulers.ForceScheduler(
             name="force-release",
             label="Release",
@@ -91,7 +91,7 @@ def targetsConfig(c, config):
         )
     )
 
-    c["builders"].append(
+    bmc["builders"].append(
         util.BuilderConfig(
             name="builds/targets",
             workernames=["masterworker"],
@@ -101,7 +101,7 @@ def targetsConfig(c, config):
         )
     )
 
-    c["builders"].append(
+    bmc["builders"].append(
         util.BuilderConfig(
             name="dummy/targets",
             workernames=config["workerNames"],
@@ -115,7 +115,7 @@ def targetsConfig(c, config):
         )
     )
 
-    return c
+    return bmc
 
 
 # jscpd:ignore-end

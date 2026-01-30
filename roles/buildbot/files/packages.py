@@ -14,12 +14,12 @@ from buildbot.plugins import *
 # pylint: disable=E0602
 
 
-def packagesConfig(c, config):
-    c["schedulers"].append(
+def packagesConfig(bmc, config):
+    bmc["schedulers"].append(
         schedulers.Triggerable(name="dummy/packages", builderNames=["dummy/packages"])
     )
 
-    c["schedulers"].append(
+    bmc["schedulers"].append(
         schedulers.ForceScheduler(
             name="force-packages",
             buttonName="Build Package Feed",
@@ -45,7 +45,7 @@ def packagesConfig(c, config):
         )
     )
 
-    c["builders"].append(
+    bmc["builders"].append(
         util.BuilderConfig(
             name="builds/packages",
             workernames=["masterworker"],
@@ -55,7 +55,7 @@ def packagesConfig(c, config):
         )
     )
 
-    c["builders"].append(
+    bmc["builders"].append(
         util.BuilderConfig(
             name="dummy/packages",
             workernames=config["workerNames"],
@@ -69,7 +69,7 @@ def packagesConfig(c, config):
         )
     )
 
-    return c
+    return bmc
 
 
 # Passed by packagesFactory to AsyncBuildGenerator to be called for each arch.
