@@ -1,7 +1,7 @@
 ---
 caddy_caddyfile: Caddyfile_inventory.j2
 
-docker_compose_file: inventory.stadtfunk.net.yml.j2
+docker_compose_file: inventory.berlin.freifunk.net.yml.j2
 
 backup_user: download-master
 backup_password: !vault |
