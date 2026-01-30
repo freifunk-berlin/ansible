@@ -107,3 +107,13 @@
     - ff_mirror
   tags:
     - mirror
+
+- name: Set up inventory
+  hosts: inventory
+  become: true
+  roles:
+    - caddy
+    - inventory
+    - docker
+  tags:
+    - inventory
