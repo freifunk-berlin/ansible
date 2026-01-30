@@ -42,6 +42,9 @@ config = {
     'packages_repo': 'https://github.com/freifunk-berlin/falter-packages.git',
     'packages_branches': ['main','openwrt-25.12','openwrt-24.10','openwrt-23.05','openwrt-22.03','openwrt-21.02','testbuildbot'],
 
+    'openwrtMirror': 'https://mirror.berlin.freifunk.net/downloads.openwrt.org',
+    'falterMirror': '',
+
     # Version of the Alpine Linux container: edge, 3.17, 3.16, ...
     # TODO: we're currently stuck at 3.18 because 3.19+ have a segfault:
     #   /build/scripts/ipkg-build: line 150: 19268 Segmentation fault      mkdir "$tmp_dir"

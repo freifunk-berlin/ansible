@@ -249,13 +249,15 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns --tmpfs /root:rw
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
-    && env FALTER_MIRROR=https://mirror.freifunk.dev build/build.sh %(prop:branch)s %(prop:arch)s out/ \
+    && env OPENWRT_MIRROR=%(kw:owMirror)s FALTER_MIRROR=%(kw:fMirror)s build/build.sh %(prop:branch)s %(prop:arch)s out/ \
     && rm -vf out/%(prop:branch)s/%(prop:arch)s/public-key.pem \
 ) >&2 \
 && cd /root/falter-packages/out/ \
 && tar -c *' > out.tar \
 """,
                     alpineVersion=config['alpineVersion'],
+                    owMirror=config['openwrtMirror'],
+                    fMirror=config['falterMirror'],
                 ),
             ],
         )
