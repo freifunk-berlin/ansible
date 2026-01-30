@@ -49,7 +49,7 @@ def packagesConfig(bmc, config):
         util.BuilderConfig(
             name="builds/packages",
             workernames=["masterworker"],
-            factory=packagesFactory(util.BuildFactory(), config["publishDir"]),
+            factory=packagesFactory(util.BuildFactory(), config),
             collapseRequests=False,
             tags=["toplevel"],
         )
@@ -59,12 +59,7 @@ def packagesConfig(bmc, config):
         util.BuilderConfig(
             name="dummy/packages",
             workernames=config["workerNames"],
-            factory=packagesArchFactory(
-                util.BuildFactory(),
-                config["publishDir"],
-                config["publishURL"],
-                config["alpineVersion"],
-            ),
+            factory=packagesArchFactory(util.BuildFactory(), config),
             collapseRequests=False,
         )
     )
@@ -123,7 +118,7 @@ def signCommand(props, wwwdir):
 
 
 # Fans out to one builder per arch and blocks for the results.
-def packagesFactory(f, wwwPrefix):
+def packagesFactory(f, config):
     f.buildClass = AsyncBuild
     f.addStep(
         steps.SetProperty(
@@ -171,10 +166,10 @@ cat build/targets-%(prop:branch)s.txt \
     )
 
     wwwdir = util.Interpolate(
-        "%(kw:prefix)s/builds/packages/%(prop:buildnumber)s", prefix=wwwPrefix
+        "%(kw:prefix)s/builds/packages/%(prop:buildnumber)s", prefix=config['publishDir']
     )
     pubdir = util.Interpolate(
-        "%(kw:prefix)s/feed/%(prop:falterBranch)s/packages", prefix=wwwPrefix
+        "%(kw:prefix)s/feed/%(prop:falterBranch)s/packages", prefix=config['publishDir']
     )
     f.addStep(
         steps.MasterShellCommand(
@@ -225,7 +220,7 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
 
 
 # Runs build.sh with prop:arch and prop:branch, and uploads the result to master.
-def packagesArchFactory(f, wwwPrefix, wwwURL, alpineVersion):
+def packagesArchFactory(f, config):
     f.addStep(
         steps.ShellCommand(
             name="build",
@@ -260,7 +255,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns --tmpfs /root:rw
 && cd /root/falter-packages/out/ \
 && tar -c *' > out.tar \
 """,
-                    alpineVersion=alpineVersion,
+                    alpineVersion=config['alpineVersion'],
                 ),
             ],
         )
@@ -269,7 +264,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns --tmpfs /root:rw
     tarfile = util.Interpolate("packages-%(prop:origbuildnumber)s-%(prop:arch)s.tar")
     wwwpath = util.Interpolate("builds/packages/%(prop:origbuildnumber)s/%(prop:arch)s")
     wwwdir = util.Interpolate(
-        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
+        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=config['publishDir'], wwwpath=wwwpath
     )
     f.addStep(
         steps.FileUpload(

@@ -95,7 +95,7 @@ def targetsConfig(bmc, config):
         util.BuilderConfig(
             name="builds/targets",
             workernames=["masterworker"],
-            factory=targetsFactory(util.BuildFactory(), config["publishDir"]),
+            factory=targetsFactory(util.BuildFactory(), config),
             collapseRequests=False,
             tags=["toplevel"],
         )
@@ -105,12 +105,7 @@ def targetsConfig(bmc, config):
         util.BuilderConfig(
             name="dummy/targets",
             workernames=config["workerNames"],
-            factory=targetsTargetFactory(
-                util.BuildFactory(),
-                config["publishDir"],
-                config["publishURL"],
-                config["alpineVersion"],
-            ),
+            factory=targetsTargetFactory(util.BuildFactory(), config),
             collapseRequests=False,
         )
     )
@@ -192,7 +187,7 @@ def targetsPubDir(props):
 
 
 # Fans out to one builder per target and blocks for the results.
-def targetsFactory(f, wwwPrefix):
+def targetsFactory(f, config):
     f.buildClass = AsyncBuild
     f.addStep(
         steps.SetProperty(
@@ -251,9 +246,9 @@ targets=$(for t in $(cat build/targets-%(prop:falterBranch)s.txt \
     )
 
     wwwdir = util.Interpolate(
-        "%(kw:prefix)s/builds/targets/%(prop:buildnumber)s", prefix=wwwPrefix
+        "%(kw:prefix)s/builds/targets/%(prop:buildnumber)s", prefix=config['publishDir']
     )
-    pubdir = util.Interpolate("%(kw:pr)s/%(kw:pd)s", pr=wwwPrefix, pd=targetsPubDir)
+    pubdir = util.Interpolate("%(kw:pr)s/%(kw:pd)s", pr=config['publishDir'], pd=targetsPubDir)
 
     f.addStep(
         steps.MasterShellCommand(
@@ -316,11 +311,11 @@ def targetsTarFile(props):
     return "targets-{0}-{1}-{2}-{3}.tar".format(n, t, st, v)
 
 
-def targetsTargetFactory(f, wwwPrefix, wwwURL, alpineVersion):
+def targetsTargetFactory(f, config):
     tarfile = targetsTarFile
     wwwpath = util.Interpolate("builds/targets/%(prop:origbuildnumber)s/")
     wwwdir = util.Interpolate(
-        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=wwwPrefix, wwwpath=wwwpath
+        "%(kw:prefix)s/%(kw:wwwpath)s", prefix=config['publishDir'], wwwpath=wwwpath
     )
 
     f.addStep(
@@ -369,7 +364,7 @@ sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/librar
 && cd /root/falter-builter/out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
 """,
-                    alpineVersion=alpineVersion,
+                    alpineVersion=config['alpineVersion'],
                 ),
             ],
         )
