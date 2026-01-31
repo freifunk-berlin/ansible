@@ -1,15 +1,15 @@
 ---
-buildbot_version: 4.3.0
+buildbot_worker_version: 4.3.0
 
-bbmaster_fqdn: buildbot.berlin.freifunk.net
-bbmaster_port: 9989
+buildbot_worker_master_fqdn: buildbot.berlin.freifunk.net
+buildbot_worker_master_port: 9989
 
-bbworker_dir: buildbot_worker/
-bbworker_contact: info {æt} berlin.freifunk.net
-bbworker_info: Worker administered by ffb-ansible-repo
+buildbot_worker_dir: buildbot_worker/
+buildbot_worker_contact: info {æt} berlin.freifunk.net
+buildbot_worker_info: Worker administered by ffb-ansible-repo
 
-machine_user: bbworker
+buildbot_worker_machine_user: bbworker
 
 # gets overridden on hosts, that use a ramdisk
-bbworker_ramdisk: false
-bbworker_path: /home/{{ machine_user }}/{{ bbworker_dir }}
+buildbot_worker_ramdisk: false
+buildbot_worker_path: /home/{{buildbot_worker_machine_user }}/{{ buildbot_worker_dir }}

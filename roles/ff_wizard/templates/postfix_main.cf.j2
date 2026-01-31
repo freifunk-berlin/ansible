@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# Managed by ff-berlin ansible
 
 smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
 biff = no
@@ -15,7 +15,7 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
-myhostname = {{ ansible_fqdn }}
+myhostname = {{ ansible_facts["fqdn"] }}
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname

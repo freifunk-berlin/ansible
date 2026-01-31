@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# {{ ansible_managed }}
+# Managed by ff-berlin ansible
 
 # silence mypy
 # type: ignore

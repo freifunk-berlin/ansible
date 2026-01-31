@@ -16,7 +16,7 @@
     group: root
   notify: Restart mariadb
 
-- name: automysqlbackup
+- name: Automysqlbackup
   ansible.builtin.include_tasks: automysqlbackup.yml
   when: mariadb_autmysqlbackup_enabled | bool
 

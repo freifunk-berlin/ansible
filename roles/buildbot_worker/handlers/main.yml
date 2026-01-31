@@ -6,10 +6,12 @@
     enabled: true
     state: restarted
 
-- name: Initialise buildbot-worker
-  ansible.builtin.command: "{{ bbworker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{
-    bbworker_name }} {{ bbworker_pwd }}"
-  become_user: "{{ machine_user }}"
+- name: Initialise buildbot-worker # noqa: no-changed-when
+  ansible.builtin.command: >
+   "{{ buildbot_worker_path }}/env/bin/buildbot-worker create-worker --umask=0o22 {{ buildbot_worker_path }}
+    {{ buildbot_worker_master_fqdn }}:{{ buildbot_worker_master_port }} {{ buildbot_worker_name }} {{ buildbot_worker_pwd }}"
+  become: true
+  become_user: "{{ buildbot_worker_machine_user }}"
 
 - name: Restart podman
   ansible.builtin.systemd:
