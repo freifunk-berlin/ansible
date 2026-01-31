@@ -13,43 +13,48 @@
     owner: caddy
     group: caddy
   loop:
-    - "{{ ffwiki_basedir }}/static/"
-    - "{{ ffwiki_basedir }}/wwwroot/"
+    - "{{ ff_wiki_basedir }}/static/"
+    - "{{ ff_wiki_basedir }}/wwwroot/"
 
 # wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.3.tar.gz
-# tar xf /tmp/mediawiki.tar.gz -C {{ ffwiki_basedir }}/wwwroot --strip-components=1
-# chown -R caddy:caddy {{ ffwiki_basedir }}/wwwroot
+# tar xf /tmp/mediawiki.tar.gz -C {{ ff_wiki_basedir }}/wwwroot --strip-components=1
+# chown -R caddy:caddy {{ ff_wiki_basedir }}/wwwroot
 
 - name: Check out RSS extension
+  become: true
   become_user: caddy
   ansible.builtin.git:
     repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/RSS.git
-    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/RSS"
+    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/RSS"
     version: REL1_43
     force: true
     accept_hostkey: true
+  notify: Install composer dependencies
 
 - name: Check out MsUpload extension
+  become: true
   become_user: caddy
   ansible.builtin.git:
     repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload
-    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/MsUpload"
+    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/MsUpload"
     version: REL1_43
     force: true
     accept_hostkey: true
+  notify: Install composer dependencies
 
 - name: Check out ffwikihelpers extension
+  become: true
   become_user: caddy
   ansible.builtin.git:
     repo: https://github.com/freifunk/ffwikihelpers.git
-    dest: "{{ ffwiki_basedir }}/wwwroot/extensions/ffwikihelpers"
+    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/ffwikihelpers"
     version: dev
     force: true
     accept_hostkey: true
 
 - name: Copy wiki configuration
   ansible.builtin.template:
-    dest: "{{ ffwiki_basedir }}/wwwroot/LocalSettings.php"
+    dest: "{{ ff_wiki_basedir }}/wwwroot/LocalSettings.php"
     src: LocalSettings.php.j2
     mode: "0640"
     owner: caddy
@@ -57,7 +62,7 @@
 
 - name: Copy composer dependencies
   ansible.builtin.template:
-    dest: "{{ ffwiki_basedir }}/wwwroot/composer.local.json"
+    dest: "{{ ff_wiki_basedir }}/wwwroot/composer.local.json"
     src: composer.local.json.j2
     mode: "0640"
     owner: caddy
@@ -80,6 +85,6 @@
     owner: caddy
     group: caddy
   loop:
-    - {file: favicon.ico, dest: "{{ ffwiki_basedir }}/static/favicon.ico"}
-    - {file: robots.txt, dest: "{{ ffwiki_basedir }}/static/robots.txt"}
-    - {file: wiki.svg, dest: "{{ ffwiki_basedir }}/static/wiki.svg"}
+    - { file: favicon.ico, dest: "{{ ff_wiki_basedir }}/static/favicon.ico" }
+    - { file: robots.txt, dest: "{{ ff_wiki_basedir }}/static/robots.txt" }
+    - { file: wiki.svg, dest: "{{ ff_wiki_basedir }}/static/wiki.svg" }

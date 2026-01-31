@@ -40,7 +40,6 @@
 - name: Include monitoring tasks
   ansible.builtin.include_tasks: monitoring.yml
 
-
 - name: Include logrotate tasks
   ansible.builtin.include_tasks: logrotate.yml
 
@@ -49,7 +48,7 @@
     name: qemu-guest-agent
     state: present
     update_cache: true
-  when: ansible_chassis_vendor == "QEMU"
+  when: ansible_facts["chassis_vendor"] == "QEMU"
 
 - name: Enable fstrim timer
   ansible.builtin.systemd:

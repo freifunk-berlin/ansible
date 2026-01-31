@@ -1,11 +1,11 @@
-; {{ ansible_managed }}
+; Managed by ff-berlin ansible
 [broker]
 ; IP address the broker will listen and accept tunnels on
 address={{ tunneldigger_listen_ip }}
 ; Ports where the broker will listen on
 port=8942
 ; Interface with that IP address
-interface={{ ansible_default_ipv4.interface }}
+interface={{ ansible_facts["default_ipv4"].interface }}
 ; Maximum number of tunnels that will be allowed by the broker
 max_tunnels=3991
 ; Tunnel id base

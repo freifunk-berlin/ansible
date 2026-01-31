@@ -1,6 +1,6 @@
 ---
-bbworker_name: scherer8-buildbot2
-bbworker_pwd: !vault |
+buildbot_worker_name: scherer8-buildbot2
+buildbot_worker_pwd: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           32623638393834626563363534346262653831616566343336353764626431633432353464666131
           3562363539366237626565333431653231663863633939640a646532356261316665626530343832
@@ -8,9 +8,9 @@ bbworker_pwd: !vault |
           3561333461616565340a343065393833623330633032343761363865313930633436633234653637
           3838
 
-bbworker_contact: Perry <isprotejesvalkata AT gmail.com>
-bbworker_info: Xeon 3.6GHz, 3 Cores, 20GB RAM, Ramdisk
+buildbot_worker_contact: Perry <isprotejesvalkata AT gmail.com>
+buildbot_worker_info: Xeon 3.6GHz, 3 Cores, 20GB RAM, Ramdisk
 
-bbworker_path: /ramdisk/bb_worker/
-bbworker_ramdisk: yes
-bbworker_ramdisk_size: 18G
+buildbot_worker_path: /ramdisk/bb_worker/
+buildbot_worker_ramdisk: yes
+buildbot_worker_ramdisk_size: 18G

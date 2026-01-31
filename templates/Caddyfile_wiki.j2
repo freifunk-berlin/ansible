@@ -11,12 +11,12 @@ wiki.freifunk.net {
 
     respond @blocked 403
 
-    root /images/* {{ ffwiki_basedir }}/static/
-    root /robots.txt {{ ffwiki_basedir }}/static/
-    root /favicon.ico {{ ffwiki_basedir }}/static/
-    root /wiki.svg {{ ffwiki_basedir }}/static/
+    root /images/* {{ ff_wiki_basedir }}/static/
+    root /robots.txt {{ ff_wiki_basedir }}/static/
+    root /favicon.ico {{ ff_wiki_basedir }}/static/
+    root /wiki.svg {{ ff_wiki_basedir }}/static/
 
-    root * {{ ffwiki_basedir }}/wwwroot/
+    root * {{ ff_wiki_basedir }}/wwwroot/
 
     php_fastcgi unix//var/run/php/php8.4-fpm.sock
 

@@ -1,7 +1,7 @@
 ---
 - name: Install apt packages
   ansible.builtin.apt:
-    cache_valid_time: "{{ 10 * 60 }}"  # 10 minutes, in seconds
+    cache_valid_time: "{{ 10 * 60 }}" # 10 minutes, in seconds
     pkg: "{{ docker_packages }}"
   when: docker_packages is defined
 

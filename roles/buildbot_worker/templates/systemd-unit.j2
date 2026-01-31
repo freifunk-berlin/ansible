@@ -1,8 +1,8 @@
-# {{ ansible_managed }}
+# Managed by ff-berlin ansible
 
 [Unit]
 Description=Buildbot-worker for Freifunk-Berlin
-{% if bbworker_ramdisk %}
+{% if buildbot_worker_ramdisk %}
 After=buildbot-worker-setup.service network.target
 Requires=buildbot-worker-setup.service
 {% else %}
@@ -12,8 +12,8 @@ After=network.target
 [Service]
 User=bbworker
 Group=bbworker
-WorkingDirectory={{ bbworker_path }}
-ExecStart={{ bbworker_path }}/env/bin/buildbot-worker start --nodaemon
+WorkingDirectory={{ buildbot_worker_path }}
+ExecStart={{ buildbot_worker_path }}/env/bin/buildbot-worker start --nodaemon
 
 [Install]
 WantedBy=multi-user.target

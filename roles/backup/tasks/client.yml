@@ -26,4 +26,4 @@
     name: restic-backup.timer
     enabled: true
     state: started
-  when: ansible_check_mode == false
+  when: not ansible_check_mode
