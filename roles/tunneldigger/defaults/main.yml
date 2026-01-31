@@ -1,4 +1,4 @@
 ---
 tunneldigger_path: /opt/tunneldigger
-tunneldigger_listen_ip: "{{ ansible_default_ipv4.address }}"
+tunneldigger_listen_ip: "{{ ansible_facts['default_ipv4'].address }}"
 tunneldigger_snat_ip: "{{ tunneldigger_listen_ip }}"

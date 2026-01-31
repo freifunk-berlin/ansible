@@ -16,7 +16,7 @@
     dest: /etc/systemd/system/restic-rest-server.service
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify:
     - Reload systemd
     - Restart rest-server
@@ -36,6 +36,6 @@
     crypt_scheme: bcrypt
     owner: restic-rest-server
     group: restic-rest-server
-    mode: '0600'
+    mode: "0600"
   notify: Restart rest-server
   with_items: "{{ backup_client_hosts }}"

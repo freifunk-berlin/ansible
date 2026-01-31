@@ -16,57 +16,57 @@
 
 - name: Create unprivileged user for buildbot
   ansible.builtin.user:
-    name: "{{ machine_user }}"
+    name: "{{ buildbot_worker_machine_user }}"
 
 - name: Create mountpoint for ramdisk
   ansible.builtin.file:
     path: /ramdisk/
     state: directory
     mode: "0755"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
-  when: bbworker_ramdisk
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
+  when: buildbot_worker_ramdisk
 
 - name: Create ramdisk mount and persist
   ansible.posix.mount:
     path: /ramdisk/
     src: tmpfs
     fstype: tmpfs
-    opts: size={{ bbworker_ramdisk_size }}
+    opts: size={{ buildbot_worker_ramdisk_size }}
     state: present
     boot: true
-  when: bbworker_ramdisk
+  when: buildbot_worker_ramdisk
   become: true
 
-- name: Create bbworker_path
+- name: Create buildbot_worker_path
   ansible.builtin.file:
-    path: "{{ bbworker_path }}"
+    path: "{{ buildbot_worker_path }}"
     state: directory
     mode: "0755"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
 
 - name: Create path for custom podman storage config
   ansible.builtin.file:
-    path: /home/{{ machine_user }}/.config/containers/
+    path: /home/{{ buildbot_worker_machine_user }}/.config/containers/
     state: directory
     mode: "0755"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
-  when: bbworker_ramdisk
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
+  when: buildbot_worker_ramdisk
 
 - name: Custom podman storage config
   ansible.builtin.copy:
-    dest: /home/{{ machine_user }}/.config/containers/storage.conf
+    dest: /home/{{ buildbot_worker_machine_user }}/.config/containers/storage.conf
     mode: "0644"
     content: |
       [storage]
       driver = "overlay"
-      runroot = "{{ bbworker_path }}/run/user/$UID/run"
-      graphroot = "{{ bbworker_path }}/.local/share/containers/storage/"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
-  when: bbworker_ramdisk
+      runroot = "{{ buildbot_worker_path }}/run/user/$UID/run"
+      graphroot = "{{ buildbot_worker_path }}/.local/share/containers/storage/"
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
+  when: buildbot_worker_ramdisk
   notify: Restart podman
 
 - name: Add buildbot-worker systemd-service-module
@@ -86,15 +86,16 @@
     owner: root
     group: root
   notify: Restart buildbot-worker
-  when: bbworker_ramdisk is true
+  when: buildbot_worker_ramdisk
 
 - name: Install buildbot-worker
   ansible.builtin.pip:
     name: buildbot-worker
-    version: "{{ buildbot_version }}"
+    version: "{{ buildbot_worker_version }}"
     state: present
-    virtualenv: "{{ bbworker_path }}env"
-  become_user: "{{ machine_user }}"
+    virtualenv: "{{ buildbot_worker_path }}env"
+  become: true
+  become_user: "{{ buildbot_worker_machine_user }}"
   notify:
     - Initialise buildbot-worker
     - Restart buildbot-worker
@@ -107,44 +108,45 @@
       #!/bin/bash
       # (re-)creates the buildbot work er on the ramdisk, everytime the system reboots.
 
-      mkdir -p "{{ bbworker_path }}"
-      python3 -m venv "{{ bbworker_path }}env"
+      mkdir -p "{{ buildbot_worker_path }}"
+      python3 -m venv "{{ buildbot_worker_path }}env"
 
-      source "{{ bbworker_path }}env/bin/activate"
-      pip install buildbot-worker=={{ buildbot_version }}
-      {{ bbworker_path }}/env/bin/buildbot-worker create-worker \
-          --umask=0o22 {{ bbworker_path }} {{ bbmaster_fqdn }}:{{ bbmaster_port }} {{ bbworker_name }} {{ bbworker_pwd }}
+      source "{{ buildbot_worker_path }}env/bin/activate"
+      pip install buildbot-worker=={{ buildbot_worker_version }} \
+          {{ buildbot_worker_path }}/env/bin/buildbot-worker create-worker \
+          --umask=0o22 {{ buildbot_worker_path }} {{ buildbot_worker_master_fqdn }}:{{ buildbot_worker_master_port }} \
+          {{ buildbot_worker_name }} {{ buildbot_worker_pwd }}
 
-      echo "{{ bbworker_contact }}" > {{ bbworker_path }}/info/admin
-      echo "{{ bbworker_info }}" > {{ bbworker_path }}/info/host
+      echo "{{ buildbot_worker_contact }}" > {{ buildbot_worker_path }}/info/admin
+      echo "{{ buildbot_worker_info }}" > {{ buildbot_worker_path }}/info/host
 
       exit 0
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
-  when: bbworker_ramdisk
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
+  when: buildbot_worker_ramdisk
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 - name: Add worker info directory
   ansible.builtin.file:
-    path: "{{ bbworker_path }}info"
+    path: "{{ buildbot_worker_path }}info"
     state: directory
     mode: "0755"
 
 - name: Add workers admin-info
   ansible.builtin.copy:
-    content: "{{ bbworker_contact }}"
-    dest: "{{ bbworker_path }}info/admin"
+    content: "{{ buildbot_worker_contact }}"
+    dest: "{{ buildbot_worker_path }}info/admin"
     mode: "0644"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
   notify: Restart buildbot-worker
 
 - name: Add worker description
   ansible.builtin.copy:
-    content: "{{ bbworker_info }}"
-    dest: "{{ bbworker_path }}/info/host"
+    content: "{{ buildbot_worker_info }}"
+    dest: "{{ buildbot_worker_path }}/info/host"
     mode: "0644"
-    owner: "{{ machine_user }}"
-    group: "{{ machine_user }}"
+    owner: "{{ buildbot_worker_machine_user }}"
+    group: "{{ buildbot_worker_machine_user }}"
   notify: Restart buildbot-worker

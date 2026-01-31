@@ -6,12 +6,14 @@
     enabled: true
     state: restarted
 
-- name: Initialize buildbot
+- name: Initialize buildbot # noqa: no-changed-when
   ansible.builtin.command: /usr/local/src/buildbot/env/bin/buildbot create-master -f /usr/local/src/buildbot/masters/master
+  become: true
   become_user: buildbot
 
-- name: Upgrade buildbot database
+- name: Upgrade buildbot database # noqa: no-changed-when
   ansible.builtin.command: /usr/local/src/buildbot/env/bin/buildbot upgrade-master /usr/local/src/buildbot/masters/master
+  become: true
   become_user: buildbot
 
 - name: Restart mariadb

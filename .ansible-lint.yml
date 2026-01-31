@@ -1,0 +1,13 @@
+---
+# Use Production Profile
+profile: production
+
+# Do not check venv or external roles
+exclude_paths:
+  - .venv/
+  - external_roles/
+  - collections/
+
+# Use default rules as a baseline
+use_default_rules: true
+

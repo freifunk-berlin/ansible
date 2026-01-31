@@ -1,6 +1,6 @@
 ---
 - name: Add Repos for Debian <=12
-  when: ansible_distribution_major_version != "13"
+  when: ansible_facts["distribution_major_version"] != "13"
   block:
     - name: Add caddy apt key
       ansible.builtin.apt_key:
@@ -13,7 +13,7 @@
         state: present
 
 - name: Add Repos for Debian 13
-  when: ansible_distribution_major_version == "13"
+  when: ansible_facts["distribution_major_version"] == "13"
   block:
     - name: Add caddy deb822 repo
       ansible.builtin.deb822_repository:
