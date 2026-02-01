@@ -1,6 +1,6 @@
 ---
-bbworker_name: akira-home
-bbworker_pwd: !vault |
+buildbot_worker_name: akira-home
+buildbot_worker_pwd: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30393433623335303735613338373662303938653663646538386561363964646633346464323630
           3063306265346139363963396162643966383832353864660a356631333664363232633962356635
@@ -10,6 +10,6 @@ bbworker_pwd: !vault |
           36643036626466633666373863346364666466313534353632646633336635333735646262306666
           396463343061613935336238346462373761
 
-bbworker_contact: Martin <martin.hubner uff web ponkt de>
-bbworker_info: VM with 4 Cores, 4GB RAM
+buildbot_worker_contact: Martin <martin.hubner uff web ponkt de>
+buildbot_worker_info: VM with 4 Cores, 4GB RAM
 ...

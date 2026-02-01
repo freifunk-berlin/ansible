@@ -1,6 +1,6 @@
 ---
-bbworker_name: masterworker
-bbworker_pwd: !vault |
+buildbot_worker_name: masterworker
+buildbot_worker_pwd: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   35323564303562396566313735336535333937353937383333306338666565376463396432303330
   6439333764633135363935353863383961343032363731330a656239353830316332613033663739
@@ -10,7 +10,7 @@ bbworker_pwd: !vault |
   36373639396238366534626330663137336233353531653331346239343337656238353036353131
   316237353437373330343034626338396366
 
-bbworker_contact: pktpls
-bbworker_info: virtual worker, syncing builds etc.
+buildbot_worker_contact: pktpls
+buildbot_worker_info: virtual worker, syncing builds etc.
 
 caddy_caddyfile: Caddyfile_buildbot.j2

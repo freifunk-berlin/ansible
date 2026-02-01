@@ -1,6 +1,6 @@
 ---
-bbworker_name: ionos-worker04
-bbworker_pwd: !vault |
+buildbot_worker_name: ionos-worker04
+buildbot_worker_pwd: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           37633536613934613263316238646162313261373233333238626665356662336464396466383338
           3337643434306530363666633330313934626664323864350a653565626238633831363735366161
@@ -10,6 +10,6 @@ bbworker_pwd: !vault |
           32303464393464326363616536613964376538656634636162623763326662383036316133313163
           383763386662393238303833393533626432
 
-bbworker_contact: Martin <martin.hubner uff web ponkt de>
-bbworker_info: VM with 3 Cores, 12GB RAM
+buildbot_worker_contact: Martin <martin.hubner uff web ponkt de>
+buildbot_worker_info: VM with 3 Cores, 12GB RAM
 ...

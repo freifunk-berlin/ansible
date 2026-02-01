@@ -97,11 +97,11 @@ In that directory, create a `main.yml`-File, please. You need to define these va
 
 ```yml
 ---
-bbworker_name: WORKERNAME
-bbworker_pwd: G00D_P455WORD
+buildbot_worker_name: WORKERNAME
+buildbot_worker_pwd: G00D_P455WORD
 
-bbworker_contact: NAME (and contact) of sponsor
-bbworker_info: Tell me on your specs. (i.e. VM with 4 Cores, 4GB RAM)
+buildbot_worker_contact: NAME (and contact) of sponsor
+buildbot_worker_info: Tell me on your specs. (i.e. VM with 4 Cores, 4GB RAM)
 ...
 ```
 

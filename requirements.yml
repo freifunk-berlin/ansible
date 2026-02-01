@@ -1,6 +1,6 @@
 ---
 # ansible dependencies
-# usage: ansible-galaxy install -r requirements.yml
+# usage: ansible-galaxy install --force --role-file requirements.yml
 roles:
   - src: ryandaniels.create_users
     version: 2.0.1
@@ -8,6 +8,6 @@ collections:
   - name: ansible.posix
     version: 2.1.0
   - name: community.mysql
-    version: 3.16.1
+    version: 4.0.1
   - name: community.general
-    version: 11.4.4
+    version: 12.3.0

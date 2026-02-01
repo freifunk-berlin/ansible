@@ -77,9 +77,9 @@
     group: root
   notify: Restart tunneldigger
   loop:
-    - {src: ff.session.mtu-changed.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh"}
-    - {src: ff.session.up.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh"}
-    - {src: dhcp-script.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh"}
+    - { src: ff.session.mtu-changed.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.mtu-changed.sh" }
+    - { src: ff.session.up.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/ff.session.up.sh" }
+    - { src: dhcp-script.sh.j2, dest: "{{ tunneldigger_path }}/broker/scripts/dhcp-script.sh" }
 
 - name: Make sure the correct Kernel modules will load on boot
   ansible.builtin.template:

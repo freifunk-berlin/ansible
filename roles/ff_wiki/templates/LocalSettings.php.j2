@@ -41,7 +41,7 @@ $wgUsePathInfo      = true;
 $wgScriptExtension  = ".php";
 $wgScript           = "$wgScriptPath/index.php";
 $wgRedirectScript   = "$wgScriptPath/redirect.php";
-$wgUploadDirectory  = "{{ ffwiki_basedir }}/static/images";
+$wgUploadDirectory  = "{{ ff_wiki_basedir }}/static/images";
 
 ## The relative URL path to the skins directory
 $wgStylePath        = "$wgScriptPath/skins";
@@ -67,16 +67,16 @@ $wgEnotifWatchlist     = true; # UPO
 $wgEmailAuthentication = true;
 
 # session cookie salt
-$wgAuthenticationTokenVersion = "{{ ffwiki_authtoken_salt }}".date("Y-I"); // invalidate sessions twice a year
+$wgAuthenticationTokenVersion = "{{ ff_wiki_authtoken_salt }}".date("Y-I"); // invalidate sessions twice a year
 
-$wgSecretKey = "{{ ffwiki_secret_key }}";
+$wgSecretKey = "{{ ff_wiki_secret_key }}";
 
 ## Database settings
 $wgDBtype           = "mysql";
 $wgDBserver         = "127.0.0.1";
 $wgDBname           = "ffwiki";
 $wgDBuser           = "ffwiki";
-$wgDBpassword       = "{{ ffwiki_db_password }}";
+$wgDBpassword       = "{{ ff_wiki_db_password }}";
 
 # MySQL specific settings
 $wgDBprefix         = "wiki_";
@@ -225,7 +225,7 @@ $wgGroupPermissions['*']['edit'] = false;
 # 2FA settings
 wfLoadExtension( 'OATHAuth' );
 $wgGroupPermissions['user']['oathauth-enable'] = true;
-$wgOATHSecretKey = "{{ ffwiki_OATHSecretKey }}";
+$wgOATHSecretKey = "{{ ff_wiki_oathsecretkey }}";
 
 wfLoadExtensions(['ffwikihelpers', 'Interwiki', 'ParserFunctions', 'Cite', 'SpamBlacklist', 'Nuke', 'WikiEditor', 'PageForms', 'RSS' ]);
 $wgRSSUrlWhitelist = array("https://rss.freifunk.net/*");

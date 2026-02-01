@@ -127,14 +127,14 @@
 - name: Is firmware-selector initialised already?
   ansible.builtin.stat:
     path: /usr/local/src/www/htdocs/firmware-selector
-  register: fw_selector
+  register: __buildbot_fw_selector
 
 - name: Checkout firmware-selector
   ansible.builtin.git:
     repo: https://github.com/freifunk-berlin/falter-firmware-selector.git
     version: falter_stable
     dest: /usr/local/src/www/htdocs/firmware-selector
-  when: not fw_selector.stat.exists
+  when: not __buildbot_fw_selector.stat.exists
 
 - name: Insert cronjob for firmware-selector
   ansible.builtin.cron:
@@ -182,7 +182,7 @@
     day: "*"
     hour: 1
     minute: 0
-    job: cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp 
+    job: cd /usr/local/src/www/htdocs/buildbot && curl https://openwrt.org/_media/toh_dump_tab_separated.gz | gunzip > toh.tmp && mv toh.tmp
       openwrt-table-of-hardware.csv
     user: buildbot
     cron_file: sync_table_of_hardware

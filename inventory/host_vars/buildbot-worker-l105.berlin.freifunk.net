@@ -1,6 +1,6 @@
 ---
-bbworker_name: l105-buildbot1
-bbworker_pwd: !vault |
+buildbot_worker_name: l105-buildbot1
+buildbot_worker_pwd: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           32643562333366316261636538356334336465663563646530653438643335633238393265386261
           3133353434646465323234366639306232343130323130310a633263323764316439313631663239
@@ -8,9 +8,9 @@ bbworker_pwd: !vault |
           3461376637393032300a363835396131663639303965653339376466393063616536313338336436
           35343333393832623935653763633237353263363462383765363862353034613161
 
-bbworker_contact: Nicolas Berens <kontakt@nicolas-berens.de>
-bbworker_info: 8 Cores, 32GB RAM, Ramdisk
+buildbot_worker_contact: Nicolas Berens <kontakt@nicolas-berens.de>
+buildbot_worker_info: 8 Cores, 32GB RAM, Ramdisk
 
-bbworker_path: /ramdisk/bb_worker/
-bbworker_ramdisk: yes
-bbworker_ramdisk_size: 18G
+buildbot_worker_path: /ramdisk/bb_worker/
+buildbot_worker_ramdisk: yes
+buildbot_worker_ramdisk_size: 18G
