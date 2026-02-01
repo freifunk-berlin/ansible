@@ -1,0 +1,17 @@
+---
+# Use Production Profile
+profile: production
+
+# Do not check venv or external roles
+exclude_paths:
+  - venv/
+  - external_roles/
+  - collections/
+  - .github/
+  - .git/
+
+# Use default rules as a baseline
+use_default_rules: true
+
+skip_list:
+  - experimental

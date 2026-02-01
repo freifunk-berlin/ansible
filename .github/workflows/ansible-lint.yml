@@ -1,0 +1,16 @@
+---
+name: ansible-lint
+on:
+  pull_request:
+    branches: ["main"]
+jobs:
+  build:
+    name: Ansible Lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@v26.1.1
+        with:
+          args: "roles templates"
+          requirements_file: "requirements.yml"
