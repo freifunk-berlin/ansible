@@ -1,5 +1,5 @@
-ansible ~= 13
+ansible ~= 13.0
 ansible-core
-ansible-lint >= 26
+ansible-lint >= 26.0
 black >= 23.9
 isort >= 5.12
