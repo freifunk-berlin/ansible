@@ -24,9 +24,9 @@ This repository currently manages these services:
 
 - check out this repository and `cd` into it
 - create a venv and activate it: `python -m venv venv && source venv/bin/activate`
-- install the python dependencies: `pip install -r requirements.txt`
-- install the external roles: `ansible-galaxy install -r requirements.yml`
-- install the external collections: `ansible-galaxy collection install -r requirements.yml`
+- install the python dependencies: `pip install --force --requirement requirements.txt`
+- install the external roles: `ansible-galaxy install --force --role-file requirements.yml`
+- install the external collections: `ansible-galaxy collection install --force --requirements-file requirements.yml`
 - Save the secret encryption password for ansible-vault under `./.vaultpass`
   - For alternative methods look here: <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
 
