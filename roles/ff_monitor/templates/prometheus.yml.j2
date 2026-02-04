@@ -1,6 +1,11 @@
+---
 global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+# Also write to Victoriametrics
+remote_write:
+  - url: http://localhost:8428/api/v1/write
 
 alerting:
   alertmanagers:
@@ -24,7 +29,7 @@ scrape_configs:
     scrape_interval: 5s
     scrape_timeout: 5s
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['localhost:9090', 'localhost:9115']
 
   - job_name: 'pushgateway'
     scrape_interval: 30s
@@ -49,7 +54,7 @@ scrape_configs:
         - "a36s-cr1.berlin.freifunk.net:9100"
         - "a36s-cr2.berlin.freifunk.net:9100"
         - "l105-cr1.berlin.freifunk.net:9100"
-{% for host in groups.all %}
+{% for host in groups.all | sort %}
         - "{{ host }}:9100"
 {% endfor %}
 
@@ -58,3 +63,41 @@ scrape_configs:
     scrape_timeout: 30s
     static_configs:
       - targets: ['127.0.0.1:9111']
+
+  - job_name: 'blackbox-ping'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        # quad9
+        - 9.9.9.9
+        - 149.112.112.112
+        - 2620:fe::fe
+        - 2620:fe::9
+        # cloudflare
+        - 1.1.1.1
+        - 1.0.0.1
+        - 2606:4700:4700::1111
+        - 2606:4700:4700::1001
+
+    relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: localhost:9115
+
+
+  - job_name: victoriametrics
+    static_configs:
+    - targets:
+      - localhost:8428
+
+  - job_name: victorialogs
+    static_configs:
+    - targets:
+      - localhost:9428
+
+# vim: set filetype=yaml:
