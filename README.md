@@ -4,7 +4,7 @@ This repository currently contains our WIP state for the infrastructure code.
 
 This is a replacement for the old [puppet repository](https://github.com/freifunk-berlin/puppet).
 
-Keep in mind that we also use ansible to configure the BerlinBackBone, this is done in the [bbb-configs repository](https://github.com/freifunk-berlin/bbb-configs).
+Keep in mind that we also use Ansible to configure the BerlinBackBone, this is done in the [bbb-configs repository](https://github.com/freifunk-berlin/bbb-configs).
 
 The code is, where necessary, quite debian centric since that's the distribution we use in our infrastructure.
 
@@ -22,18 +22,17 @@ This repository currently manages these services:
 
 ## Requirements // How to use
 
-- check out this repo and `cd` into it
+- check out this repository and `cd` into it
 - create a venv and activate it: `python -m venv venv && source venv/bin/activate`
-- install the python dependencies: `pip install -r requirements.txt`
-- install the external roles: `ansible-galaxy install -f requirements.yml`
-- install the external collections: `ansible-galaxy collection install -f requirements.yml`
+- install the python dependencies: `pip install --force --requirement requirements.txt`
+- install the external roles: `ansible-galaxy install --force --role-file requirements.yml`
+- install the external collections: `ansible-galaxy collection install --force --requirements-file requirements.yml`
 - Save the secret encryption password for ansible-vault under `./.vaultpass`
   - For alternative methods look here: <https://docs.ansible.com/ansible/latest/user_guide/vault.html>
 
-
 ## Structure
 
-We follow an adapted version of the [ansible alternative layout](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_best_practices.html#alternative-directory-layout).
+We follow an adapted version of the [Ansible alternative layout](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_best_practices.html#alternative-directory-layout).
 Where we put the inventory in an extra directory, but don't use different directories for the stages (Since we don't have any).
 Also, the roles are divided into 2 directories, one for external ones, and one for our internal ones.
 

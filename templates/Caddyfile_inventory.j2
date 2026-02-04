@@ -1,0 +1,5 @@
+inventory.berlin.freifunk.net {
+        reverse_proxy localhost:8000 {
+                header_up X-Forwarded-Proto {scheme}
+        }
+}
