@@ -10,8 +10,14 @@
     - /opt/meshviewer
     - /var/www/hopglass.berlin.freifunk.net/www/
 
-# Download latest meshviewer release from https://github.com/freifunk/meshviewer/releases
-# and unpack to /var/www/hopglass.berlin.freifunk.net/www/
+- name: Download Meshviewer release
+  ansible.builtin.get_url:
+    url: "https://github.com/freifunk/meshviewer/releases/download/v{{ meshviewer_version }}/meshviewer-build.zip"
+    dest: /opt/meshviewer/
+    mode: "0644"
+    owner: caddy
+    group: caddy
+  notify: Unpack Meshviewer
 
 - name: Copy owm2meshviewer script
   ansible.builtin.copy:

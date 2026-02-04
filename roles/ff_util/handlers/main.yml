@@ -1,1 +1,6 @@
 ---
+- name: Unpack Meshviewer
+  ansible.builtin.unarchive:
+    src: /opt/meshviewer/meshviewer-build.zip
+    dest: /var/www/hopglass.berlin.freifunk.net/www
+    remote_src: true
