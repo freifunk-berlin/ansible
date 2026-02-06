@@ -125,3 +125,11 @@
     mode: "0644"
     owner: www-data
     group: www-data
+
+- name: Add blackbox exporter config
+  ansible.builtin.template:
+    dest: /etc/freifunk/blackbox.yml
+    src: blackbox.yml.j2
+    mode: "0644"
+    owner: root
+    group: root
