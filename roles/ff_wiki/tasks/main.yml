@@ -16,7 +16,7 @@
     - "{{ ff_wiki_basedir }}/static/"
     - "{{ ff_wiki_basedir }}/wwwroot/"
 
-# wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.3.tar.gz
+# wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.6.tar.gz
 # tar xf /tmp/mediawiki.tar.gz -C {{ ff_wiki_basedir }}/wwwroot --strip-components=1
 # chown -R caddy:caddy {{ ff_wiki_basedir }}/wwwroot
 
