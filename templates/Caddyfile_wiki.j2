@@ -8,8 +8,25 @@ wiki.freifunk.net {
     encode gzip zstd
 
     @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
-
     respond @blocked 403
+
+   @user_reg {
+        query title=Spezial:Benutzerkonto_anlegen
+    }
+
+    reverse_proxy /.within.website/* 127.0.0.1:3000
+
+    route @user_reg {
+    reverse_proxy /.within.website/* 127.0.0.1:3000
+    forward_auth 127.0.0.1:3000 {
+        uri /.within.website/x/cmd/anubis/api/check
+        trusted_proxies private_ranges
+        @unauthorized status 401
+        handle_response @unauthorized {
+            redir * /.within.website/?redir={uri} 307
+        }
+      }
+    }
 
     root /images/* {{ ff_wiki_basedir }}/static/
     root /robots.txt {{ ff_wiki_basedir }}/static/

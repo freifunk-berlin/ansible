@@ -5,27 +5,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
         exit;
 }
 
-# Simple anti-bot measure: set a cookie on simple (non-parameterized) GET requests ("whitelist" client), allow more complex queries only with that cookie set (should sign cookie etc., but this seems to work fine at the moment)
-# if($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'HEAD') {
-#   if(count($_GET) == 0) {
-#     setcookie("ffwknock", $_SERVER['REMOTE_ADDR'], time()+60*60, "/", "", true, true);
-#   } else {
-#     if(($_COOKIE["ffwknock"] ?? "-") != $_SERVER['REMOTE_ADDR']) {
-#       if(!isset($_COOKIE["ffwiki_wiki_UserName"]) &&
-#          ($_SERVER['REMOTE_ADDR'] != "172.17.0.1") &&
-#          ($_SERVER['REMOTE_ADDR'] != "172.17.0.2") &&
-#          ($_SERVER['REMOTE_ADDR'] != "127.0.0.1") &&
-#          ($_SERVER["REQUEST_URI"] != "/api.php?hidebots=1&urlversion=1&days=7&limit=50&action=feedrecentchanges&feedformat=atom")) {
-#         // file_put_contents("/tmp/blocked.txt", "" . time() . " - " . $_SERVER['REMOTE_ADDR'] . " - " . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\n", FILE_APPEND);
-#         exit("Internal error, please go to main page and try again\n");
-#       }
-#     }
-#   }
-# }
-
-## Uncomment this to disable output compression
-# $wgDisableOutputCompression = true;
-
 $wgSitename      = "wiki.freifunk.net";
 $wgMetaNamespace = "Wiki.freifunk.net";
 
@@ -43,12 +22,32 @@ $wgScript           = "$wgScriptPath/index.php";
 $wgRedirectScript   = "$wgScriptPath/redirect.php";
 $wgUploadDirectory  = "{{ ff_wiki_basedir }}/static/images";
 
+##
+## Skins
+##
+
 ## The relative URL path to the skins directory
 $wgStylePath        = "$wgScriptPath/skins";
 
-## The relative URL path to the logo.  Make sure you change this from the default,
-## or else you'll overwrite your logo when you upgrade!
-$wgLogo             = "/wiki.svg";
+$wgLogos = [
+        '1x' => "/wiki.svg",
+        'wordmark' => [
+                'src' => "/wiki.svg",
+                '1x' => "/wikisvg.svg",
+                'width' => 160,
+                'height' => 160,
+        ],
+];
+
+wfLoadSkin( 'MonoBook' );
+wfLoadSkin( 'Vector' );
+$wgDefaultSkin = 'vector-2022';
+
+##
+## PageImages
+##
+
+wfLoadExtension( 'PageImages' );
 
 $wgCookieSecure = true; // cookie transmitted via https only
 
@@ -131,15 +130,6 @@ $wgUseTeX           = false;
 # Site language code, should be one of ./languages/Language(.*).php
 $wgLanguageCode = "de";
 
-
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook', 'vector':
-#wfLoadSkin( 'CologneBlue' );
-#wfLoadSkin( 'Modern' );
-wfLoadSkin( 'MonoBook' );
-wfLoadSkin( 'Vector' );
-$wgDefaultSkin = 'vector';
-
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
 ## License and Creative Commons licenses are supported so far.
@@ -174,39 +164,8 @@ $wgFileExtensions[] = 'json';
 $wgAllowUserCss = true;
 
 # Extensions
-wfLoadExtensions([ 'VisualEditor', 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ]);
-$wgCaptchaClass = 'QuestyCaptcha';
-$arr = array (
-        //"Was steht im Logo oben links auf dieser Seite?<br/>What's written in the logo of this wiki?" => "freifunk.net",
-        //'Schreib bitte das Zauberwort "Freiheit" auf:<br/>Please type the keyword "Freiheit":' => 'Freiheit',
-        //'Tippe bitte die Zahl 0815 ein:<br/>Please type the number 0815 here' => '0815',
-        //'Kubikwurzel aus 79507' => '43',
-        //'Was steht groß auf diesem Router?<br/>Please type the word written on the Router. <br/><img src="http://wireless.subsignal.org/images/2/23/Tupper2.jpg" width=50% alt="" title="" />' => "Linksys",
-        //'Welche Farbe hat der linke Kater? (in english)<br/>Which color has the left cat?  <br/><img src="//wiki.freifunk.net/images/8/8b/Cats.jpg" width=60% alt="" title="" />' => 'black',
-        //'Wieviel % VOL ist da drin?<br/>How much alcohol is in there (in % Vol)? <br/><img src="//wiki.freifunk.net/images/5/5f/Vodka.jpg" width=60% alt="" title="" />' => '40',
-        //'Schreib das stärkste WLAN auf:<br/>Type the strongest wifi: <br/><img src="//wiki.freifunk.net/images/thumb/3/3d/Wifi_networks.jpg/436px-Wifi_networks.jpg" width=60% alt="" title="" />' => 'weimarnetz'
-        //'Welches ist die größte Stadt auf der Karte? What is the largest City on the Map? <br/><img src="//wiki.freifunk.net/images/f/fb/M%C3%BCnsterland.png" width=60% alt="" title="" />' => 'Münster',
-        //'Wie viele Euro werden für neue Hardware benötigt? How much money is necessary for new hardware (in Euro) <br/><img src="//wiki.freifunk.net/images/a/a8/Freifunk-salzwedel-altmark-riebau.jpg" width=60% alt="" title="" />' => '200',
-        //'Wieviel Uhr ist es <a href="//wiki.freifunk.net/Datei:Rathaus-Spandau-01.jpg">in diesem Bild</a> (Schreibweise wie "13:15")?<br/>What time is it <a href="//wiki.freifunk.net/Datei:Rathaus-Spandau-01.jpg">in this picture</a> (notation "13:15")?' => '16:45'
-        'Wann ist das Vernetzungsmumble? Siehe "Events"-Kasten auf der Wiki-Startseite, kompletter Satz "am ??. ????? ??????". --- When does the "Vernetzungsmumble" take place? See box "Events" on the main page and use the complete sentence "am ??. ????? ??????"' => 'am 23. jeden Monats'
-);
-foreach ( $arr as $key => $value ) {
-        $wgCaptchaQuestions[] = array( 'question' => $key, 'answer' => $value );
-}
+wfLoadExtensions([ 'VisualEditor', 'ConfirmEdit']);
 
-// Fix the default captcha behaviour
-$wgGroupPermissions['*'            ]['skipcaptcha'] = false;
-$wgGroupPermissions['user'         ]['skipcaptcha'] = false;
-$wgGroupPermissions['autoconfirmed']['skipcaptcha'] = false;
-$wgGroupPermissions['bot'          ]['skipcaptcha'] = true; // registered bots
-$wgGroupPermissions['sysop'        ]['skipcaptcha'] = true;
-#uncomment the following line to disable anonymous account creation
-#$wgGroupPermissions['*']['createaccount'] = false;
-
-$wgCaptchaTriggers['edit']          = false;
-$wgCaptchaTriggers['create']        = false;
-$wgCaptchaTriggers['createaccount'] = true;
-$wgCaptchaTriggers['addurl']        = false;
 $wgPFEnableStringFunctions = true;
 $wgCiteEnablePopups = true;
 $wgGroupPermissions['user']['writeapi'] = true; // VisualEditor
@@ -247,13 +206,6 @@ $wgExtraNamespaces[200] = "Archiv";
 $wgExtraNamespaces[201] = "Archiv_Diskussion";
 $wgNamespaceRobotPolicies = array( NS_TALK => 'noindex,nofollow', 200 => 'noindex,nofollow', 201 => 'noindex,nofollow' );
 
-/*
-if (!is_string($wgSiteNotice)) $wgSiteNotice = '';
-$wgSiteNotice .= '<div style="border: 2px solid #d00000; padding: 0.5em 0.5em 0.5em 0.5em; color: #000; background-color: #fff0f0; margin: 3px 3px 0;">';
-$wgSiteNotice .= 'Das Wiki wurde nach einem Hack neu installiert.<br/><b>Bitte [https://wiki.freifunk.net/Spezial:ChangeCredentials ändert euer Wiki-Passwort] auf eins, das ihr nirgendwo anders benutzt.</b><br/>Falls ihr euer altes Passwort noch woanders benutzt habt, setzt es dort jeweils auch neu (auf ein anderes).';
-$wgSiteNotice .= '</div>';
-*/
-
 if ( !$wgCommandLineMode ) {
 
 if (preg_match('@\/Archiv:@', @$_SERVER['REQUEST_URI'])) {
@@ -263,14 +215,6 @@ if (preg_match('@\/Archiv:@', @$_SERVER['REQUEST_URI'])) {
         $wgSiteNotice .= '</div>';
 }
 
-if (preg_match('@Spezial:Benutzerkonto_anlegen@', @$_SERVER['REQUEST_URI'])) {
-        if (!is_string($wgSiteNotice)) $wgSiteNotice = '';
-        $wgSiteNotice .= '<div style="border: 2px solid #d00000; padding: 0.5em 0.5em 0.5em 0.5em; color: #000; background-color: #ffffcb; margin: 3px 3px 0;">';
-        $wgSiteNotice .= '<b>Bitte setze ein Passwort, dass Du nirgendwo anders benutzt.</b>';
-        $wgSiteNotice .= '</div>';
-}
-
-//if(($_SERVER['REMOTE_ADDR'] ?? '91.65.121.157') != '91.65.121.157') $wgReadOnly = '<h1><b>Das Wiki wird zur Zeit neu installiert und kann nicht editiert werden.</b></h1>';
 }
 
 $wgUseGzip = true;
