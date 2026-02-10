@@ -10,9 +10,7 @@ wiki.freifunk.net {
     @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
     respond @blocked 403
 
-   @user_reg {
-        query title=Spezial:Benutzerkonto_anlegen
-    }
+   @user_reg expression `{path}.contains("Spezial:Benutzerkonto_anlegen")`
 
     reverse_proxy /.within.website/* 127.0.0.1:3000
 
