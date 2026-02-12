@@ -8,4 +8,56 @@ services:
       - 127.0.0.1:25827:25826/udp
     command: --collectd.listen-address=":25826"
 
+  pushgateway:
+    restart: unless-stopped
+    image: prom/pushgateway:v1.11.2
+    ports:
+      - 127.0.0.1:9091:9091
+
+  blackbox:
+    restart: unless-stopped
+    image: prom/blackbox-exporter:v0.28.0
+    # network: host to allow V6 ping
+    network_mode: host
+    command:
+      - '--config.file=/etc/blackbox/blackbox.yml'
+    volumes:
+      - /etc/freifunk/blackbox.yml:/etc/blackbox/blackbox.yml
+
+  victoriametrics:
+    restart: unless-stopped
+    image: victoriametrics/victoria-metrics:v1.135.0
+    ports:
+      - 8428:8428
+      - 8089:8089
+      - 8089:8089/udp
+      - 4242:4242
+    command:
+      - '--retentionPeriod=365'
+      - '--storageDataPath=/victoria-metrics-data'
+      - '--httpListenAddr=:8428'
+      - '--influxListenAddr=:8089'
+    volumes:
+      - /mnt/victoriametrics/data:/victoria-metrics-data
+
+  victorialogs:
+    restart: unless-stopped
+    image: victoriametrics/victoria-logs:v1.44.0
+    ports:
+      - 9428:9428
+    command:
+      - '--retentionPeriod=7d'
+      - '--storageDataPath=/victoria-logs-data'
+    volumes:
+      - /mnt/victorialogs/data:/victoria-logs-data
+
+  victoriatraces:
+    image: 'docker.io/victoriametrics/victoria-traces:v0.7.1'
+    ports:
+      - "10428:10428"
+    command:
+      - "--storageDataPath=/vtraces"
+    volumes:
+      - /mnt/victoriatraces/data:/vtraces
+
 # vim: set filetype=yaml:

@@ -1,6 +1,10 @@
 ---
 - name: Run docker-compose # noqa: no-changed-when
-  ansible.builtin.command:
-    cmd: docker compose --project-directory /etc/freifunk/ up --detach --force-recreate --remove-orphans --wait --quiet-pull --pull always
+  community.docker.docker_compose_v2:
+    project_src: /etc/freifunk/
+    pull: always
+    recreate: always
+    remove_orphans: true
+    wait: true
 
 # vim: set filetype=yaml:

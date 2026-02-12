@@ -3,9 +3,9 @@ import json
 import urllib.request
 import requests
 
-PROMETHEUS_HOST="localhost:9090"
+PROMETHEUS_HOST="localhost:8428"
 
-dhcp_leases=requests.get('http://localhost:9090/api/v1/query', params={'query': 'collectd_dhcpleases_count{}'})
+dhcp_leases=requests.get(f'http://{PROMETHEUS_HOST}/api/v1/query', params={'query': 'collectd_dhcpleases_count{}'}, timeout=30)
 
 LEASES_DICT = dict()
 
@@ -15,8 +15,7 @@ for node in dhcp_leases.json()['data']['result']:
     LEASES_DICT[node_name] = leases
 
 
-
-with urllib.request.urlopen("https://hopglass.berlin.freifunk.net/nodes.json") as url:
+with urllib.request.urlopen("https://hopglass.berlin.freifunk.net/meshviewer.json") as url:
     data = json.loads(url.read().decode())
 
     simplenodelist = list()
@@ -26,11 +25,11 @@ with urllib.request.urlopen("https://hopglass.berlin.freifunk.net/nodes.json") a
         simplenode = {"type": "Feature"}
 
         properties = {}
-        geometry = {'type': "Point", 'coordinates': [node['nodeinfo']['location']['longitude'],
-                                                     node['nodeinfo']['location']['latitude']]}
+        geometry = {'type': "Point", 'coordinates': [node['location']['longitude'],
+                                                     node['location']['latitude']]}
 
-        properties['name'] = node['nodeinfo']['hostname']
-        properties['leases'] = LEASES_DICT.get(node['nodeinfo']['hostname'], 0)
+        properties['name'] = node['hostname']
+        properties['leases'] = LEASES_DICT.get(node['hostname'], 0)
 
         simplenode['properties'] = properties
         simplenode['geometry'] = geometry
