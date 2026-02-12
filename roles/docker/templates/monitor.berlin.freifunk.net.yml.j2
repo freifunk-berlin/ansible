@@ -51,6 +51,13 @@ services:
     volumes:
       - /mnt/victorialogs/data:/victoria-logs-data
 
-
+  victoriatraces:
+    image: 'docker.io/victoriametrics/victoria-traces:v0.7.1'
+    ports:
+      - "10428:10428"
+    command:
+      - "--storageDataPath=/vtraces"
+    volumes:
+      - /mnt/victoriatraces/data:/vtraces
 
 # vim: set filetype=yaml:
