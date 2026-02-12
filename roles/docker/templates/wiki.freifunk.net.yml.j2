@@ -1,0 +1,12 @@
+---
+services:
+  anubis:
+    image: ghcr.io/techarohq/anubis:v1.24.0
+    restart: unless-stopped
+    environment:
+      BIND: ":3000"
+      TARGET: " "
+    ports:
+      - 3000:3000
+
+# vim: set filetype=yaml:
