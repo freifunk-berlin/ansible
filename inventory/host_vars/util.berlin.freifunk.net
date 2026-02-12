@@ -1,3 +1,4 @@
 ---
 caddy_caddyfile: Caddyfile_utils.j2
 php_version: 8.4
+meshviewer_version: 13.0.0
