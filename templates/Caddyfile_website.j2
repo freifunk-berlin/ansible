@@ -12,21 +12,7 @@ berlin.freifunk.net {
         root * /home/github/www/berlin.freifunk.net
         encode gzip
 
-        @de_before_en {
-                header_regexp Accept-Language de.*en
-                path /
-        }
-        @en_before_de {
-                header_regexp Accept-Language en.*de
-                path /
-        }
-        @de_only {
-                header_regexp Accept-Language de
-                path /
-        }
-        @fallback {
-                path /
-        }
+        @preffere_de `header_regexp('Accept-Language', 'de') && !header_regexp('Accept-Language', 'en.*de')`
 
         handle_errors 404 {
                 handle /de/* {
@@ -35,16 +21,16 @@ berlin.freifunk.net {
                 handle /en/* {
                         rewrite /en/404.html
                 }
-                handle /* {
-                        rewrite /en/404.html
+                handle {
+                        handle @preffere_de {
+                                redir * /de{uri} 302
+                        }
+                        handle {
+                                redir * /en{uri} 302
+                        }
                 }
                 file_server
         }
-
-        redir @de_before_en /de/ 302
-        redir @en_before_de /en/ 302
-        redir @de_only /de/ 302
-        redir @fallback /en/ 302
 
         redir /index_en /en/ 301
         redir /index_en/* /en/ 301
@@ -87,26 +73,35 @@ freifunk.dev {
         root * /home/github/www/freifunk.dev
         encode gzip
 
-        @de_before_en {
-                header_regexp Accept-Language de.*en
-                path_regexp branch ^\/([[:alnum:]]+)(\/$|$)
+        @preffere_de `header_regexp('Accept-Language', 'de') && !header_regexp('Accept-Language', 'en.*de')`
+
+        @generic_branch_path {
+                path_regexp branch ^\/([[:alnum:]]+)(\/.*$|$)
         }
-        @en_before_de {
-                header_regexp Accept-Language en.*de
-                path_regexp branch ^\/([[:alnum:]]+)(\/$|$)
+        @en_path {
+                path_regexp branch ^\/([[:alnum:]]+)(\/en/.*$)
         }
-        @de_only {
-                header_regexp Accept-Language de
-                path_regexp branch ^\/([[:alnum:]]+)(\/$|$)
-        }
-        @fallback {
-                path_regexp branch ^\/([[:alnum:]]+)(\/$|$)
+        @de_path {
+                path_regexp branch ^\/([[:alnum:]]+)(\/de/.*$)
         }
 
-        redir @de_before_en /{re.branch.1}/de/ 302
-        redir @en_before_de /{re.branch.1}/en/ 302
-        redir @de_only /{re.branch.1}/de/ 302
-        redir @fallback /{re.branch.1}/en/ 302
+        handle_errors 404 {
+                handle @de_path {
+                        rewrite {re.branch.1}/de/404.html
+                }
+                handle @en_path {
+                        rewrite {re.branch.1}/en/404.html
+                }
+                handle @generic_branch_path {
+                        handle @preffere_de {
+                                redir * /{re.branch.1}/de{re.branch.2} 302
+                        }
+                        handle {
+                                redir * /{re.branch.1}/en{re.branch.2} 302
+                        }
+                }
+                file_server
+        }
 
         @index_en {
                 path_regexp branch ^\/([[:alnum:]]+)\/index\_en
@@ -150,4 +145,3 @@ freifunk.dev {
 
         file_server
 }
-
