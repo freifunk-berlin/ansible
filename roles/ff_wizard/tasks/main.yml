@@ -76,3 +76,11 @@
     owner: www-data
     group: www-data
     recurse: true
+
+- name: Add Unattended-Upgrades config
+  ansible.builtin.template:
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    src: 50unattended-upgrades.j2
+    mode: "0644"
+    owner: root
+    group: root
