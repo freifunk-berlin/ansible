@@ -14,6 +14,8 @@ berlin.freifunk.net {
 
         @preffere_de `header_regexp('Accept-Language', 'de') && !header_regexp('Accept-Language', 'en.*de')`
 
+        @with_query not query ""
+
         handle_errors 404 {
                 handle /de/* {
                         rewrite /de/404.html
@@ -31,6 +33,8 @@ berlin.freifunk.net {
                 }
                 file_server
         }
+
+	redir @with_query {path} 301
 
         redir /index_en /en/ 301
         redir /index_en/* /en/ 301
@@ -75,6 +79,8 @@ freifunk.dev {
 
         @preffere_de `header_regexp('Accept-Language', 'de') && !header_regexp('Accept-Language', 'en.*de')`
 
+        @with_query not query ""
+
         @generic_branch_path {
                 path_regexp branch ^\/([[:alnum:]]+)(\/.*$|$)
         }
@@ -102,6 +108,8 @@ freifunk.dev {
                 }
                 file_server
         }
+
+	redir @with_query {path} 301
 
         @index_en {
                 path_regexp branch ^\/([[:alnum:]]+)\/index\_en
