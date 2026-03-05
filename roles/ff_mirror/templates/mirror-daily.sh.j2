@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+OPENWRT_MIRROR="rsync://ftp.halifax.rwth-aachen.de/openwrt/"
+OPENWRT_SNAPSHOT_MIRROR="rsync://rsync.openwrt.org/downloads-snapshots/snapshots/"
+OPENWRT_MIRROR_DIR="/data/mirror/downloads.openwrt.org"
+OPENWRTSOURCES_MIRROR="rsync://rsync.openwrt.org/sources/"
+OPENWRTSOURCES_MIRROR_DIR="/data/mirror/sources.openwrt.org"
+LOCKFILE="/tmp/ff-mirror-rsync.lock"
+
+# Add --delete-delay when we are sure the upstream is completely mirrored
+RSYNC_OPTIONS='--recursive --no-motd --links --times  --perms --hard-links --sparse --delay-updates --stats --exclude="/lastsync" --exclude="/upstream-mirror"'
+
+echo "$OPENWRT_MIRROR" > "$OPENWRT_MIRROR_DIR"/upstream-mirror
+
+# Run to sync everything
+flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
+date +%s > "$OPENWRT_MIRROR_DIR"/lastsync
+
+# Second run where we also delete files (but not *SNAPSHOTS)
+
+# flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS  --exclude="releases/*-SNAPSHOT" --exclude="/snapshots" "$OPENWRT_MIRROR" "$OPENWRT_MIRROR_DIR"
+
+# Sync the packages tarball sources
+flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS "$OPENWRTSOURCES_MIRROR" "$OPENWRTSOURCES_MIRROR_DIR"/

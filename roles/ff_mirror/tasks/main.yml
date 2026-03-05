@@ -63,10 +63,24 @@
     - { "name": "net.core.default_qdisc", "value": "fq" }
 
 
-- name: Copy sync script
+- name: Copy sync scripts
   ansible.builtin.template:
-    dest: "/data/mirrorscript.sh"
-    src: "mirrorscript.sh.j2"
+    dest: "{{ item.dest }}"
+    src: "{{ item.template }}"
     mode: "0755"
     owner: root
     group: root
+  with_items:
+    - { "template": "mirror-daily.sh.j2", "dest": "/data/mirror-daily.sh" }
+    - { "template": "mirror-weekly.sh.j2", "dest": "/data/mirror-weekly.sh" }
+
+
+- name: Setup cron jobs
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    user: caddy
+    special_time: "{{ item.special_time }}"
+    job: "{{ item.job }}"
+  with_items:
+    - { "name": "Daily mirror sync", "special_time": "daily", "job": "/usr/bin/bash /data/mirror-daily.sh" }
+    - { "name": "Weekly mirror sync", "special_time": "weekly", "job": "/usr/bin/bash /data/mirror-weekly.sh" }
