@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+OPENWRT_SNAPSHOT_MIRROR="rsync://rsync.openwrt.org/downloads-snapshots/snapshots/"
+OPENWRT_MIRROR_DIR="/data/mirror/downloads.openwrt.org"
+OPENWRTSOURCES_MIRROR_DIR="/data/mirror/sources.openwrt.org"
+LOCKFILE="/tmp/ff-mirror-rsync.lock"
+
+# Add --delete-delay when we are sure the upstream is completely mirrored
+RSYNC_OPTIONS='--recursive --no-motd --links --times  --perms --hard-links --sparse --delay-updates --stats --exclude="/lastsync" --exclude="/upstream-mirror"'
+
+
+# Sync snapshots separately
+flock -n "$LOCKFILE" rsync $RSYNC_OPTIONS --delay-delete --exclude="packages/.scheduled_for_delete/" "$OPENWRT_SNAPSHOT_MIRROR" "$OPENWRT_MIRROR_DIR"/snapshots/
+
+date +%s > "$OPENWRT_MIRROR_DIR"/snapshots/lastsync
