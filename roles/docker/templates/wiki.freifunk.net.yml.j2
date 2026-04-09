@@ -1,11 +1,19 @@
 ---
 services:
   anubis:
-    image: ghcr.io/techarohq/anubis:v1.24.0
+    image: ghcr.io/techarohq/anubis:v1.25.0
     restart: unless-stopped
     environment:
       BIND: ":3000"
       TARGET: " "
+    healthcheck:
+      test: ["CMD", "anubis", "--healthcheck"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 500ms
+    volumes:
+      - "/etc/freifunk/botPolicy.yaml:/data/cfg/botPolicy.yaml:ro"
     ports:
       - 3000:3000
 

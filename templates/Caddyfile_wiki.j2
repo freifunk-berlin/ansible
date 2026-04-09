@@ -10,13 +10,13 @@ wiki.freifunk.net {
     @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
     respond @blocked 403
 
-   @user_reg expression `{path}.contains("Spezial:Benutzerkonto_anlegen")`
+    @user_reg expression `({path}.contains("Spezial:Benutzerkonto_anlegen") ||  query({'title': 'Spezial:Benutzerkonto_anlegen'}))`
 
     reverse_proxy /.within.website/* 127.0.0.1:3000
 
     route @user_reg {
-    reverse_proxy /.within.website/* 127.0.0.1:3000
-    forward_auth 127.0.0.1:3000 {
+      reverse_proxy /.within.website/* 127.0.0.1:3000
+      forward_auth 127.0.0.1:3000 {
         uri /.within.website/x/cmd/anubis/api/check
         trusted_proxies private_ranges
         @unauthorized status 401
@@ -37,6 +37,46 @@ wiki.freifunk.net {
 
     log {
         output file /var/log/caddy/wiki.freifunk.net-error.log
+        level ERROR
+    }
+
+    file_server
+}
+
+
+dev.wiki.freifunk.net {
+    encode gzip zstd
+
+    @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*
+    respond @blocked 403
+
+    @user_reg expression `({path}.contains("Spezial:Benutzerkonto_anlegen") ||  query({'title': 'Spezial:Benutzerkonto_anlegen'}))`
+
+    reverse_proxy /.within.website/* 127.0.0.1:3000
+
+    route @user_reg {
+      reverse_proxy /.within.website/* 127.0.0.1:3000
+      forward_auth 127.0.0.1:3000 {
+        uri /.within.website/x/cmd/anubis/api/check
+        trusted_proxies private_ranges
+        @unauthorized status 401
+        handle_response @unauthorized {
+            redir * /.within.website/?redir={uri} 307
+        }
+      }
+    }
+
+    root /images/* /opt/dev.wiki.freifunk.net/static/
+    root /robots.txt /opt/dev.wiki.freifunk.net/static/
+    root /favicon.ico /opt/dev.wiki.freifunk.net/static/
+    root /wiki.svg /opt/dev.wiki.freifunk.net/static/
+
+    root * /opt/dev.wiki.freifunk.net/wwwroot/
+
+    php_fastcgi unix//var/run/php/php8.4-fpm.sock
+
+    log {
+        output file /var/log/caddy/dev.wiki.freifunk.net-error.log
         level ERROR
     }
 
