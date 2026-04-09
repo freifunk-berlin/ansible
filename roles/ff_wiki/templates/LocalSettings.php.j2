@@ -53,6 +53,11 @@ $wgCookieSecure = true; // cookie transmitted via https only
 
 ## UPO means: this is also a user preference option
 
+
+##
+## Email
+##
+
 $wgEnableEmail      = true;
 $wgEnableUserEmail  = true; # UPO
 
@@ -70,7 +75,11 @@ $wgAuthenticationTokenVersion = "{{ ff_wiki_authtoken_salt }}".date("Y-I"); // i
 
 $wgSecretKey = "{{ ff_wiki_secret_key }}";
 
-## Database settings
+
+##
+## Database
+##
+
 $wgDBtype           = "mysql";
 $wgDBserver         = "127.0.0.1";
 $wgDBname           = "ffwiki";
@@ -103,6 +112,11 @@ $wgEnableSidebarCache = true;
 
 # We have a cronjob for this
 $wgJobRunRate=0;
+
+
+##
+## Uploads
+##
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
@@ -165,6 +179,7 @@ $wgAllowUserCss = true;
 
 # Extensions
 wfLoadExtensions([ 'VisualEditor']);
+#wfLoadExtensions([ 'ConfirmEdit']);
 
 $wgPFEnableStringFunctions = true;
 $wgCiteEnablePopups = true;
@@ -181,12 +196,15 @@ $wgAccountCreationThrottle = 5;
 
 $wgGroupPermissions['*']['edit'] = false;
 
+// Disable Account Creation
+// $wgGroupPermissions['*']['createaccount'] = false;
+
 # 2FA settings
 wfLoadExtension( 'OATHAuth' );
 $wgGroupPermissions['user']['oathauth-enable'] = true;
 $wgOATHSecretKey = "{{ ff_wiki_oathsecretkey }}";
 
-wfLoadExtensions(['ffwikihelpers', 'Interwiki', 'ParserFunctions', 'Cite', 'SpamBlacklist', 'Nuke', 'WikiEditor', 'PageForms', 'RSS' ]);
+wfLoadExtensions(['ffwikihelpers', 'Interwiki', 'ParserFunctions', 'Cite', 'SpamBlacklist', 'WikiEditor', 'PageForms', 'RSS' ]);
 $wgRSSUrlWhitelist = array("https://rss.freifunk.net/*");
 $wgMFAutodetectMobileView = false;
 $wgGroupPermissions['bureaucrat']['renameuser'] = false;
@@ -202,6 +220,15 @@ wfLoadExtension( 'Maps' );
 $egMapsDefaultService = 'leaflet';
 
 wfLoadExtension('MultimediaViewer');
+
+##
+## AntiSpam
+##
+
+# Allows mass deletion: https://wiki.freifunk.net/Spezial:Massenl%C3%B6schung
+wfLoadExtension( 'Nuke' );
+$wgGroupPermissions['sysop']['nuke'] = false;
+$wgGroupPermissions['nuke']['nuke'] = true;
 
 // "Archiv:" namespace - no indexing by robots
 $wgExtraNamespaces[200] = "Archiv";
