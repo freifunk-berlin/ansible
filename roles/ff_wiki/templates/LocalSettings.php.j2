@@ -164,7 +164,7 @@ $wgFileExtensions[] = 'json';
 $wgAllowUserCss = true;
 
 # Extensions
-wfLoadExtensions([ 'VisualEditor', 'ConfirmEdit']);
+wfLoadExtensions([ 'VisualEditor']);
 
 $wgPFEnableStringFunctions = true;
 $wgCiteEnablePopups = true;
@@ -174,7 +174,7 @@ $wgGroupPermissions['user']['writeapi'] = true; // VisualEditor
 // https://www.mediawiki.org/wiki/Manual:Autoconfirmed_users
 // https://www.mediawiki.org/wiki/Manual:$wgRateLimits
 
-$wgAutoConfirmCount = 10; // 10 edits and...
+$wgAutoConfirmCount = 3; // 3 edits and...
 $wgAutoConfirmAge = 86400; // ...one day until not considered "newbie" anymore
 $wgRateLimits['edit']['newbie'] = array(1, 180); // one edit every 180 seconds
 $wgAccountCreationThrottle = 5;
