@@ -82,13 +82,13 @@ freifunk.dev {
         @with_query not query ""
 
         @generic_branch_path {
-                path_regexp branch ^\/([[:alnum:]]+)(\/.*$|$)
+                path_regexp branch ^\/(([[:alnum:]]|\-|\_)+)(\/.*$|$)
         }
         @en_path {
-                path_regexp branch ^\/([[:alnum:]]+)(\/en/.*$)
+                path_regexp branch ^\/(([[:alnum:]]|\-|\_)+)(\/en\/.*$)
         }
         @de_path {
-                path_regexp branch ^\/([[:alnum:]]+)(\/de/.*$)
+                path_regexp branch ^\/(([[:alnum:]]|\-|\_)+)(\/de\/.*$)
         }
 
         handle_errors 404 {
@@ -100,10 +100,10 @@ freifunk.dev {
                 }
                 handle @generic_branch_path {
                         handle @preffere_de {
-                                redir * /{re.branch.1}/de{re.branch.2} 302
+                                redir * /{re.branch.1}/de{re.branch.3} 302
                         }
                         handle {
-                                redir * /{re.branch.1}/en{re.branch.2} 302
+                                redir * /{re.branch.1}/en{re.branch.3} 302
                         }
                 }
                 file_server
