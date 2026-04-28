@@ -1,0 +1,5 @@
+pgdata*
+backups*
+.git*
+client*
+nginx*
