@@ -351,7 +351,7 @@ def targetsTargetFactory(f, config):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
-sudo podman run -i --rm --log-driver=none --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+sudo podman run -i --rm --log-driver=none --pids-limit=0 --network=slirp4netns docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
     && git clone %(prop:repository)s /root/falter-builter \
