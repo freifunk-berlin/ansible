@@ -353,6 +353,7 @@ def targetsTargetFactory(f, config):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
+trap "podman kill -a ; rm -f out.tar" TERM ; \
 %(prop:podmanCmd)s run -i --rm --log-driver=none --pids-limit=0 --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
 ( \
     apk add git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
