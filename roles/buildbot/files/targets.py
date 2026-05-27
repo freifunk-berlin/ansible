@@ -237,8 +237,10 @@ targets=$(for t in $(cat build/targets-%(prop:falterBranch)s.txt \
 | grep -v "#" | grep . \
 | cut -d" " -f2- | xargs -n1 echo | sort) ; do echo "$t tunneldigger" ; echo "$t notunnel" ; done) \
 ; echo "$targets" | grep "ath79/generic" \
+; echo "$targets" | grep "ipq40xx/generic" \
+; echo "$targets" | grep "mediatek/filogic" \
 ; echo "$targets" | grep "ramips/mt7621" \
-; echo "$targets" | grep -v "ath79/generic" | grep -v "ramips/mt7621" \
+; echo "$targets" | grep -v "ath79/generic" | grep -v "ipq40xx/generic" | grep -v "mediatek/filogic" | grep -v "ramips/mt7621" \
 """
                 ),
             ],
