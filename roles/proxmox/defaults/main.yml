@@ -10,3 +10,5 @@ proxmox_additional_packages:
 proxmox_zfs_arc_size: 68719476736
 
 proxmox_cluster: false
+
+proxmox_kernel_cmdline: "root=ZFS=rpool/ROOT/pve-1 boot=zfs"
