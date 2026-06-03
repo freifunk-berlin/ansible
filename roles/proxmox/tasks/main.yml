@@ -39,7 +39,8 @@
 - name: Set boot line
   ansible.builtin.copy:
     dest: /etc/kernel/cmdline
-    content: "{{ proxmox_kernel_cmdline }}"
+    content: "{{ proxmox_kernel_cmdline }}\n"
+  notify: Refresh pve-efiboot
 
 - name: Single node configuration
   ansible.builtin.include_tasks: single_node.yml

@@ -16,3 +16,7 @@
     name: sshd
     enabled: true
     state: restarted
+
+- name: Refresh pve-efiboot
+  ansible.builtin.command:
+    cmd: pve-efiboot-tool refresh
