@@ -20,3 +20,4 @@
 - name: Refresh pve-efiboot
   ansible.builtin.command:
     cmd: pve-efiboot-tool refresh
+  changed_when: true
