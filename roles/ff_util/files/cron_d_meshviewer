@@ -10,5 +10,5 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-*/10 *  *  *  *  caddy cd /opt/meshviewer/; /opt/meshviewer/venv/bin/python3 /opt/meshviewer/owm2meshviewer.py; mv /opt/meshviewer/nodes_meshviewer.json /var/www/hopglass.berlin.freifunk.net/www/meshviewer.json
+*/10 *  *  *  *  caddy cd /opt/meshviewer/; /opt/meshviewer/venv/bin/python3 /opt/meshviewer/owm2meshviewer.py; mv /opt/meshviewer/nodes_meshviewer.json /var/www/map.berlin.freifunk.net/www/meshviewer.json
 
