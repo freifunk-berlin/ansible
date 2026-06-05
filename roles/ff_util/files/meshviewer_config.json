@@ -2,7 +2,7 @@
   "cacheBreaker": "2f967a527",
   "clientZoom": 15,
   "dataPath": [
-    "https://hopglass.berlin.freifunk.net/"
+    "https://map.berlin.freifunk.net/"
   ],
   "deprecated": [
     "TP-Link Archer C2 v3",
@@ -39,7 +39,7 @@
   ],
   "deprecation_enabled": true,
   "deprecation_text": "Dieses Gerät ist relativ alt und sollte bei Gelegenheit getauscht werden - <a href='https://berlin.freifunk.net/de/contact/'>Melde dich jetzt bei uns</a>",
-  "devicePictures": "https://hopglass.berlin.freifunk.net/device-pictures/{MODEL_NORMALIZED}.svg",
+  "devicePictures": "https://map.berlin.freifunk.net/device-pictures/{MODEL_NORMALIZED}.svg",
   "devicePicturesLicense": "CC-BY-NC-SA 4.0",
   "devicePicturesSource": "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
   "domainNames": [
