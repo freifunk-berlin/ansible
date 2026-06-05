@@ -6,7 +6,7 @@
 require_once('classify-firmware.php');
 header("Content-Type: text/plain");
 
-$url="https://hopglass.berlin.freifunk.net/meshviewer.json";
+$url="https://map.berlin.freifunk.net/meshviewer.json";
 //  Initiate curl
 $ch = curl_init();
 // Will return the response, if false it print the response
