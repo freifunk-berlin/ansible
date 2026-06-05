@@ -82,7 +82,7 @@
   tags:
     - wiki
 
-- name: Set up hopglass
+- name: Set up meshviewer/util
   hosts: utils
   become: true
   roles:
