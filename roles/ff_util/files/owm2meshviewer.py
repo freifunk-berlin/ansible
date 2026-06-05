@@ -15,7 +15,7 @@ import requests
 # This is a quick hack to pull Freifunk node data for a specific geographic area
 # from OpenWifiMap (OWM) and to convert it to the format used by Gluon communities
 # typically (ffmap-backend, nodes.json and graph.json) in order to be able to use
-# it with compatible frontends such as HopGlass.
+# it with compatible frontends such as meshviewer.
 
 # The cache is mostly helpful when debugging the script.
 # Use /dev/shm ramdisk since that's much faster than real disks on shared VMs
