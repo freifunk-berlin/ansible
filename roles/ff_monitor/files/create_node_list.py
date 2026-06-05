@@ -2,7 +2,7 @@
 import json
 import urllib.request
 
-with urllib.request.urlopen("https://hopglass.berlin.freifunk.net/meshviewer.json") as url:
+with urllib.request.urlopen("https://map.berlin.freifunk.net/meshviewer.json") as url:
     data = json.loads(url.read().decode())
 
     simplenodelist = list()
