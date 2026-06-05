@@ -17,4 +17,4 @@ backup_role: client
 backup_directories:
   - /var/lib/docker/volumes/snipe-it_storage/_data/dumps/
 
-snipeit_version: v8.4.1
+snipeit_version: v8.6.1
