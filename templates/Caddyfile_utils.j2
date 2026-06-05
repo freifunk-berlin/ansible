@@ -25,6 +25,10 @@ map.berlin.freifunk.net {
     }
 }
 
+hopglass.berlin.freifunk.net {
+    redir https://map.berlin.freifunk.net permanent
+}
+
 https:// {
     encode gzip zstd
     uri path_regexp /{2,} /
