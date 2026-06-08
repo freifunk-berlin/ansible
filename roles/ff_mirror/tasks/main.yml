@@ -39,18 +39,6 @@
     - { "template": "rsyncd.motd.j2", "dest": "/etc/rsyncd.motd" }
     - { "template": "rsyncd.conf.j2", "dest": "/etc/rsyncd.conf" }
 
-- name: Copy firewall config
-  ansible.builtin.template:
-    dest: "{{ item.dest }}"
-    src: "{{ item.template }}"
-    mode: "0640"
-    owner: root
-    group: root
-  notify: Reload iptables
-  with_items:
-    - { "template": "iptables_rules.v4.j2", "dest": "/etc/iptables/rules.v4" }
-    - { "template": "iptables_rules.v6.j2", "dest": "/etc/iptables/rules.v6" }
-
 - name: Set sysctls
   ansible.posix.sysctl:
     sysctl_file: /etc/sysctl.d/99-freifunk.conf
@@ -62,7 +50,6 @@
     - { "name": "net.ipv4.tcp_congestion_control", "value": "bbr" }
     - { "name": "net.core.default_qdisc", "value": "fq" }
 
-
 - name: Copy sync scripts
   ansible.builtin.template:
     dest: "{{ item.dest }}"
@@ -73,7 +60,6 @@
   with_items:
     - { "template": "mirror-daily.sh.j2", "dest": "/data/mirror-daily.sh" }
     - { "template": "mirror-weekly.sh.j2", "dest": "/data/mirror-weekly.sh" }
-
 
 - name: Setup cron jobs
   ansible.builtin.cron:
