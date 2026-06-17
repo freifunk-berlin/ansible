@@ -26,7 +26,7 @@ services:
 
   victoriametrics:
     restart: unless-stopped
-    image: victoriametrics/victoria-metrics:v1.135.0
+    image: victoriametrics/victoria-metrics:v1.145.0
     ports:
       - 8428:8428
       - 8089:8089
@@ -42,17 +42,21 @@ services:
 
   victorialogs:
     restart: unless-stopped
-    image: victoriametrics/victoria-logs:v1.44.0
+    image: victoriametrics/victoria-logs:v1.51.0
     ports:
       - 9428:9428
+      - 1514:1514
     command:
       - '--retentionPeriod=7d'
       - '--storageDataPath=/victoria-logs-data'
+      - '-syslog.listenAddr.tcp=:1514'
+      - '-syslog.listenAddr.udp=:1514'
+
     volumes:
       - /mnt/victorialogs/data:/victoria-logs-data
 
   victoriatraces:
-    image: 'docker.io/victoriametrics/victoria-traces:v0.7.1'
+    image: 'docker.io/victoriametrics/victoria-traces:v0.9.2'
     ports:
       - "10428:10428"
     command:
