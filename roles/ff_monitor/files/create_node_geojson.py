@@ -15,7 +15,7 @@ for node in dhcp_leases.json()['data']['result']:
     LEASES_DICT[node_name] = leases
 
 
-with urllib.request.urlopen("https://hopglass.berlin.freifunk.net/meshviewer.json") as url:
+with urllib.request.urlopen("https://map.berlin.freifunk.net/meshviewer.json") as url:
     data = json.loads(url.read().decode())
 
     simplenodelist = list()

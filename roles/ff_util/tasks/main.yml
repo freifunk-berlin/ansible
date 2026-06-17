@@ -8,7 +8,7 @@
     group: caddy
   loop:
     - /opt/meshviewer
-    - /var/www/hopglass.berlin.freifunk.net/www/
+    - /var/www/map.berlin.freifunk.net/www/
 
 - name: Download Meshviewer release
   ansible.builtin.get_url:
@@ -30,7 +30,7 @@
 - name: Copy meshviewer config
   ansible.builtin.copy:
     src: meshviewer_config.json
-    dest: /var/www/hopglass.berlin.freifunk.net/www/config.json
+    dest: /var/www/map.berlin.freifunk.net/www/config.json
     mode: "0644"
     owner: caddy
     group: caddy
@@ -61,5 +61,5 @@
   become_user: caddy
   ansible.builtin.git:
     repo: https://github.com/freifunk/device-pictures.git
-    dest: /var/www/hopglass.berlin.freifunk.net/device-pictures
+    dest: /var/www/map.berlin.freifunk.net/device-pictures
     version: main
