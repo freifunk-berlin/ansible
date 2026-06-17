@@ -22,11 +22,16 @@ map.berlin.freifunk.net {
     encode gzip zstd
     header {
         Cache-Control no-cache
+# Dirty hack to allow old cached hopglass site to still work
+        Access-Control-Allow-Origin "https://hopglass.berlin.freifunk.net"
+        Access-Control-Allow-Methods GET
     }
 }
 
 hopglass.berlin.freifunk.net {
-    redir https://map.berlin.freifunk.net permanent
+# Dirty hack to force browsers to clear its cache so it applies the redirect
+    header Clear-Site-Data "\"storage\", \"cookies\", \"cache\""
+    redir https://map.berlin.freifunk.net{uri} permanent
 }
 
 https:// {
