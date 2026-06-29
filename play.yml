@@ -118,3 +118,13 @@
     - docker
   tags:
     - inventory
+
+- name: Set up vote
+  hosts: vote
+  become: true
+  roles:
+    - caddy
+    - vote
+    - docker
+  tags:
+    - vote
