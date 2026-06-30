@@ -63,6 +63,11 @@ berlin.freifunk.net {
         redir /en/imprint /de/imprint/ 301
         redir /en/imprint/ /de/imprint/ 301
 
+        redir /dweb /en/dweb/ 301
+        redir /dweb/ /en/dweb/ 301
+        redir /de/dweb /en/dweb/ 301
+        redir /de/dweb/ /en/dweb/ 301
+
         redir /wiki /de/wiki/ 301
         redir /wiki/ /de/wiki/ 301
         redir /meshwiki /de/wiki/ 301
@@ -152,4 +157,9 @@ freifunk.dev {
         redir @wiki /{re.branch.1}/de/wiki/ 301
 
         file_server
+}
+
+# dweb camp 2026
+dweb.freifunk.net {
+        redir https://berlin.freifunk.net/en/dweb/
 }
