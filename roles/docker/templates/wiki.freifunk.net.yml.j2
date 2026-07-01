@@ -6,6 +6,8 @@ services:
     environment:
       BIND: ":3000"
       TARGET: " "
+      POLICY_FNAME: "/data/cfg/botPolicy.yaml"
+      DIFFICULTY: "10"
     healthcheck:
       test: ["CMD", "anubis", "--healthcheck"]
       interval: 5s

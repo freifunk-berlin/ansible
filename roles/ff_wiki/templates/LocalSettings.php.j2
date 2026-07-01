@@ -195,6 +195,7 @@ $wgRateLimits['edit']['newbie'] = array(1, 180); // one edit every 180 seconds
 $wgAccountCreationThrottle = 5;
 
 $wgGroupPermissions['*']['edit'] = false;
+$wgRateLimits['*']['no_ratelimit'] = [ 999, 1 ];
 
 // Disable Account Creation
 // $wgGroupPermissions['*']['createaccount'] = false;
@@ -213,7 +214,7 @@ $wgGroupPermissions['sysop']['interwiki'] = true; // To grant sysops permissions
 
 $wgRSSUrlWhitelist = array('*');
 wfLoadExtension('SemanticMediaWiki');
-enableSemantics('wiki.freifunk.net');
+
 $smwgEnabledEditPageHelp = false;
 
 wfLoadExtension( 'Maps' );
