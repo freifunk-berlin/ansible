@@ -37,7 +37,7 @@ firmware_kathleen1505 = re.compile(r"^Freifunk Berlin kathleen 15.05(\.1){0,1}$"
 firmware_openwrt = re.compile("^OpenWrt .*")
 
 bounding_box = (
-    "12.5,52.1,14.5,52.9"  # Berlin and parts of East Brandenburg (-> Fuerstenwalde)
+    "12.4,52.0,14.5,53.3"  # Berlin and parts of East Brandenburg (-> Fuerstenwalde)
 )
 bounding_box_elems = [float(x) for x in bounding_box.split(",")]
 date_format = "%Y-%m-%dT%H:%M:%S+0000"
