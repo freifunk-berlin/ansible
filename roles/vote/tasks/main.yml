@@ -1,0 +1,17 @@
+---
+
+- name: Copy loomio config
+  ansible.builtin.template:
+    src: env.j2
+    dest: /etc/freifunk/.env
+    mode: "0640"
+    owner: root
+    group: root
+  notify: Start and migrate loomio
+
+- name: Initialize the database
+  ansible.builtin.command:
+    cmd: cd /etc/freifunk/ && docker compose run app rake db:setup
+    creates: /etc/freifunk/DB_INITIALIZED
+
+# see https://github.com/loomio/loomio/tree/master/deploy
