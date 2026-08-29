@@ -1,6 +1,6 @@
 ---
 
-docker_compose_file: vote.freifunktion.net.yml.j2
+docker_compose_file: vote.freifunk.dev.yml.j2
 
 vote_secret_cookie_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256

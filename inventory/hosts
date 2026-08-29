@@ -70,4 +70,4 @@ mirror.berlin.freifunk.net
 inventory.berlin.freifunk.net ansible_host=77.87.49.22
 
 [vote]
-vote.freifunktion.net
+vote.freifunk.dev
