@@ -112,10 +112,10 @@
       python3 -m venv "{{ buildbot_worker_path }}env"
 
       source "{{ buildbot_worker_path }}env/bin/activate"
-      pip install buildbot-worker=={{ buildbot_worker_version }} \
-          {{ buildbot_worker_path }}/env/bin/buildbot-worker create-worker \
-          --umask=0o22 {{ buildbot_worker_path }} {{ buildbot_worker_master_fqdn }}:{{ buildbot_worker_master_port }} \
-          {{ buildbot_worker_name }} {{ buildbot_worker_pwd }}
+      pip install buildbot-worker=={{ buildbot_worker_version }}
+      {{ buildbot_worker_path }}/env/bin/buildbot-worker create-worker \
+      --umask=0o22 {{ buildbot_worker_path }} {{ buildbot_worker_master_fqdn }}:{{ buildbot_worker_master_port }} \
+      {{ buildbot_worker_name }} {{ buildbot_worker_pwd }}
 
       echo "{{ buildbot_worker_contact }}" > {{ buildbot_worker_path }}/info/admin
       echo "{{ buildbot_worker_info }}" > {{ buildbot_worker_path }}/info/host
