@@ -18,6 +18,16 @@
   ansible.builtin.user:
     name: "{{ buildbot_worker_machine_user }}"
 
+# For cgroupsv2 for rootless containers
+# Same as `loginctl enable-linger bbworker`
+- name: Enable Linger for bbworker user
+  ansible.builtin.file:
+    path: "/var/lib/systemd/linger/{{ buildbot_worker_machine_user }}"
+    state: file
+    mode: "0644"
+    owner: root
+    group: root
+
 - name: Create mountpoint for ramdisk
   ansible.builtin.file:
     path: /ramdisk/
