@@ -321,6 +321,19 @@ def targetsTargetFactory(f, config):
     )
 
     f.addStep(
+        steps.Git(
+            name="git clone",
+            haltOnFailure=True,
+            repourl=util.Interpolate("%(prop:repository)s"),
+            # if using incremental, we get strange behaviors, when configuring
+            # another repo, that is back the other repo. Doing full checkouts is cleaner
+            method="clobber",
+            mode="full",
+            submodules=True,
+        ),
+    )
+
+    f.addStep(
         steps.ShellCommand(
             name="build",
             haltOnFailure=True,
@@ -353,21 +366,23 @@ def targetsTargetFactory(f, config):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
-trap "podman kill -a ; rm -f out.tar" TERM ; \
-%(prop:podmanCmd)s run -i --rm --log-driver=none --pids-limit=0 --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+trap "podman kill -a ; rm -f out.tar" TERM \
+; iidfile=./.tmp-falter-image-id.txt \
+&& %(prop:podmanCmd)s build --iidfile=$iidfile --pull=newer --network=host build/ \
+&& img=$(cat $iidfile) \
+&& rm -f $iidfile \
+&& echo "image is $img" \
+&& %(prop:podmanCmd)s run -i --rm --log-driver=none --pids-limit=0 --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 --entrypoint= $img sh -c '\
 ( \
-    apk add git gcompat bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 gettext perl python3 rsync sqlite flex libxslt py3-setuptools \
-    && git clone %(prop:repository)s /root/falter-builter \
-    && cd /root/falter-builter/ \
+    git clone %(prop:repository)s . \
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
     && env OPENWRT_MIRROR=%(kw:owMirror)s FALTER_MIRROR=%(kw:fMirror)s FALTER_VARIANT=%(prop:variant)s build/build.sh %(prop:falterVersion)s %(prop:target)s all \
 ) >&2 \
-&& cd /root/falter-builter/out/%(prop:falterVersion)s \
+&& cd out/%(prop:falterVersion)s \
 && tar -c *' > out.tar \
 """,
-                    alpineVersion=config['alpineVersion'],
                     owMirror=config['openwrtMirror'],
                     fMirror=config['falterMirror'],
                 ),
@@ -405,7 +420,7 @@ trap "podman kill -a ; rm -f out.tar" TERM ; \
             name="cleanup",
             alwaysRun=True,
             warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar"],
+            command=["sh", "-c", "rm -vf out.tar ; podman kill -a"],
         )
     )
 

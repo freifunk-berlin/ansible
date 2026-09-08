@@ -222,6 +222,19 @@ mkdir -p %(kw:p)s %(kw:p)s.new \
 # Runs build.sh with prop:arch and prop:branch, and uploads the result to master.
 def packagesArchFactory(f, config):
     f.addStep(
+        steps.Git(
+            name="git clone",
+            haltOnFailure=True,
+            repourl=util.Interpolate("%(prop:repository)s"),
+            # if using incremental, we get strange behaviors, when configuring
+            # another repo, that is back the other repo. Doing full checkouts is cleaner
+            method="clobber",
+            mode="full",
+            submodules=True,
+        ),
+    )
+
+    f.addStep(
         steps.ShellCommand(
             name="build",
             haltOnFailure=True,
@@ -241,22 +254,24 @@ def packagesArchFactory(f, config):
                     #     https://github.com/containers/podman/issues/13779
                     #
                     """\
-trap "podman kill -a ; rm -f out.tar" TERM ; \
-%(prop:podmanCmd)s run -i --rm --pids-limit=0 --log-driver=none --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 docker.io/library/alpine:%(kw:alpineVersion)s sh -c '\
+trap "podman kill -a ; rm -f out.tar" TERM \
+; iidfile=./.tmp-falter-image-id.txt \
+&& %(prop:podmanCmd)s build --iidfile=$iidfile --pull=newer --network=host build/ \
+&& img=$(cat $iidfile) \
+&& rm -f $iidfile \
+&& echo "image is $img" \
+&& %(prop:podmanCmd)s run -i --rm --log-driver=none --pids-limit=0 --network=slirp4netns --tmpfs /root:rw,size=12582912k,mode=1777 --entrypoint= $img sh -c '\
 ( \
-    apk add gcompat git bash wget zstd xz gzip unzip grep diffutils findutils coreutils build-base gcc abuild binutils ncurses-dev gawk bzip2 perl python3 rsync argp-standalone musl-fts-dev musl-obstack-dev musl-libintl py3-setuptools \
-    && git clone %(prop:repository)s /root/falter-packages \
-    && cd /root/falter-packages/ \
+    git clone %(prop:repository)s . \
     && git checkout %(prop:got_revision)s \
     && git submodule init \
     && git submodule update \
     && env OPENWRT_MIRROR=%(kw:owMirror)s FALTER_MIRROR=%(kw:fMirror)s GIT_MIRROR=%(kw:gitMirror)s SOURCES_MIRROR=%(kw:srcMirror)s build/build.sh %(prop:branch)s %(prop:arch)s out/ \
     && rm -vf out/%(prop:branch)s/%(prop:arch)s/public-key.pem \
 ) >&2 \
-&& cd /root/falter-packages/out/ \
+&& cd out/ \
 && tar -c *' > out.tar \
 """,
-                    alpineVersion=config['alpineVersion'],
                     owMirror=config['openwrtMirror'],
                     fMirror=config['falterMirror'],
                     gitMirror=config['gitMirror'],
@@ -318,7 +333,7 @@ trap "podman kill -a ; rm -f out.tar" TERM ; \
             name="cleanup worker",
             alwaysRun=True,
             warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar"],
+            command=["sh", "-c", "rm -vf out.tar ; podman kill -a"],
         )
     )
 

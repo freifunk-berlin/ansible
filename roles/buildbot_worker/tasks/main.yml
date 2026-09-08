@@ -46,29 +46,6 @@
     owner: "{{ buildbot_worker_machine_user }}"
     group: "{{ buildbot_worker_machine_user }}"
 
-- name: Create path for custom podman storage config
-  ansible.builtin.file:
-    path: /home/{{ buildbot_worker_machine_user }}/.config/containers/
-    state: directory
-    mode: "0755"
-    owner: "{{ buildbot_worker_machine_user }}"
-    group: "{{ buildbot_worker_machine_user }}"
-  when: buildbot_worker_ramdisk
-
-- name: Custom podman storage config
-  ansible.builtin.copy:
-    dest: /home/{{ buildbot_worker_machine_user }}/.config/containers/storage.conf
-    mode: "0644"
-    content: |
-      [storage]
-      driver = "overlay"
-      runroot = "{{ buildbot_worker_path }}/run/user/$UID/run"
-      graphroot = "{{ buildbot_worker_path }}/.local/share/containers/storage/"
-    owner: "{{ buildbot_worker_machine_user }}"
-    group: "{{ buildbot_worker_machine_user }}"
-  when: buildbot_worker_ramdisk
-  notify: Restart podman
-
 - name: Add buildbot-worker systemd-service-module
   ansible.builtin.template:
     dest: /etc/systemd/system/buildbot-worker.service
