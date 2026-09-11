@@ -45,6 +45,14 @@
     group: root
   notify: Restart collectd
 
+- name: Copy snmp_exporter config
+  ansible.builtin.copy:
+    dest: /etc/freifunk/snmp.yml
+    src: snmp.yml
+    mode: "0640"
+    owner: prometheus
+    group: prometheus
+
 - name: Add cleanup task for data that hasn't been updated in 30 days
   ansible.builtin.cron:
     name: remove old rrd files
