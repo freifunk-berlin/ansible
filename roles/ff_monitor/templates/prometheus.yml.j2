@@ -40,7 +40,7 @@ scrape_configs:
     scrape_interval: 900s
     scrape_timeout: 30s
     static_configs:
-      - targets: ['127.0.0.1:9111']
+      - targets: ['owm-exporter:9111']
 
   - job_name: 'blackbox-ping'
     metrics_path: /probe
@@ -58,14 +58,13 @@ scrape_configs:
         - 1.0.0.1
         - 2606:4700:4700::1111
         - 2606:4700:4700::1001
-
     relabel_configs:
         - source_labels: [__address__]
           target_label: __param_target
         - source_labels: [__param_target]
           target_label: instance
         - target_label: __address__
-          replacement: blackbox:9115
+          replacement: host.docker.internal:9115
 
 
   - job_name: victoriametrics
@@ -82,7 +81,6 @@ scrape_configs:
     scrape_interval: 120s
     scrape_timeout: 120s
     static_configs:
-
       - targets: ['10.31.134.101']
         labels:
           ffberlin_hostname: c-base-simeon-af60lr
