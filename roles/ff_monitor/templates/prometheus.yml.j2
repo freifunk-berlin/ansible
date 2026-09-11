@@ -9,18 +9,12 @@ scrape_configs:
     metrics_path: /metrics/firmware/
     scheme: https
 
-  - job_name: 'prometheus'
-    scrape_interval: 5s
-    scrape_timeout: 5s
-    static_configs:
-      - targets: ['localhost:9115']
-
   - job_name: 'pushgateway'
     scrape_interval: 30s
     scrape_timeout: 30s
     honor_labels: true
     static_configs:
-      - targets: ['localhost:9091']
+      - targets: ['pushgateway:9091']
 
   - job_name: collectd
     scrape_interval: 30s
@@ -30,7 +24,7 @@ scrape_configs:
 
   - job_name: grafana
     static_configs:
-      - targets: ['127.0.0.1:8080']
+      - targets: ['host.docker.internal:8080']
 
   - job_name: servers
     static_configs:
@@ -46,7 +40,7 @@ scrape_configs:
     scrape_interval: 900s
     scrape_timeout: 30s
     static_configs:
-      - targets: ['127.0.0.1:9111']
+      - targets: ['owm-exporter:9111']
 
   - job_name: 'blackbox-ping'
     metrics_path: /probe
@@ -64,24 +58,169 @@ scrape_configs:
         - 1.0.0.1
         - 2606:4700:4700::1111
         - 2606:4700:4700::1001
-
     relabel_configs:
         - source_labels: [__address__]
           target_label: __param_target
         - source_labels: [__param_target]
           target_label: instance
         - target_label: __address__
-          replacement: localhost:9115
+          replacement: host.docker.internal:9115
 
 
   - job_name: victoriametrics
     static_configs:
     - targets:
-      - localhost:8428
+      - victoriametrics:8428
 
   - job_name: victorialogs
     static_configs:
     - targets:
-      - localhost:9428
+      - victorialogs:9428
+
+  - job_name: 'snmp-af60'
+    scrape_interval: 120s
+    scrape_timeout: 120s
+    static_configs:
+      - targets: ['10.31.134.101']
+        labels:
+          ffberlin_hostname: c-base-simeon-af60lr
+      - targets: ['10.31.11.10']
+        labels:
+          ffberlin_hostname: emma-o-60ghz
+      - targets: ['10.31.131.131']
+        labels:
+          ffberlin_hostname: flughafen-ak36
+      - targets: ['10.31.131.132']
+        labels:
+          ffberlin_hostname: flughafen-rhxb
+      - targets: ['10.31.157.11']
+        labels:
+          ffberlin_hostname: gub37-emma
+      - targets: ['10.248.97.250']
+        labels:
+          ffberlin_hostname: hweg-rhnk
+      - targets: ['10.31.214.26']
+        labels:
+          ffberlin_hostname: ilr-teufb
+      - targets: ['10.248.44.34']
+        labels:
+          ffberlin_hostname: izrd-ev-sama
+      - targets: ['10.31.9.243']
+        labels:
+          ffberlin_hostname: k9-sama
+      - targets: ['10.31.82.211']
+        labels:
+          ffberlin_hostname: kiehlufer-rhnk
+      - targets: ['10.31.191.180']
+        labels:
+          ffberlin_hostname: klunker-philmel
+      - targets: ['10.36.243.190']
+        labels:
+          ffberlin_hostname: perleberger36-strom-60
+      - targets: ['10.230.2.3']
+        labels:
+          ffberlin_hostname: philmel-klunker
+      - targets: ['10.31.153.11']
+        labels:
+          ffberlin_hostname: rhnk-rhxb
+      - targets: ['10.31.153.22']
+        labels:
+          ffberlin_hostname: rhnk-ak36
+      - targets: ['10.31.153.24']
+        labels:
+          ffberlin_hostname: rhnk-oso-60ghz
+      - targets: ['10.31.153.26']
+        labels:
+          ffberlin_hostname: rhnk-w38b
+      - targets: ['10.31.126.4']
+        labels:
+          ffberlin_hostname: rhxb-l105
+      - targets: ['10.31.126.5']
+        labels:
+          ffberlin_hostname: rhxb-flughafen
+      - targets: ['10.31.126.8']
+        labels:
+          ffberlin_hostname: rhxb-rhnk
+      - targets: ['10.31.119.131']
+        labels:
+          ffberlin_hostname: rigaer78-sama
+      - targets: ['10.31.81.25']
+        labels:
+          ffberlin_hostname: sama-ost-60ghz
+      - targets: ['10.31.81.26']
+        labels:
+          ffberlin_hostname: sama-sued-60ghz
+      - targets: ['10.31.81.30']
+        labels:
+          ffberlin_hostname: sama-saarbruecker
+      - targets: ['10.31.174.242']
+        labels:
+          ffberlin_hostname: sav-emma
+      - targets: ['10.31.52.163']
+        labels:
+          ffberlin_hostname: scharni-sama
+      - targets: ['10.31.130.133']
+        labels:
+          ffberlin_hostname: ak36-flughafen
+      - targets: ['10.31.130.136']
+        labels:
+          ffberlin_hostname: ak36-rhnk
+      - targets: ['10.31.130.139']
+        labels:
+          ffberlin_hostname: ak36-teufelsberg
+      - targets: ['10.31.127.131']
+        labels:
+          ffberlin_hostname: l105-ost-60g
+      - targets: ['10.31.83.52']
+        labels:
+          ffberlin_hostname: saarbruecker-sama
+    metrics_path: /snmp
+    params:
+      auth: [public_v2]
+      module:
+        - if_mib
+        - af60
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmp-exporter:9116
+
+
+  - job_name: 'snmp-swos'
+    scrape_interval: 120s
+    scrape_timeout: 120s
+    static_configs:
+      - targets: ['10.31.11.2']
+        labels:
+          ffberlin_hostname: emma-switch
+      - targets: ['10.230.2.2']
+        labels:
+          ffberlin_hostname: philmel-switch
+      - targets: ['10.31.153.2']
+        labels:
+          ffberlin_hostname: rhnk-switch
+      - targets: ['10.31.130.131']
+        labels:
+          ffberlin_hostname: ak36-poe-roof
+    metrics_path: /snmp
+    params:
+      auth: [public_v2]
+      module:
+        - if_mib
+        - mikrotik
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: snmp-exporter:9116
+
+  - job_name: 'snmp_exporter'
+    static_configs:
+      - targets: ['snmp-exporter:9116']
 
 # vim: set filetype=yaml:
