@@ -19,9 +19,9 @@
     update_cache: true
     cache_valid_time: 3600
 
-- name: Copy prometheus config
+- name: Copy vmagent prometheus config
   ansible.builtin.template:
-    dest: /etc/prometheus/prometheus.yml
+    dest: /mnt/vmagentdata/prometheus.yml
     src: prometheus.yml.j2
     mode: "0640"
     owner: prometheus
