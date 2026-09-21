@@ -366,7 +366,7 @@ def targetsTargetFactory(f, config):
                     # Also larger targets seemed to need more than 6 GiB.
                     #
                     """\
-trap "podman kill -a ; rm -f out.tar" TERM \
+trap "echo 'trap TERM' ; podman kill worker-%(prop:workername)s ; rm -vf out.tar" TERM \
 ; iidfile=./.tmp-falter-image-id.txt \
 && %(prop:podmanCmd)s build --iidfile=$iidfile --pull=newer --network=host build/ \
 && img=$(cat $iidfile) \
@@ -416,15 +416,6 @@ trap "podman kill -a ; rm -f out.tar" TERM \
     )
 
     f.addStep(
-        steps.ShellCommand(
-            name="cleanup",
-            alwaysRun=True,
-            warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar ; podman kill -a"],
-        )
-    )
-
-    f.addStep(
         steps.MasterShellCommand(
             name="cleanup master",
             alwaysRun=True,
@@ -441,7 +432,7 @@ trap "podman kill -a ; rm -f out.tar" TERM \
             name="cleanup worker",
             alwaysRun=True,
             warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar"],
+            command=["sh", "-c", util.Interpolate("rm -vf out.tar ; podman kill worker-%(prop:workername)s ; true")],
         )
     )
 

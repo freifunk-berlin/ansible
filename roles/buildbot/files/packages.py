@@ -254,7 +254,7 @@ def packagesArchFactory(f, config):
                     #     https://github.com/containers/podman/issues/13779
                     #
                     """\
-trap "podman kill -a ; rm -f out.tar" TERM \
+trap "echo 'trap TERM' ; podman kill worker-%(prop:workername)s ; rm -vf out.tar" TERM \
 ; iidfile=./.tmp-falter-image-id.txt \
 && %(prop:podmanCmd)s build --iidfile=$iidfile --pull=newer --network=host build/ \
 && img=$(cat $iidfile) \
@@ -333,7 +333,7 @@ trap "podman kill -a ; rm -f out.tar" TERM \
             name="cleanup worker",
             alwaysRun=True,
             warnOnFailure=False,
-            command=["sh", "-c", "rm -vf out.tar ; podman kill -a"],
+            command=["sh", "-c", util.Interpolate("rm -vf out.tar ; podman kill worker-%(prop:workername)s ; true")],
         )
     )
 
