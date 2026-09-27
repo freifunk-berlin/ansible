@@ -297,7 +297,18 @@
         "type": "osm"
       },
       "name": "OpenStreetMap (DE)",
-      "url": "https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
+      "url": "https://tiles.berlin.freifunk.net/osm_de/{z}/{x}/{y}.png"
+    },
+    {
+      "config": {
+        "#subdomains": "1234",
+        "attribution": "&copy; Versatiles | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
+        "maxZoom": 17,
+        "invertInDarkMode": true,
+        "type": "osm"
+      },
+      "name": "Satelliten Ansicht",
+      "url": "https://tiles.berlin.freifunk.net/versatiles/tiles/satellite/{z}/{x}/{y}.png"
     },
     {
       "name": "BaseMap.de (Vektor)",
