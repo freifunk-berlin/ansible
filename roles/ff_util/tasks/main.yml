@@ -63,3 +63,6 @@
     repo: https://github.com/freifunk/device-pictures.git
     dest: /var/www/map.berlin.freifunk.net/device-pictures
     version: main
+
+- name: Tilecache
+  ansible.builtin.include_tasks: tilecache.yml

@@ -4,3 +4,9 @@
     src: /opt/meshviewer/meshviewer-build.zip
     dest: /var/www/map.berlin.freifunk.net/www
     remote_src: true
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+    state: restarted

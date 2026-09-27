@@ -22,9 +22,6 @@ map.berlin.freifunk.net {
     encode gzip zstd
     header {
         Cache-Control no-cache
-# Dirty hack to allow old cached hopglass site to still work
-        Access-Control-Allow-Origin "https://hopglass.berlin.freifunk.net"
-        Access-Control-Allow-Methods GET
     }
 }
 
@@ -93,4 +90,8 @@ ff.berlin {
     php_fastcgi unix//run/php/php8.4-fpm.sock
     @rewrite not path /knoteninfo.php/*
     rewrite @rewrite /knoteninfo.php?path={url}
+}
+
+tiles.berlin.freifunk.net {
+    reverse_proxy  http://localhost:8080
 }
