@@ -1,4 +1,4 @@
-ansible ~= 13.0
+ansible ~= 14.0
 ansible-core
 ansible-lint >= 26.0
 black >= 23.9

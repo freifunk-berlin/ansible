@@ -6,8 +6,8 @@ roles:
     version: 2.0.1
 collections:
   - name: ansible.posix
-    version: 2.1.0
-  - name: community.mysql
-    version: 4.0.1
+    version: 2.2.2
+  - name: ansible.mysql
+    version: 5.2.0
   - name: community.general
-    version: 12.3.0
+    version: 13.4.0

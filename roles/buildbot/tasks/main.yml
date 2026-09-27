@@ -26,12 +26,12 @@
   notify: Restart mariadb
 
 - name: Create buildbot database
-  community.mysql.mysql_db:
+  ansible.mysql.mysql_db:
     name: buildbot
     state: present
 
 - name: Create buildbot mariadb user
-  community.mysql.mysql_user:
+  ansible.mysql.mysql_user:
     name: buildbot
     password: "{{ buildbot_mariadb_user_password }}"
     priv: buildbot.*:ALL
