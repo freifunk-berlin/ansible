@@ -14,24 +14,28 @@ monitor.berlin.freifunk.net  {
 }
 
 
-# Pushgw 
-http://10.31.130.151:9091 {
-     bind 10.31.130.151
-#    @delete-get {   # TODO Fix
-#        return 418
-#    }
-#    @put-post {
-        reverse_proxy http://127.0.0.1:9091
-#    }
+# Pushgw
+http://10.31.130.151:9091 http://monitor.berlin.freifunk.net:9091  {
+    bind 10.31.130.151 77.87.50.8  2001:bf7:b301::8
+
+    @denied {
+        not {
+            method POST
+            path /metrics/job/nodes/instance/*
+        }
+    }
+    respond @denied 418
+
+    reverse_proxy http://127.0.0.1:9091
 }
 
 monitor.berlin.freifunk.net:9042 {
     @denied1 not method GET POST
     @denied2 not path /api/*
-    
-    
+
+
     reverse_proxy http://127.0.0.1:9090
-    
+
     respond @denied1 "nope" 418 {
                close
     }
