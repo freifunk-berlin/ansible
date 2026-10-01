@@ -48,7 +48,7 @@
   ansible.builtin.git:
     repo: https://github.com/freifunk/ffwikihelpers.git
     dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/ffwikihelpers"
-    version: dev
+    version: main
     force: true
     accept_hostkey: true
 
