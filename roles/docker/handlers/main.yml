@@ -6,5 +6,6 @@
     recreate: always
     remove_orphans: true
     wait: true
+  when: not ansible_check_mode
 
 # vim: set filetype=yaml:

@@ -34,7 +34,7 @@ services:
 
   victoriametrics:
     restart: unless-stopped
-    image: victoriametrics/victoria-metrics:v1.151.0
+    image: victoriametrics/victoria-metrics:v1.153.0
     ports:
       - 8428:8428
       - 9090:8428
@@ -50,7 +50,7 @@ services:
       - /mnt/victoriametrics/data:/victoria-metrics-data
 
   vmagent:
-    image: victoriametrics/vmagent:v1.151.0
+    image: victoriametrics/vmagent:v1.153.0
     depends_on:
       - "victoriametrics"
     ports:
@@ -72,7 +72,7 @@ services:
 
   victorialogs:
     restart: unless-stopped
-    image: victoriametrics/victoria-logs:v1.52.0
+    image: victoriametrics/victoria-logs:v1.53.0
     ports:
       - 9428:9428
       - 1514:1514
@@ -86,7 +86,7 @@ services:
       - /mnt/victorialogs/data:/victoria-logs-data
 
   victoriatraces:
-    image: 'docker.io/victoriametrics/victoria-traces:v0.10.0'
+    image: 'docker.io/victoriametrics/victoria-traces:v0.12.0'
     ports:
       - "10428:10428"
     command:
