@@ -9,8 +9,4 @@ buildbot_worker_pwd: !vault |
           35343333393832623935653763633237353263363462383765363862353034613161
 
 buildbot_worker_contact: Nicolas Berens <kontakt@nicolas-berens.de>
-buildbot_worker_info: 8 Cores, 32GB RAM, Ramdisk
-
-buildbot_worker_path: /ramdisk/bb_worker/
-buildbot_worker_ramdisk: yes
-buildbot_worker_ramdisk_size: 18G
+buildbot_worker_info: 12 Cores, 16GB RAM

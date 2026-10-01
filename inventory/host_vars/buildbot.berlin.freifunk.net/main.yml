@@ -1,3 +1,8 @@
 ---
 
 caddy_caddyfile: Caddyfile_buildbot.j2
+
+
+git mv inventory/host_vars/buildbot-worker-02.yml inventory/host_vars/buildbot-worker-02
+git mv inventory/host_vars/buildbot-worker-03.yml inventory/host_vars/buildbot-worker-03
+git mv inventory/host_vars/buildbot-worker-04.yml inventory/host_vars/buildbot-worker-04
