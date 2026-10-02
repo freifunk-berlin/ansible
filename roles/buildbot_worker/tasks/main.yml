@@ -23,7 +23,7 @@
 - name: Enable Linger for bbworker user
   ansible.builtin.file:
     path: "/var/lib/systemd/linger/{{ buildbot_worker_machine_user }}"
-    state: file
+    state: touch
     mode: "0644"
     owner: root
     group: root
