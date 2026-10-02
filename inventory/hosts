@@ -8,10 +8,9 @@ config.berlin.freifunk.net
 monitor.berlin.freifunk.net
 
 [buildbotworker]
-buildbot-worker-01 ansible_host=85.215.202.123
-buildbot-worker-02 ansible_host=85.215.248.194
-buildbot-worker-03 ansible_host=85.215.225.21
-buildbot-worker-04 ansible_host=85.215.162.88
+buildbot-worker-ionos-01.berlin.freifunk.net ansible_host=85.215.202.123
+buildbot-worker-ionos-02.berlin.freifunk.net ansible_host=85.215.248.194
+buildbot-worker-ionos-03.berlin.freifunk.net ansible_host=85.215.225.21
 buildbot-worker-akira ansible_host=192.168.16.7                  # only from within martins home...
 buildbot-worker-scherer8-1 ansible_host=martin@scherer8-buildbot1.ff  # only from within freifunk-net use a jump-host or so...
 buildbot-worker-scherer8-2 ansible_host=martin@scherer8-buildbot2.ff  # only from within freifunk-net use a jump-host or so...
@@ -55,6 +54,7 @@ wiki.freifunk.net
 
 [backup_hosts]
 backup.berlin.freifunk.net
+offsite-backup.berlin.freifunk.net ansible_host=85.215.162.88
 
 [backup_hosts:children]
 wiki
@@ -68,4 +68,7 @@ mirror.berlin.freifunk.net
 
 [inventory]
 inventory.berlin.freifunk.net ansible_host=77.87.49.22
+
+[other]
+vote.freifunktion.net ansible_host=77.87.49.26
 
