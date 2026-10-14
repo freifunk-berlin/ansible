@@ -226,6 +226,9 @@ wfLoadExtension('MultimediaViewer');
 ## AntiSpam
 ##
 
+# Use regexp to detect most comon spam 
+$wgSpamRegex = "/online-casino|buy-viagra|adipex|phentermine|adult-website\.com|display:none|overflow:\s*auto;\s*height:\s*[0-4]px;/i";
+
 # Allows mass deletion: https://wiki.freifunk.net/Spezial:Massenl%C3%B6schung
 wfLoadExtension( 'Nuke' );
 $wgGroupPermissions['sysop']['nuke'] = false;
