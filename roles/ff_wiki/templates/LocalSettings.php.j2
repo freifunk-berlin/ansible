@@ -191,10 +191,11 @@ $wgGroupPermissions['user']['writeapi'] = true; // VisualEditor
 
 $wgAutoConfirmCount = 3; // 3 edits and...
 $wgAutoConfirmAge = 86400; // ...one day until not considered "newbie" anymore
-$wgRateLimits['edit']['newbie'] = array(1, 180); // one edit every 180 seconds
-$wgAccountCreationThrottle = 5;
+$wgRateLimits['edit']['newbie'] = array(2, 86400); // max two edits per day for unconfirmed newbies
+$wgAccountCreationThrottle = 3; // max 3 registrations per IP and day
 
 $wgGroupPermissions['*']['edit'] = false;
+$wgGroupPermissions['newbie']['edit'] = true;
 $wgRateLimits['*']['no_ratelimit'] = [ 999, 1 ];
 
 // Disable Account Creation
