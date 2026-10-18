@@ -62,3 +62,12 @@
     owner: root
     group: root
     mode: "0755"
+
+- name: Set sysctls
+  ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-freifunk.conf
+    reload: true
+    state: present
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items: "{{ common_sysctls }}"
