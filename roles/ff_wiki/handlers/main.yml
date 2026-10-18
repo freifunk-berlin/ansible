@@ -1,7 +1,14 @@
 ---
 - name: Install composer dependencies # noqa: no-changed-when
   ansible.builtin.command:
-    cmd: composer install --no-dev --optimize-autoloader
+    cmd: composer update --no-dev --optimize-autoloader
     chdir: "{{ ff_wiki_basedir }}/wwwroot/"
+  become: true
+  become_user: caddy
+
+- name: Install composer dependencies - dev # noqa: no-changed-when
+  ansible.builtin.command:
+    cmd: composer update --no-dev --optimize-autoloader
+    chdir: "{{ ff_wiki_dev_basedir }}/wwwroot/"
   become: true
   become_user: caddy

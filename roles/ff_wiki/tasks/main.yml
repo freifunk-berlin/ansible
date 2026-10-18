@@ -15,59 +15,138 @@
   loop:
     - "{{ ff_wiki_basedir }}/static/"
     - "{{ ff_wiki_basedir }}/wwwroot/"
+    - "{{ ff_wiki_dev_basedir }}/static/"
+    - "{{ ff_wiki_dev_basedir }}/wwwroot/"
 
 # wget -O /tmp/mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.43/mediawiki-1.43.9.tar.gz
 # tar xf /tmp/mediawiki.tar.gz -C {{ ff_wiki_basedir }}/wwwroot --strip-components=1
 # chown -R caddy:caddy {{ ff_wiki_basedir }}/wwwroot
+- name: Dev Wiki
+  block:
+  - name: Check out RSS extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/RSS.git
+      dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/RSS"
+      version: REL1_43
+      force: true
+      accept_hostkey: true
+    notify: Install composer dependencies
 
-- name: Check out RSS extension
-  become: true
-  become_user: caddy
-  ansible.builtin.git:
-    repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/RSS.git
-    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/RSS"
-    version: REL1_43
-    force: true
-    accept_hostkey: true
-  notify: Install composer dependencies
+  - name: Check out MsUpload extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload
+      dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/MsUpload"
+      version: REL1_43
+      force: true
+      accept_hostkey: true
+    notify: Install composer dependencies
 
-- name: Check out MsUpload extension
-  become: true
-  become_user: caddy
-  ansible.builtin.git:
-    repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload
-    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/MsUpload"
-    version: REL1_43
-    force: true
-    accept_hostkey: true
-  notify: Install composer dependencies
+  - name: Check out ffwikihelpers extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://github.com/freifunk/ffwikihelpers.git
+      dest: "{{ ff_wiki_dev_basedir }}/wwwroot/extensions/ffwikihelpers"
+      version: main
+      force: true
+      accept_hostkey: true
 
-- name: Check out ffwikihelpers extension
-  become: true
-  become_user: caddy
-  ansible.builtin.git:
-    repo: https://github.com/freifunk/ffwikihelpers.git
-    dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/ffwikihelpers"
-    version: main
-    force: true
-    accept_hostkey: true
+  - name: Copy wiki configuration
+    ansible.builtin.template:
+      dest: "{{ ff_wiki_dev_basedir }}/wwwroot/LocalSettings.php"
+      src: dev-LocalSettings.php.j2
+      mode: "0640"
+      owner: caddy
+      group: caddy
 
-- name: Copy wiki configuration
-  ansible.builtin.template:
-    dest: "{{ ff_wiki_basedir }}/wwwroot/LocalSettings.php"
-    src: LocalSettings.php.j2
-    mode: "0640"
-    owner: caddy
-    group: caddy
+  - name: Copy composer dependencies
+    ansible.builtin.template:
+      dest: "{{ ff_wiki_dev_basedir }}/wwwroot/composer.local.json"
+      src: dev-composer.local.json.j2
+      mode: "0640"
+      owner: caddy
+      group: caddy
+    notify: Install composer dependencies - dev
 
-- name: Copy composer dependencies
-  ansible.builtin.template:
-    dest: "{{ ff_wiki_basedir }}/wwwroot/composer.local.json"
-    src: composer.local.json.j2
-    mode: "0640"
-    owner: caddy
-    group: caddy
-  notify: Install composer dependencies
+  - name: Copy Static Files
+    ansible.builtin.copy:
+      src: "{{ item.file }}"
+      dest: "{{ item.dest }}"
+      mode: "0640"
+      owner: caddy
+      group: caddy
+    loop:
+      - { file: favicon.ico, dest: "{{ ff_wiki_dev_basedir }}/static/favicon.ico" }
+      - { file: robots.txt, dest: "{{ ff_wiki_dev_basedir }}/static/robots.txt" }
+      - { file: wiki.svg, dest: "{{ ff_wiki_dev_basedir }}/static/wiki.svg" }
+
+
+- name: Main Wiki
+  block:
+  - name: Check out RSS extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/RSS.git
+      dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/RSS"
+      version: REL1_43
+      force: true
+      accept_hostkey: true
+    notify: Install composer dependencies
+
+  - name: Check out MsUpload extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://gerrit.wikimedia.org/r/mediawiki/extensions/MsUpload
+      dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/MsUpload"
+      version: REL1_43
+      force: true
+      accept_hostkey: true
+    notify: Install composer dependencies
+
+  - name: Check out ffwikihelpers extension
+    become: true
+    become_user: caddy
+    ansible.builtin.git:
+      repo: https://github.com/freifunk/ffwikihelpers.git
+      dest: "{{ ff_wiki_basedir }}/wwwroot/extensions/ffwikihelpers"
+      version: main
+      force: true
+      accept_hostkey: true
+
+  - name: Copy wiki configuration
+    ansible.builtin.template:
+      dest: "{{ ff_wiki_basedir }}/wwwroot/LocalSettings.php"
+      src: LocalSettings.php.j2
+      mode: "0640"
+      owner: caddy
+      group: caddy
+
+  - name: Copy composer dependencies
+    ansible.builtin.template:
+      dest: "{{ ff_wiki_basedir }}/wwwroot/composer.local.json"
+      src: composer.local.json.j2
+      mode: "0640"
+      owner: caddy
+      group: caddy
+    notify: Install composer dependencies
+
+  - name: Copy Static Files
+    ansible.builtin.copy:
+      src: "{{ item.file }}"
+      dest: "{{ item.dest }}"
+      mode: "0640"
+      owner: caddy
+      group: caddy
+    loop:
+      - { file: favicon.ico, dest: "{{ ff_wiki_basedir }}/static/favicon.ico" }
+      - { file: robots.txt, dest: "{{ ff_wiki_basedir }}/static/robots.txt" }
+      - { file: wiki.svg, dest: "{{ ff_wiki_basedir }}/static/wiki.svg" }
 
 - name: Add cronjobs
   ansible.builtin.template:
@@ -76,18 +155,6 @@
     mode: "0640"
     owner: root
     group: root
-
-- name: Copy Static Files
-  ansible.builtin.copy:
-    src: "{{ item.file }}"
-    dest: "{{ item.dest }}"
-    mode: "0640"
-    owner: caddy
-    group: caddy
-  loop:
-    - { file: favicon.ico, dest: "{{ ff_wiki_basedir }}/static/favicon.ico" }
-    - { file: robots.txt, dest: "{{ ff_wiki_basedir }}/static/robots.txt" }
-    - { file: wiki.svg, dest: "{{ ff_wiki_basedir }}/static/wiki.svg" }
 
 - name: Copy Anubis config
   ansible.builtin.template:
