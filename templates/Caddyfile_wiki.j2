@@ -45,6 +45,11 @@ wiki.freifunk.net {
 
 
 dev.wiki.freifunk.net {
+    basic_auth {
+		# user dev pw freifunk
+		dev $2a$12$596mnUGDIoAnu23BXl6MTuEeaEYrVFkaXBYzNnXMFlfA5SPAi3YR6
+	}
+
     encode gzip zstd
 
     @blocked path /mw-config/*  /tests/*  /maintenance/*  /status/*  /LocalSettings.php  /vendor/*  /languages/*  /cache/*  /includes/*  /extensions/MobileFrontend/dev-scripts/*  /extensions/MobileFrontend/tests/*

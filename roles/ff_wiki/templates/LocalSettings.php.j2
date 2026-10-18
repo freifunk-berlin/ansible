@@ -199,7 +199,7 @@ $wgGroupPermissions['newbie']['edit'] = true;
 $wgRateLimits['*']['no_ratelimit'] = [ 999, 1 ];
 
 // Disable Account Creation
-// $wgGroupPermissions['*']['createaccount'] = false;
+$wgGroupPermissions['*']['createaccount'] = false;
 
 # 2FA settings
 wfLoadExtension( 'OATHAuth' );
@@ -227,7 +227,7 @@ wfLoadExtension('MultimediaViewer');
 ## AntiSpam
 ##
 
-# Use regexp to detect most comon spam 
+# Use regexp to detect most comon spam
 $wgSpamRegex = "/online-casino|buy-viagra|adipex|phentermine|adult-website\.com|display:none|overflow:\s*auto;\s*height:\s*[0-4]px;/i";
 
 # Allows mass deletion: https://wiki.freifunk.net/Spezial:Massenl%C3%B6schung

@@ -1,0 +1,271 @@
+<?php
+
+# Protect against web entry
+if ( !defined( 'MEDIAWIKI' ) ) {
+        exit;
+}
+
+$wgSitename      = "wiki.freifunk.net";
+$wgMetaNamespace = "Wiki.freifunk.net";
+
+## The URL base path to the directory containing the wiki;
+## defaults for all runtime URL paths are based off of this.
+## For more information on customizing the URLs please see:
+## http://www.mediawiki.org/wiki/Manual:Short_URL
+$wgServer           = "https://dev.wiki.freifunk.net";
+$wgCanonicalServer  = 'https://dev.wiki.freifunk.net';
+$wgScriptPath       = "";
+$wgArticlePath      = "/$1";
+$wgUsePathInfo      = true;
+$wgScriptExtension  = ".php";
+$wgScript           = "$wgScriptPath/index.php";
+$wgRedirectScript   = "$wgScriptPath/redirect.php";
+$wgUploadDirectory  = "{{ ff_wiki_basedir }}/static/images";
+
+##
+## Skins
+##
+
+## The relative URL path to the skins directory
+$wgStylePath        = "$wgScriptPath/skins";
+
+$wgLogos = [
+        '1x' => "/wiki.svg",
+        'wordmark' => [
+                'src' => "/wiki.svg",
+                '1x' => "/wikisvg.svg",
+                'width' => 160,
+                'height' => 160,
+        ],
+];
+
+wfLoadSkin( 'MonoBook' );
+wfLoadSkin( 'Vector' );
+$wgDefaultSkin = 'vector-2022';
+
+##
+## PageImages
+##
+
+wfLoadExtension( 'PageImages' );
+
+$wgCookieSecure = true; // cookie transmitted via https only
+
+## UPO means: this is also a user preference option
+
+
+##
+## Email
+##
+
+$wgEnableEmail      = true;
+$wgEnableUserEmail  = true; # UPO
+
+$wgEmergencyContact = "noreply@wiki.freifunk.net";
+$wgPasswordSender   = "noreply@wiki.freifunk.net";
+$wgPasswordSenderName = "dev.wiki.freifunk.net";
+$wgUserEmailUseReplyTo = true; // it's not the 90s anymore; forging from: lines will send mails to the spam folder
+
+$wgEnotifUserTalk      = true; # UPO
+$wgEnotifWatchlist     = true; # UPO
+$wgEmailAuthentication = true;
+
+# session cookie salt
+$wgAuthenticationTokenVersion = "{{ ff_wiki_authtoken_salt }}".date("Y-I"); // invalidate sessions twice a year
+
+$wgSecretKey = "{{ ff_wiki_secret_key }}";
+
+
+##
+## Database
+##
+
+$wgDBtype           = "mysql";
+$wgDBserver         = "127.0.0.1";
+$wgDBname           = "ffwikidev";
+$wgDBuser           = "ffwiki";
+$wgDBpassword       = "{{ ff_wiki_db_password }}";
+
+# MySQL specific settings
+$wgDBprefix         = "wiki_";
+
+# MySQL table options to use during installation or update
+$wgDBTableOptions   = "ENGINE=InnoDB, DEFAULT CHARSET=utf8";
+
+
+## Shared memory settings
+$wgMainCacheType = CACHE_ACCEL;
+$wgMessageCacheType = CACHE_ACCEL;
+$wgParserCacheType = CACHE_ACCEL;
+$wgCacheDirectory = "/var/tmp/dev.wiki.freifunk.net/caches/l10ncache";
+$wgLocalisationCacheConf = array(
+        'class' => 'LocalisationCache',
+        'store' => 'files',
+        'storeClass' => false,
+        'storeDirectory' => false,
+        'storeServer' => [],
+        'forceRecache' => false,
+        'manualRecache' => false,
+);
+$wgUseLocalMessageCache = true;
+$wgEnableSidebarCache = true;
+
+# We have a cronjob for this
+$wgJobRunRate=0;
+
+
+##
+## Uploads
+##
+
+## To enable image uploads, make sure the 'images' directory
+## is writable, then set this to true:
+wfLoadExtension( 'MsUpload' );
+$wgMaxUploadSize = 10*1024*1024; // 10 MBytes
+$wgUploadSizeWarning = 10*1024*1024; // 10 MBytes
+$wgEnableUploads  = true;
+$wgUseImageMagick = true;
+$wgImageMagickConvertCommand = "/usr/bin/convert";
+
+# InstantCommons allows wiki to use images from http://commons.wikimedia.org
+$wgUseInstantCommons  = true;
+
+## If you use ImageMagick (or any other shell command) on a
+## Linux server, this will need to be set to the name of an
+## available UTF-8 locale
+$wgShellLocale = "en_US.utf8";
+$wgMaxShellMemory = 1024000;
+
+## If you have the appropriate support software installed
+## you can enable inline LaTeX equations:
+$wgUseTeX           = false;
+
+
+# Site language code, should be one of ./languages/Language(.*).php
+$wgLanguageCode = "de";
+
+## For attaching licensing metadata to pages, and displaying an
+## appropriate copyright notice / icon. GNU Free Documentation
+## License and Creative Commons licenses are supported so far.
+#$wgEnableCreativeCommonsRdf = true;
+$wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
+$wgRightsUrl  = "";
+$wgRightsText = "";
+$wgRightsIcon = "";
+# $wgRightsCode = ""; # Not yet used
+
+# Path to the GNU diff3 utility. Used for conflict resolution.
+$wgDiff3 = "/usr/bin/diff3";
+
+# Query string length limit for ResourceLoader. You should only set this if
+# your web server has a query string length limit (then set it to that limit),
+# or if you have suhosin.get.max_value_length set in php.ini (then set it to
+# that value)
+$wgResourceLoaderMaxQueryLength = -1;
+
+
+# End of automatically generated settings.
+# Add more configuration options below.
+
+# Add some more file extensions we allow uploads for
+$wgFileExtensions[] = 'pdf';
+$wgFileExtensions[] = 'svg';
+$wgFileExtensions[] = 'odt';
+$wgFileExtensions[] = 'odp';
+$wgFileExtensions[] = 'eps';
+$wgFileExtensions[] = 'json';
+
+$wgAllowUserCss = true;
+
+# Extensions
+wfLoadExtensions([ 'VisualEditor']);
+#wfLoadExtensions([ 'ConfirmEdit']);
+
+$wgPFEnableStringFunctions = true;
+$wgCiteEnablePopups = true;
+$wgGroupPermissions['user']['writeapi'] = true; // VisualEditor
+
+// https://www.mediawiki.org/wiki/Manual:Combating_vandalism
+// https://www.mediawiki.org/wiki/Manual:Autoconfirmed_users
+// https://www.mediawiki.org/wiki/Manual:$wgRateLimits
+
+$wgAutoConfirmCount = 3; // 3 edits and...
+$wgAutoConfirmAge = 86400; // ...one day until not considered "newbie" anymore
+$wgRateLimits['edit']['newbie'] = array(2, 86400); // max two edits per day for unconfirmed newbies
+$wgAccountCreationThrottle = 3; // max 3 registrations per IP and day
+
+$wgGroupPermissions['*']['edit'] = false;
+$wgGroupPermissions['newbie']['edit'] = true;
+$wgRateLimits['*']['no_ratelimit'] = [ 999, 1 ];
+
+// Disable Account Creation
+$wgGroupPermissions['*']['createaccount'] = false;
+
+# 2FA settings
+wfLoadExtension( 'OATHAuth' );
+$wgGroupPermissions['user']['oathauth-enable'] = true;
+$wgOATHSecretKey = "{{ ff_wiki_oathsecretkey }}";
+
+wfLoadExtensions(['ffwikihelpers', 'Interwiki', 'ParserFunctions', 'Cite', 'SpamBlacklist', 'WikiEditor', 'PageForms', 'RSS' ]);
+$wgRSSUrlWhitelist = array("https://rss.freifunk.net/*");
+$wgMFAutodetectMobileView = false;
+$wgGroupPermissions['bureaucrat']['renameuser'] = false;
+$wgGroupPermissions['sysop']['interwiki'] = true; // To grant sysops permissions to edit interwiki data
+// To enable pulling global interwikis from a central database
+
+$wgRSSUrlWhitelist = array('*');
+wfLoadExtension('SemanticMediaWiki');
+
+$smwgEnabledEditPageHelp = false;
+
+wfLoadExtension( 'Maps' );
+$egMapsDefaultService = 'leaflet';
+
+wfLoadExtension('MultimediaViewer');
+
+##
+## AntiSpam
+##
+
+# Use regexp to detect most comon spam
+$wgSpamRegex = "/online-casino|buy-viagra|adipex|phentermine|adult-website\.com|display:none|overflow:\s*auto;\s*height:\s*[0-4]px;/i";
+
+# Allows mass deletion: https://wiki.freifunk.net/Spezial:Massenl%C3%B6schung
+wfLoadExtension( 'Nuke' );
+$wgGroupPermissions['sysop']['nuke'] = false;
+$wgGroupPermissions['nuke']['nuke'] = true;
+
+// "Archiv:" namespace - no indexing by robots
+$wgExtraNamespaces[200] = "Archiv";
+$wgExtraNamespaces[201] = "Archiv_Diskussion";
+$wgNamespaceRobotPolicies = array( NS_TALK => 'noindex,nofollow', 200 => 'noindex,nofollow', 201 => 'noindex,nofollow' );
+
+if ( !$wgCommandLineMode ) {
+
+if (preg_match('@\/Archiv:@', @$_SERVER['REQUEST_URI'])) {
+        if (!is_string($wgSiteNotice)) $wgSiteNotice = '';
+        $wgSiteNotice .= '<div style="border: 2px solid #d00000; padding: 0.5em 0.5em 0.5em 0.5em; color: #000; background-color: #ffffcb; margin: 3px 3px 0;">';
+        $wgSiteNotice .= 'Die Artikel im Archiv-Namespace sind veraltet und werden nur noch aus historischen Gr&uuml;nden aufbewahrt.';
+        $wgSiteNotice .= '</div>';
+}
+
+}
+
+$wgUseGzip = true;
+
+$wgUseFileCache = true;
+$wgFileCacheDirectory = "/var/tmp/dev.wiki.freifunk.net/caches/pagecache";
+$wgShowIPinHeader = false;
+$wgPageLanguageUseDB = true;
+$wgGroupPermissions['sysop']['pagelang'] = true;
+$wgLocaltimezone = "Europe/Berlin";
+
+$wgDebugLogFile="./debuglog.txt";
+
+$wgShowExceptionDetails = true;
+
+
+$wgActions['mcrundo'] = false;
+$wgActions['mcrrestore'] = false;
+$wgWhitelistRead = [];
+$wgWhitelistReadRegexp = [];
