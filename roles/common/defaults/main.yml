@@ -19,3 +19,10 @@ common_packages_base:
 
 common_packages_extra: []
 common_log_retention: 30
+
+common_sysctls:
+
+    - name: "net.ipv4.tcp_congestion_control"
+      value: "bbr"
+    - name: "net.core.default_qdisc"
+      value: "fq"
