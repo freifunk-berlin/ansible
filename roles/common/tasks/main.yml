@@ -48,7 +48,7 @@
     name: qemu-guest-agent
     state: present
     update_cache: true
-  when: ansible_virtualization_role == "guest"
+  when: ansible_facts['virtualization_role'] == "guest"
 
 - name: Disable openipmi service on VMs
   ansible.builtin.service:
@@ -56,7 +56,7 @@
     enabled: false
     state: stopped
   ignore_errors: True # noqa
-  when: ansible_virtualization_role == "guest"
+  when: ansible_facts['virtualization_role'] == "guest"
 
 - name: Enable fstrim timer
   ansible.builtin.systemd:
