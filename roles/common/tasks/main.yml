@@ -55,7 +55,7 @@
     name: openipmi
     enabled: false
     state: stopped
-  ignore_errors: True # noqa
+  ignore_errors: true # noqua
   when: ansible_facts['virtualization_role'] == "guest"
 
 - name: Enable fstrim timer
