@@ -32,6 +32,9 @@ scrape_configs:
         - "a36s-cr1.berlin.freifunk.net:9100"
         - "a36s-cr2.berlin.freifunk.net:9100"
         - "l105-cr1.berlin.freifunk.net:9100"
+        - "a36s-cr1.berlin.freifunk.net:9101"
+        - "a36s-cr2.berlin.freifunk.net:9101"
+        - "l105-cr1.berlin.freifunk.net:9101"
 {% for host in groups.all | sort %}
         - "{{ host }}:9100"
 {% endfor %}
@@ -66,16 +69,10 @@ scrape_configs:
         - target_label: __address__
           replacement: host.docker.internal:9115
 
-
   - job_name: victoriametrics
     static_configs:
     - targets:
       - victoriametrics:8428
-
-  - job_name: victorialogs
-    static_configs:
-    - targets:
-      - victorialogs:9428
 
   - job_name: 'snmp-af60'
     scrape_interval: 120s
@@ -187,7 +184,6 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: snmp-exporter:9116
-
 
   - job_name: 'snmp-swos'
     scrape_interval: 120s
