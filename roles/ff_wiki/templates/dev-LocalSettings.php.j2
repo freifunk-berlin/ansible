@@ -235,6 +235,9 @@ wfLoadExtension( 'Nuke' );
 $wgGroupPermissions['sysop']['nuke'] = false;
 $wgGroupPermissions['nuke']['nuke'] = true;
 
+# Load extension for dynamic anti-spam rules
+wfLoadExtension( 'AbuseFilter' );
+
 // "Archiv:" namespace - no indexing by robots
 $wgExtraNamespaces[200] = "Archiv";
 $wgExtraNamespaces[201] = "Archiv_Diskussion";
