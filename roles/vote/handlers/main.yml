@@ -1,0 +1,12 @@
+---
+- name: Stop containers # noqa: no-changed-when
+  community.docker.docker_compose_v2:
+    project_src: /etc/freifunk/
+    state: absent
+  listen: "Start and migrate loomio"
+
+- name: Migrate database # noqa: no-changed-when
+  ansible.builtin.command:
+    cmd: docker compose run --rm app rake db:migrate
+  listen: "Start and migrate loomio"
+  notify: Run docker-compose
