@@ -22,7 +22,6 @@ b.tunnel.berlin.freifunk.net # freifunk-gw01
 d.tunnel.berlin.freifunk.net # vpn03f.berlin.freifunk.net
 f.tunnel.berlin.freifunk.net # former vpn03h.berlin.freifunk.net
 
-
 [users_only:children]
 meshtastic
 
@@ -72,3 +71,6 @@ inventory.berlin.freifunk.net ansible_host=77.87.49.22
 [other]
 vote.freifunktion.net ansible_host=77.87.49.26
 
+
+[nameserver]
+ns49.freifunktion.net ansible_host=77.87.49.53
