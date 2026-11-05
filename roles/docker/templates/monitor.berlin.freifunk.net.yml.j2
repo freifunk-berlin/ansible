@@ -11,9 +11,14 @@ services:
   pushgateway:
     restart: unless-stopped
     image: prom/pushgateway:v1.11.4
-    resources:
-      limits:
-        memory: 4G
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
     ports:
       - 127.0.0.1:9091:9091
 
