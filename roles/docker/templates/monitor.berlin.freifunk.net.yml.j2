@@ -72,6 +72,7 @@ services:
         target: /etc/prometheus/prometheus.yml
     command:
       - "--promscrape.config=/etc/prometheus/prometheus.yml"
+      - "--promscrape.maxScrapeSize=100MB"
       - "--remoteWrite.url=http://victoriametrics:8428/api/v1/write"
       - "-opentelemetry.usePrometheusNaming"
     restart: always
