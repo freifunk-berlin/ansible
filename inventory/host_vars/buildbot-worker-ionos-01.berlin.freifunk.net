@@ -9,5 +9,5 @@ buildbot_worker_pwd: !vault |
           63333832623765373739366439633065366439326562363130306561383639633633
 
 buildbot_worker_contact: Martin <martin.hubner uff web ponkt de>
-buildbot_worker_info: VM with 6 Cores, 24GB RAM
+buildbot_worker_info: VM with 6 Cores, 12GB RAM
 ...
