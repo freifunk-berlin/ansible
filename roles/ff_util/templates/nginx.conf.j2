@@ -22,10 +22,23 @@ http {
     proxy_cache_valid 180d;
     proxy_cache_background_update on;
     proxy_cache_path /opt/tilecache levels=1:2 keys_zone=osm:100m max_size=5g inactive=180d;
-    proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504 ;
-    proxy_cache_valid 1h;
+    proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+    proxy_cache_valid 12h;
+    proxy_cache_lock on;
+
+    proxy_http_version 1.1;
+
+    add_header X-Proxy-Cache $upstream_cache_status;
+
+    log_format cache_st '$remote_addr - $upstream_cache_status [$time_local]  '
+                 '"$request" $status $body_bytes_sent '
+                 '"$http_referer" "$http_user_agent"';
+
+    # Enable for debug
+    # access_log /var/log/nginx/cache.log cache_st;
 
     access_log off;
+
     error_log /var/log/nginx/error.log info;
 
     server {
@@ -56,21 +69,5 @@ http {
             proxy_ssl_server_name on;
             proxy_ssl_name tile.openstreetmap.de;
         }
-
-        location /versatiles/ {
-            proxy_pass https://tiles.versatiles.org/;
-            proxy_set_header Host tiles.versatiles.org;
-            proxy_ssl_server_name on;
-            proxy_ssl_name tiles.versatiles.org;
-            proxy_set_header User-Agent "FFBerlin Tile Cache";
-            proxy_set_header Cookie "";
-            proxy_set_header Referer "";
-            proxy_set_header Via "";
-            proxy_set_header X-Forwarded-For "";
-            proxy_set_header X-Forwarded-Host "";
-            proxy_set_header X-Forwarded-Proto "";
-            proxy_set_header Accept-Encoding "";
-        }
-
     }
 }

@@ -509,7 +509,6 @@
   "mapLayers": [
     {
       "config": {
-        "#subdomains": "1234",
         "attribution": "&copy; Openstreetmap | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
         "maxZoom": 19,
         "invertInDarkMode": true,
@@ -520,14 +519,13 @@
     },
     {
       "config": {
-        "#subdomains": "1234",
         "attribution": "&copy; Versatiles | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
         "maxZoom": 17,
         "invertInDarkMode": false,
         "type": "osm"
       },
       "name": "Satelliten Ansicht",
-      "url": "https://tiles.berlin.freifunk.net/versatiles/tiles/satellite/{z}/{x}/{y}.png"
+      "url": "https://tiles.berlin.freifunk.net/tiles/satellite/{z}/{x}/{y}.png"
     },
     {
       "name": "BaseMap.de (Vektor)",
