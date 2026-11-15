@@ -1,0 +1,17 @@
+---
+services:
+  versatiles-frontend:
+    image: versatiles/versatiles:latest
+    command: serve  --static "frontend.br.tar.gz" "osm.versatiles" "satellite.versatiles" "elevation.versatiles" "landcover-vectors.versatiles"
+    restart: always
+    volumes:
+      - type: bind
+        source: /opt/versatiles/
+        target: /data/
+        read_only: True
+    ports:
+      - target: 8080
+        published: 8081
+        protocol: tcp
+
+# vim: set filetype=yaml:

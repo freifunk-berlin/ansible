@@ -86,6 +86,7 @@
   hosts: utils
   become: true
   roles:
+    - docker
     - caddy
     - php
     - ff_util

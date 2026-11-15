@@ -93,5 +93,19 @@ ff.berlin {
 }
 
 tiles.berlin.freifunk.net {
+
+  handle /osm_de/* {
     reverse_proxy  http://localhost:8080
+  } 
+  
+  handle /versatiles/* {
+    reverse_proxy  http://localhost:8080
+  } 
+
+  
+  handle /tiles/satellite/* {
+    reverse_proxy  http://localhost:8081
+  }
+  
 }
+
