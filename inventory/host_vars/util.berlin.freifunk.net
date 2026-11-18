@@ -1,5 +1,5 @@
 ---
 caddy_caddyfile: Caddyfile_utils.j2
 php_version: 8.4
-meshviewer_version: 13.2.0
+meshviewer_version: 14.0.0
 docker_compose_file: util.berlin.freifunk.net.yml.j2
